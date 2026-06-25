@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kusumgar · Command Center</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#0A1A2F; --card:#11233B; --card-2:#14294A;
+    --cream:#F5F1E8; --muted:rgba(245,241,232,.60); --faint:rgba(245,241,232,.38);
+    --gold:#C9A227; --gold-soft:rgba(201,162,39,.14); --gold-line:rgba(201,162,39,.45);
+    --red:#E2574C; --amber:#E0A82E; --emerald:#34C796;
+    --g1:#C9A227; --g2:#D9BC5E; --g3:#8C7A3E; --g4:rgba(245,241,232,.32);
+    --hairline:rgba(245,241,232,.09);
+    --shadow:inset 0 1px 0 rgba(245,241,232,.03), 0 18px 40px -24px rgba(0,0,0,.65);
+    --s3:16px; --s4:24px; --s5:32px; --s6:48px; --s7:72px;
+    --r-card:20px; --r-tile:16px; --r-pill:999px; --r-btn:10px;
+    --serif:'Playfair Display', Georgia, serif;
+    --font:'Inter', system-ui, -apple-system, sans-serif;
+    --mono:'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  body{
+    background:var(--bg);
+    color:var(--cream);
+    font-family:var(--font);
+    font-size:16px;
+    line-height:1.5;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    background-image:radial-gradient(1100px 520px at 78% -8%, rgba(201,162,39,.06), transparent 60%);
+    background-attachment:fixed;
+  }
+
+  .page{ max-width:1200px; margin:0 auto; padding:30px 32px 56px; }
+
+  section{ margin-top:var(--s7); }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--hairline);
+    border-radius:var(--r-card);
+    box-shadow:var(--shadow);
+    padding:28px;
+  }
+
+  /* ── 1. Header ───────────────────────────────────── */
+  .topbar{ display:flex; justify-content:space-between; align-items:flex-start; gap:24px; }
+  .brand{ display:flex; flex-direction:column; }
+  .brand-line{ display:flex; align-items:baseline; gap:12px; }
+  .wordmark{ font-family:var(--serif); font-weight:600; font-size:23px; letter-spacing:.005em; }
+  .cc{ font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:var(--muted); }
+  .pb{ font-size:10.5px; letter-spacing:.04em; color:var(--faint); margin-top:5px; }
+
+  .topbar-right{ display:flex; flex-direction:column; align-items:flex-end; gap:11px; }
+  .clock{ font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:13px; color:var(--muted); letter-spacing:.01em; }
+  .clock .time{ color:var(--cream); }
+  .ipo-chip{
+    font-size:12px; color:var(--gold);
+    background:var(--gold-soft); border:1px solid var(--gold-line);
+    padding:7px 15px; border-radius:var(--r-pill); white-space:nowrap; letter-spacing:.01em;
+  }
+
+  /* ── 2. Greeting ─────────────────────────────────── */
+  .greeting{ margin-top:50px; }
+  .greeting h1{ font-family:var(--serif); font-weight:600; font-size:clamp(30px,4.4vw,46px); line-height:1.12; }
+  .greeting .sub{ font-family:var(--serif); font-weight:400; color:var(--muted); font-size:clamp(18px,2.4vw,24px); margin-top:9px; }
+
+  /* ── 3. KPI row ──────────────────────────────────── */
+  .kpis{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-top:40px; }
+  .kpi-label{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+  .kpi-num{ font-family:var(--mono); font-variant-numeric:tabular-nums; font-weight:500; font-size:38px; line-height:1.05; margin:12px 0 9px; }
+  .kpi-num .unit{ font-size:18px; color:var(--muted); margin-left:5px; }
+  .kpi-delta{ font-size:12.5px; color:var(--muted); display:flex; align-items:center; gap:7px; }
+  .kpi-delta .up{ color:var(--emerald); font-variant-numeric:tabular-nums; }
+  .kpi-delta .sep{ color:var(--faint); }
+
+  /* ── 4. Needs your attention ─────────────────────── */
+  .section-label{
+    font-family:var(--serif); font-weight:500; font-size:13px;
+    letter-spacing:.20em; text-transform:uppercase; color:var(--muted); margin-bottom:20px;
+  }
+  .attn-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+  .attn{ display:flex; flex-direction:column; gap:14px; min-height:208px; opacity:0; }
+  .attn .dot{ width:9px; height:9px; border-radius:50%; flex:none; }
+  .attn .dot.red{ background:var(--red); }
+  .attn .dot.amber{ background:var(--amber); }
+  .attn .dot.gold{ background:var(--gold); }
+  .attn h3{ font-size:17px; line-height:1.42; font-weight:600; letter-spacing:-.005em; }
+  .attn p{ font-size:13.5px; color:var(--muted); line-height:1.55; }
+  .attn-action{
+    margin-top:auto; align-self:flex-start;
+    background:transparent; color:var(--cream);
+    border:1px solid var(--gold-line); border-radius:var(--r-btn);
+    padding:9px 17px; font-size:13px; font-family:var(--font); cursor:pointer;
+    transition:background .18s ease, border-color .18s ease;
+  }
+  .attn-action:hover{ background:var(--gold-soft); border-color:var(--gold); }
+
+  /* ── 5. Supporting visuals ───────────────────────── */
+  .visuals{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .visual-title{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:22px; }
+
+  .barchart{ width:100%; height:auto; display:block; }
+  .bar-val{ font-family:var(--mono); font-size:13px; fill:var(--cream); }
+  .bar-lab{ font-family:var(--font); font-size:11px; letter-spacing:.08em; fill:rgba(245,241,232,.55); }
+
+  .donut-block{ display:grid; grid-template-columns:168px 1fr; align-items:center; gap:30px; }
+  .donut-wrap{ position:relative; width:168px; height:168px; }
+  .donut-wrap svg{ width:168px; height:168px; display:block; }
+  .donut-center{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; pointer-events:none; }
+  .donut-center .dc-lab{ font-size:10px; letter-spacing:.20em; text-transform:uppercase; color:var(--faint); }
+  .donut-center .dc-yr{ font-family:var(--serif); font-size:20px; color:var(--cream); }
+
+  .legend{ display:flex; flex-direction:column; gap:15px; }
+  .legend-row{ display:grid; grid-template-columns:11px 1fr auto; align-items:center; gap:12px; }
+  .legend-row .sw{ width:11px; height:11px; border-radius:3px; }
+  .legend-row .nm{ font-size:13px; color:var(--cream); line-height:1.3; }
+  .legend-row .pc{ font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:13px; color:var(--muted); }
+
+  /* ── Footer ──────────────────────────────────────── */
+  .foot{ margin-top:64px; text-align:center; font-size:12px; letter-spacing:.02em; color:var(--faint); }
+
+  /* ── Toast ───────────────────────────────────────── */
+  .toast{
+    position:fixed; left:50%; bottom:34px;
+    transform:translateX(-50%) translateY(8px);
+    background:var(--card-2); color:var(--cream);
+    border:1px solid var(--hairline); border-radius:12px;
+    padding:13px 22px; font-size:13.5px;
+    box-shadow:0 18px 40px -18px rgba(0,0,0,.7);
+    opacity:0; pointer-events:none; z-index:50;
+    transition:opacity .3s ease, transform .3s ease;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  /* ── Motion ──────────────────────────────────────── */
+  @keyframes rise{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:translateY(0); } }
+  .cascade .attn{ animation:rise .55s cubic-bezier(.22,.61,.36,1) both; }
+  .cascade .attn:nth-child(1){ animation-delay:0ms; }
+  .cascade .attn:nth-child(2){ animation-delay:120ms; }
+  .cascade .attn:nth-child(3){ animation-delay:240ms; }
+
+  @keyframes softpulse{
+    0%,100%{ box-shadow:0 0 0 0 rgba(226,87,76,.45); }
+    50%    { box-shadow:0 0 0 7px rgba(226,87,76,0); }
+  }
+  .attn .dot.red{ animation:softpulse 2.8s ease-in-out infinite; }
+
+  @media (prefers-reduced-motion:reduce){
+    .cascade .attn{ animation:none; opacity:1; }
+    .attn{ opacity:1; }
+    .attn .dot.red{ animation:none; }
+    .toast{ transition:none; }
+  }
+
+  /* ── Responsive ──────────────────────────────────── */
+  @media (max-width:980px){
+    .kpis{ grid-template-columns:repeat(2,1fr); }
+    .attn-grid{ grid-template-columns:1fr; }
+    .attn{ min-height:0; }
+    .visuals{ grid-template-columns:1fr; }
+  }
+  @media (max-width:680px){
+    .page{ padding:22px 18px 40px; }
+    section{ margin-top:var(--s6); }
+    .card{ padding:22px; }
+  }
+  @media (max-width:560px){
+    .kpis{ grid-template-columns:1fr; }
+    .topbar{ flex-direction:column; gap:18px; }
+    .topbar-right{ align-items:flex-start; }
+    .donut-block{ grid-template-columns:1fr; justify-items:center; gap:24px; }
+    .legend{ width:100%; max-width:300px; }
+  }
+</style>
+</head>
+
+<body>
+  <div class="page">
+
+    <!-- 1. Header -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-line">
+          <span class="wordmark">Kusumgar</span>
+          <span class="cc">Command Center</span>
+        </div>
+        <span class="pb">powered by muns.ai</span>
+      </div>
+      <div class="topbar-right">
+        <div class="clock"><span id="date">—</span> · <span class="time" id="time">—</span></div>
+        <div class="ipo-chip">IPO · ₹650 cr offer · listing in 22 days</div>
+      </div>
+    </header>
+
+    <!-- 2. Greeting -->
+    <section class="greeting">
+      <h1>Good morning, Sapna.</h1>
+      <div class="sub">3 things need your attention today.</div>
+    </section>
+
+    <!-- 3. KPI row -->
+    <section class="kpis">
+      <div class="card">
+        <div class="kpi-label">Revenue</div>
+        <div class="kpi-num">₹779<span class="unit">cr</span></div>
+        <div class="kpi-delta"><span class="up">▲ +67%</span><span class="sep">·</span> 2-yr growth</div>
+      </div>
+      <div class="card">
+        <div class="kpi-label">EBITDA</div>
+        <div class="kpi-num">₹188<span class="unit">cr</span></div>
+        <div class="kpi-delta"><span class="sep">·</span> 24.2% margin</div>
+      </div>
+      <div class="card">
+        <div class="kpi-label">Defence &amp; Aerospace</div>
+        <div class="kpi-num">76<span class="unit">%</span></div>
+        <div class="kpi-delta"><span class="sep">·</span> of revenue</div>
+      </div>
+      <div class="card">
+        <div class="kpi-label">Capacity used</div>
+        <div class="kpi-num">42.3<span class="unit">%</span></div>
+        <div class="kpi-delta"><span class="sep">·</span> room to scale</div>
+      </div>
+    </section>
+
+    <!-- 4. Needs your attention -->
+    <section class="attention">
+      <div class="section-label">Needs your attention</div>
+      <div class="attn-grid" id="attnGrid">
+
+        <div class="card attn">
+          <span class="dot red"></span>
+          <h3>A parachute-fabric order may slip 6 days.</h3>
+          <p>Nylon 66 base-yarn PO not placed yet · 2 alternate suppliers ready.</p>
+          <button class="attn-action" data-toast="PO drafted — sent to procurement.">Place PO</button>
+        </div>
+
+        <div class="card attn">
+          <span class="dot amber"></span>
+          <h3>Colour is drifting on a live dye batch.</h3>
+          <p>Batch DY-2208, olive green · a small floor fix now avoids a full re-dye.</p>
+          <button class="attn-action" data-toast="Sent to the floor — DY-2208 flagged.">Send fix to floor</button>
+        </div>
+
+        <div class="card attn">
+          <span class="dot gold"></span>
+          <h3>One investor question worth preparing.</h3>
+          <p>Top 10 customers = 84.7% of revenue · have your answer ready before the roadshow.</p>
+          <button class="attn-action" data-toast="Brief opened — concentration note ready.">Open brief</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 5. Supporting visuals -->
+    <section class="visuals">
+
+      <!-- Bar chart -->
+      <div class="card">
+        <div class="visual-title">Revenue, ₹ cr</div>
+        <svg class="barchart" viewBox="0 0 300 180" role="img" aria-label="Revenue by year: FY23 302, FY24 468, FY25 779 crore">
+          <line x1="30" y1="150" x2="276" y2="150" stroke="rgba(245,241,232,.14)" stroke-width="1"/>
+          <rect x="38"  y="101.15" width="44" height="48.85"  rx="4" fill="#C9A227"/>
+          <rect x="128" y="74.30"  width="44" height="75.70"  rx="4" fill="#C9A227"/>
+          <rect x="218" y="24.00"  width="44" height="126.00" rx="4" fill="#C9A227"/>
+          <text x="60"  y="93.15" text-anchor="middle" class="bar-val">302</text>
+          <text x="150" y="66.30" text-anchor="middle" class="bar-val">468</text>
+          <text x="240" y="16.00" text-anchor="middle" class="bar-val">779</text>
+          <text x="60"  y="166" text-anchor="middle" class="bar-lab">FY23</text>
+          <text x="150" y="166" text-anchor="middle" class="bar-lab">FY24</text>
+          <text x="240" y="166" text-anchor="middle" class="bar-lab">FY25</text>
+        </svg>
+      </div>
+
+      <!-- Donut -->
+      <div class="card">
+        <div class="visual-title">Where revenue comes from</div>
+        <div class="donut-block">
+          <div class="donut-wrap">
+            <svg viewBox="0 0 200 200" role="img" aria-label="Revenue mix: Defence and Aerospace Fabrics 48.6%, Defence and Aerospace Solutions 29.1%, Automotive and Industrial 14.8%, Outdoor and Lifestyle 7.5%">
+              <g transform="rotate(-90 100 100)" fill="none" stroke-width="26">
+                <circle cx="100" cy="100" r="80" stroke="rgba(245,241,232,.06)"/>
+                <circle cx="100" cy="100" r="80" stroke="var(--g1)" stroke-dasharray="244.071 258.584" stroke-dashoffset="0">
+                  <title>Defence &amp; Aerospace Fabrics — ₹370 cr</title>
+                </circle>
+                <circle cx="100" cy="100" r="80" stroke="var(--g2)" stroke-dasharray="146.443 356.212" stroke-dashoffset="-244.071">
+                  <title>Defence &amp; Aerospace Solutions — ₹222 cr</title>
+                </circle>
+                <circle cx="100" cy="100" r="80" stroke="var(--g3)" stroke-dasharray="74.541 428.114" stroke-dashoffset="-390.514">
+                  <title>Automotive &amp; Industrial — ₹113 cr</title>
+                </circle>
+                <circle cx="100" cy="100" r="80" stroke="var(--g4)" stroke-dasharray="37.600 465.055" stroke-dashoffset="-465.055">
+                  <title>Outdoor &amp; Lifestyle — ₹57 cr</title>
+                </circle>
+              </g>
+            </svg>
+            <div class="donut-center">
+              <span class="dc-yr">FY25</span>
+              <span class="dc-lab">Revenue mix</span>
+            </div>
+          </div>
+          <div class="legend">
+            <div class="legend-row"><span class="sw" style="background:var(--g1)"></span><span class="nm">Defence &amp; Aerospace Fabrics</span><span class="pc">48.6%</span></div>
+            <div class="legend-row"><span class="sw" style="background:var(--g2)"></span><span class="nm">Defence &amp; Aerospace Solutions</span><span class="pc">29.1%</span></div>
+            <div class="legend-row"><span class="sw" style="background:var(--g3)"></span><span class="nm">Automotive &amp; Industrial</span><span class="pc">14.8%</span></div>
+            <div class="legend-row"><span class="sw" style="background:var(--g4)"></span><span class="nm">Outdoor &amp; Lifestyle</span><span class="pc">7.5%</span></div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Footer -->
+    <footer class="foot">Kusumgar Limited · live view across 6 plants · powered by muns.ai</footer>
+
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // Live clock — premium, calm format
+    (function(){
+      var dEl = document.getElementById('date');
+      var tEl = document.getElementById('time');
+      var DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      var MON  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      function p(n){ return String(n).padStart(2,'0'); }
+      function tick(){
+        var n = new Date();
+        dEl.textContent = DAYS[n.getDay()] + ', ' + n.getDate() + ' ' + MON[n.getMonth()] + ' ' + n.getFullYear();
+        tEl.textContent = p(n.getHours()) + ':' + p(n.getMinutes()) + ':' + p(n.getSeconds());
+      }
+      tick();
+      setInterval(tick, 1000);
+    })();
+
+    // Toast — single reusable, fades after ~2s
+    (function(){
+      var toast = document.getElementById('toast');
+      var timer;
+      function showToast(msg){
+        toast.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(timer);
+        timer = setTimeout(function(){ toast.classList.remove('show'); }, 2000);
+      }
+      document.querySelectorAll('.attn-action').forEach(function(btn){
+        btn.addEventListener('click', function(){ showToast(btn.dataset.toast); });
+      });
+    })();
+
+    // One-time gentle card cascade on load
+    document.addEventListener('DOMContentLoaded', function(){
+      document.getElementById('attnGrid').classList.add('cascade');
+    });
+  </script>
+</body>
+</html>
