@@ -1,9 +1,23 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0A1A2F">
 <title>Kusumgar · Command Center</title>
+
+<script>
+  /* Set theme before first paint to avoid a flash. */
+  (function(){
+    try{
+      var t = localStorage.getItem('kc-theme');
+      if(t !== 'light' && t !== 'dark'){
+        t = (window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+      }
+      document.documentElement.setAttribute('data-theme', t);
+    }catch(e){}
+  })();
+</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,12 +31,26 @@
     --red:#E2574C; --amber:#E0A82E; --emerald:#34C796;
     --g1:#C9A227; --g2:#D9BC5E; --g3:#8C7A3E; --g4:rgba(245,241,232,.32);
     --hairline:rgba(245,241,232,.09);
+    --track:rgba(245,241,232,.06); --axis:rgba(245,241,232,.14);
     --shadow:inset 0 1px 0 rgba(245,241,232,.03), 0 18px 40px -24px rgba(0,0,0,.65);
-    --s3:16px; --s4:24px; --s5:32px; --s6:48px; --s7:72px;
+    --glow:radial-gradient(1100px 520px at 78% -8%, rgba(201,162,39,.06), transparent 60%);
+    --s3:16px; --s4:24px; --s5:32px; --s6:48px; --s7:64px;
     --r-card:20px; --r-tile:16px; --r-pill:999px; --r-btn:10px;
     --serif:'Playfair Display', Georgia, serif;
     --font:'Inter', system-ui, -apple-system, sans-serif;
     --mono:'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  [data-theme="light"]{
+    --bg:#F3EEE2; --card:#FFFFFF; --card-2:#FAF6EC;
+    --cream:#13243A; --muted:rgba(19,36,58,.62); --faint:rgba(19,36,58,.42);
+    --gold:#8A6E14; --gold-soft:rgba(138,110,20,.12); --gold-line:rgba(138,110,20,.42);
+    --red:#C2433A; --amber:#A9791A; --emerald:#1A8F68;
+    --g1:#C9A227; --g2:#9C7C16; --g3:#6E5A22; --g4:rgba(19,36,58,.32);
+    --hairline:rgba(19,36,58,.12);
+    --track:rgba(19,36,58,.07); --axis:rgba(19,36,58,.18);
+    --shadow:inset 0 1px 0 rgba(255,255,255,.7), 0 16px 38px -26px rgba(24,34,52,.30);
+    --glow:radial-gradient(1100px 520px at 78% -8%, rgba(201,162,39,.12), transparent 62%);
   }
 
   *{ box-sizing:border-box; margin:0; padding:0; }
@@ -36,11 +64,11 @@
     min-height:100vh;
     -webkit-font-smoothing:antialiased;
     text-rendering:optimizeLegibility;
-    background-image:radial-gradient(1100px 520px at 78% -8%, rgba(201,162,39,.06), transparent 60%);
+    background-image:var(--glow);
     background-attachment:fixed;
   }
 
-  .page{ max-width:1200px; margin:0 auto; padding:30px 32px 56px; }
+  .page{ max-width:1280px; margin:0 auto; padding:30px 32px 56px; }
 
   section{ margin-top:var(--s7); }
 
@@ -52,6 +80,11 @@
     padding:28px;
   }
 
+  .section-label{
+    font-family:var(--serif); font-weight:500; font-size:13px;
+    letter-spacing:.20em; text-transform:uppercase; color:var(--muted); margin-bottom:20px;
+  }
+
   /* ── 1. Header ───────────────────────────────────── */
   .topbar{ display:flex; justify-content:space-between; align-items:flex-start; gap:24px; }
   .brand{ display:flex; flex-direction:column; }
@@ -60,7 +93,8 @@
   .cc{ font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:var(--muted); }
   .pb{ font-size:10.5px; letter-spacing:.04em; color:var(--faint); margin-top:5px; }
 
-  .topbar-right{ display:flex; flex-direction:column; align-items:flex-end; gap:11px; }
+  .topbar-right{ display:flex; align-items:center; gap:14px; }
+  .topbar-meta{ display:flex; flex-direction:column; align-items:flex-end; gap:11px; }
   .clock{ font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:13px; color:var(--muted); letter-spacing:.01em; }
   .clock .time{ color:var(--cream); }
   .ipo-chip{
@@ -68,26 +102,40 @@
     background:var(--gold-soft); border:1px solid var(--gold-line);
     padding:7px 15px; border-radius:var(--r-pill); white-space:nowrap; letter-spacing:.01em;
   }
+  .theme-toggle{
+    width:38px; height:38px; flex:none; padding:0;
+    display:inline-flex; align-items:center; justify-content:center;
+    background:transparent; border:1px solid var(--hairline); border-radius:50%;
+    color:var(--gold); cursor:pointer;
+    transition:background .18s ease, border-color .18s ease;
+  }
+  .theme-toggle:hover{ background:var(--gold-soft); border-color:var(--gold-line); }
+  .theme-toggle svg{ width:18px; height:18px; display:block; }
+  .theme-toggle .i-moon{ display:none; }
+  [data-theme="light"] .theme-toggle .i-sun{ display:none; }
+  [data-theme="light"] .theme-toggle .i-moon{ display:block; }
 
   /* ── 2. Greeting ─────────────────────────────────── */
-  .greeting{ margin-top:50px; }
+  .greeting{ margin-top:48px; }
   .greeting h1{ font-family:var(--serif); font-weight:600; font-size:clamp(30px,4.4vw,46px); line-height:1.12; }
   .greeting .sub{ font-family:var(--serif); font-weight:400; color:var(--muted); font-size:clamp(18px,2.4vw,24px); margin-top:9px; }
+  .brief{ margin-top:16px; font-size:13px; color:var(--faint); letter-spacing:.01em; }
+  .brief .live-dot{ display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--emerald); margin-right:9px; vertical-align:middle; }
 
-  /* ── 3. KPI row ──────────────────────────────────── */
+  /* ── 3. KPI rows ─────────────────────────────────── */
   .kpis{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-top:40px; }
+  .kpis-2{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-top:18px; }
   .kpi-label{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
   .kpi-num{ font-family:var(--mono); font-variant-numeric:tabular-nums; font-weight:500; font-size:38px; line-height:1.05; margin:12px 0 9px; }
   .kpi-num .unit{ font-size:18px; color:var(--muted); margin-left:5px; }
   .kpi-delta{ font-size:12.5px; color:var(--muted); display:flex; align-items:center; gap:7px; }
   .kpi-delta .up{ color:var(--emerald); font-variant-numeric:tabular-nums; }
   .kpi-delta .sep{ color:var(--faint); }
+  .card.kpi-sm{ padding:20px 22px; }
+  .kpi-sm .kpi-num{ font-size:25px; margin:9px 0 6px; }
+  .kpi-sm .kpi-num .unit{ font-size:14px; }
 
   /* ── 4. Needs your attention ─────────────────────── */
-  .section-label{
-    font-family:var(--serif); font-weight:500; font-size:13px;
-    letter-spacing:.20em; text-transform:uppercase; color:var(--muted); margin-bottom:20px;
-  }
   .attn-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
   .attn{ display:flex; flex-direction:column; gap:14px; min-height:208px; opacity:0; }
   .attn .dot{ width:9px; height:9px; border-radius:50%; flex:none; }
@@ -96,38 +144,96 @@
   .attn .dot.gold{ background:var(--gold); }
   .attn h3{ font-size:17px; line-height:1.42; font-weight:600; letter-spacing:-.005em; }
   .attn p{ font-size:13.5px; color:var(--muted); line-height:1.55; }
-  .attn-action{
-    margin-top:auto; align-self:flex-start;
+  .attn-action, .quiet-action{
+    align-self:flex-start;
     background:transparent; color:var(--cream);
     border:1px solid var(--gold-line); border-radius:var(--r-btn);
     padding:9px 17px; font-size:13px; font-family:var(--font); cursor:pointer;
     transition:background .18s ease, border-color .18s ease;
   }
-  .attn-action:hover{ background:var(--gold-soft); border-color:var(--gold); }
+  .attn-action{ margin-top:auto; }
+  .attn-action:hover, .quiet-action:hover{ background:var(--gold-soft); border-color:var(--gold); }
 
-  /* ── 5. Supporting visuals ───────────────────────── */
-  .visuals{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
-  .visual-title{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:22px; }
+  /* ── 5. Watcher feed ─────────────────────────────── */
+  .watch-list{ display:flex; flex-direction:column; }
+  .watch{ display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:start; padding:17px 0; border-top:1px solid var(--hairline); }
+  .watch:first-child{ border-top:none; padding-top:2px; }
+  .watch .dot{ width:9px; height:9px; border-radius:50%; margin-top:5px; flex:none; }
+  .watch .dot.red{ background:var(--red); }
+  .watch .dot.amber{ background:var(--amber); }
+  .watch .dot.gold{ background:var(--gold); }
+  .watch .dot.emerald{ background:var(--emerald); }
+  .watch h4{ font-size:14.5px; font-weight:600; line-height:1.4; }
+  .watch p{ font-size:12.5px; color:var(--muted); margin-top:3px; line-height:1.5; }
+  .watch .w-time{ font-family:var(--mono); font-size:11.5px; color:var(--faint); white-space:nowrap; padding-top:2px; }
+
+  /* ── 6. Across the floor ─────────────────────────── */
+  .floor{ display:grid; grid-template-columns:repeat(auto-fit, minmax(216px,1fr)); gap:18px; }
+  .floor .card{ display:flex; flex-direction:column; gap:11px; }
+  .f-top{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .f-label{ font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  .f-top .dot{ width:8px; height:8px; border-radius:50%; flex:none; }
+  .f-top .dot.emerald{ background:var(--emerald); }
+  .f-top .dot.amber{ background:var(--amber); }
+  .f-top .dot.red{ background:var(--red); }
+  .f-metric{ font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:23px; line-height:1.1; }
+  .f-metric .f-sub{ font-family:var(--font); font-size:12px; color:var(--faint); margin-left:4px; }
+  .f-insight{ font-size:12.5px; color:var(--muted); line-height:1.5; }
+
+  /* ── 7. Plants strip ─────────────────────────────── */
+  .plants{ display:grid; grid-template-columns:repeat(auto-fit, minmax(132px,1fr)); gap:14px; }
+  .plant{ background:var(--card); border:1px solid var(--hairline); border-radius:14px; box-shadow:var(--shadow); padding:15px 16px; display:flex; flex-direction:column; gap:9px; }
+  .plant .p-name{ display:flex; align-items:center; gap:8px; font-size:13px; }
+  .plant .dot{ width:7px; height:7px; border-radius:50%; flex:none; }
+  .plant .dot.emerald{ background:var(--emerald); }
+  .plant .dot.amber{ background:var(--amber); }
+  .plant .p-util{ font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:19px; }
+  .plant .p-cap{ font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--faint); }
+  .plants-foot{ margin-top:16px; font-size:12px; color:var(--faint); letter-spacing:.02em; }
+
+  /* ── 8. Trends & mix ─────────────────────────────── */
+  .charts-2{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .visual-title{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+  .visual-note{ font-size:11.5px; color:var(--faint); margin-bottom:18px; }
+  .donut-card{ margin-top:18px; }
 
   .barchart{ width:100%; height:auto; display:block; }
   .bar-val{ font-family:var(--mono); font-size:13px; fill:var(--cream); }
-  .bar-lab{ font-family:var(--font); font-size:11px; letter-spacing:.08em; fill:rgba(245,241,232,.55); }
+  .bar-lab{ font-family:var(--font); font-size:11px; letter-spacing:.08em; fill:var(--muted); }
 
-  .donut-block{ display:grid; grid-template-columns:168px 1fr; align-items:center; gap:30px; }
-  .donut-wrap{ position:relative; width:168px; height:168px; }
-  .donut-wrap svg{ width:168px; height:168px; display:block; }
+  .donut-block{ display:grid; grid-template-columns:200px 1fr; align-items:center; gap:40px; }
+  .donut-wrap{ position:relative; width:200px; height:200px; }
+  .donut-wrap svg{ width:200px; height:200px; display:block; }
   .donut-center{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; pointer-events:none; }
   .donut-center .dc-lab{ font-size:10px; letter-spacing:.20em; text-transform:uppercase; color:var(--faint); }
-  .donut-center .dc-yr{ font-family:var(--serif); font-size:20px; color:var(--cream); }
+  .donut-center .dc-yr{ font-family:var(--serif); font-size:22px; color:var(--cream); }
 
-  .legend{ display:flex; flex-direction:column; gap:15px; }
+  .legend{ display:flex; flex-direction:column; gap:16px; }
   .legend-row{ display:grid; grid-template-columns:11px 1fr auto; align-items:center; gap:12px; }
   .legend-row .sw{ width:11px; height:11px; border-radius:3px; }
-  .legend-row .nm{ font-size:13px; color:var(--cream); line-height:1.3; }
-  .legend-row .pc{ font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:13px; color:var(--muted); }
+  .legend-row .nm{ font-size:13.5px; color:var(--cream); line-height:1.3; }
+  .legend-row .pc{ font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:13.5px; color:var(--muted); }
+
+  /* ── 9. IPO readiness ────────────────────────────── */
+  .ipo-grid{ display:grid; grid-template-columns:1fr 1fr; gap:36px; }
+  .ipo-sub{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+  .ipo-check{ display:flex; flex-direction:column; }
+  .ipo-row{ display:grid; grid-template-columns:auto 1fr; gap:13px; align-items:start; padding:13px 0; border-top:1px solid var(--hairline); }
+  .ipo-row:first-of-type{ border-top:none; }
+  .ipo-row .dot{ width:8px; height:8px; border-radius:50%; margin-top:6px; flex:none; }
+  .ipo-row .dot.emerald{ background:var(--emerald); }
+  .ipo-row .dot.gold{ background:var(--gold); }
+  .ipo-row .dot.amber{ background:var(--amber); }
+  .ipo-row .ir-main{ font-size:14px; line-height:1.4; }
+  .ipo-row .ir-note{ font-size:12px; color:var(--faint); margin-top:2px; }
+  .ipo-q ul{ list-style:none; }
+  .ipo-q li{ font-size:13px; color:var(--muted); line-height:1.5; padding:11px 0; border-top:1px solid var(--hairline); display:flex; gap:11px; }
+  .ipo-q li:first-child{ border-top:none; }
+  .ipo-q li:before{ content:"—"; color:var(--gold); flex:none; }
+  .ipo-q .quiet-action{ margin-top:18px; }
 
   /* ── Footer ──────────────────────────────────────── */
-  .foot{ margin-top:64px; text-align:center; font-size:12px; letter-spacing:.02em; color:var(--faint); }
+  .foot{ margin-top:60px; text-align:center; font-size:12px; letter-spacing:.02em; color:var(--faint); }
 
   /* ── Toast ───────────────────────────────────────── */
   .toast{
@@ -136,7 +242,7 @@
     background:var(--card-2); color:var(--cream);
     border:1px solid var(--hairline); border-radius:12px;
     padding:13px 22px; font-size:13.5px;
-    box-shadow:0 18px 40px -18px rgba(0,0,0,.7);
+    box-shadow:0 18px 40px -18px rgba(0,0,0,.45);
     opacity:0; pointer-events:none; z-index:50;
     transition:opacity .3s ease, transform .3s ease;
   }
@@ -159,15 +265,17 @@
     .cascade .attn{ animation:none; opacity:1; }
     .attn{ opacity:1; }
     .attn .dot.red{ animation:none; }
-    .toast{ transition:none; }
+    .toast, .theme-toggle, .attn-action, .quiet-action{ transition:none; }
   }
 
   /* ── Responsive ──────────────────────────────────── */
   @media (max-width:980px){
-    .kpis{ grid-template-columns:repeat(2,1fr); }
+    .kpis, .kpis-2{ grid-template-columns:repeat(2,1fr); }
     .attn-grid{ grid-template-columns:1fr; }
     .attn{ min-height:0; }
-    .visuals{ grid-template-columns:1fr; }
+    .charts-2{ grid-template-columns:1fr; }
+    .donut-block{ grid-template-columns:1fr; justify-items:center; gap:26px; text-align:left; }
+    .ipo-grid{ grid-template-columns:1fr; gap:24px; }
   }
   @media (max-width:680px){
     .page{ padding:22px 18px 40px; }
@@ -175,11 +283,13 @@
     .card{ padding:22px; }
   }
   @media (max-width:560px){
-    .kpis{ grid-template-columns:1fr; }
+    .kpis, .kpis-2{ grid-template-columns:1fr; }
     .topbar{ flex-direction:column; gap:18px; }
-    .topbar-right{ align-items:flex-start; }
-    .donut-block{ grid-template-columns:1fr; justify-items:center; gap:24px; }
-    .legend{ width:100%; max-width:300px; }
+    .topbar-right{ align-items:center; align-self:stretch; justify-content:space-between; }
+    .topbar-meta{ align-items:flex-start; }
+    .watch{ grid-template-columns:auto 1fr; }
+    .watch .w-time{ grid-column:2; padding-top:0; }
+    .legend{ width:100%; max-width:320px; }
   }
 </style>
 </head>
@@ -197,8 +307,19 @@
         <span class="pb">powered by muns.ai</span>
       </div>
       <div class="topbar-right">
-        <div class="clock"><span id="date">—</span> · <span class="time" id="time">—</span></div>
-        <div class="ipo-chip">IPO · ₹650 cr offer · listing in 22 days</div>
+        <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false">
+          <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+            <circle cx="12" cy="12" r="4.2"/>
+            <path d="M12 2.5v2.2M12 19.3v2.2M4.4 4.4l1.6 1.6M18 18l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.4 19.6l1.6-1.6M18 6l1.6-1.6"/>
+          </svg>
+          <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 14.5A8 8 0 1 1 9.5 4a6.3 6.3 0 0 0 10.5 10.5z"/>
+          </svg>
+        </button>
+        <div class="topbar-meta">
+          <div class="clock"><span id="date">—</span> · <span class="time" id="time">—</span></div>
+          <div class="ipo-chip">IPO · ₹650 cr offer · listing in 22 days</div>
+        </div>
       </div>
     </header>
 
@@ -206,9 +327,10 @@
     <section class="greeting">
       <h1>Good morning, Sapna.</h1>
       <div class="sub">3 things need your attention today.</div>
+      <div class="brief"><span class="live-dot"></span>Your AI team read Dynamics, your live dashboards and 6 mailboxes overnight · last synced 06:00.</div>
     </section>
 
-    <!-- 3. KPI row -->
+    <!-- 3. KPI rows -->
     <section class="kpis">
       <div class="card">
         <div class="kpi-label">Revenue</div>
@@ -231,6 +353,29 @@
         <div class="kpi-delta"><span class="sep">·</span> room to scale</div>
       </div>
     </section>
+
+    <div class="kpis-2">
+      <div class="card kpi-sm">
+        <div class="kpi-label">Order book</div>
+        <div class="kpi-num">₹612<span class="unit">cr</span></div>
+        <div class="kpi-delta"><span class="sep">·</span> ~9-month cover</div>
+      </div>
+      <div class="card kpi-sm">
+        <div class="kpi-label">On-time delivery</div>
+        <div class="kpi-num">91.4<span class="unit">%</span></div>
+        <div class="kpi-delta"><span class="sep">·</span> target 95</div>
+      </div>
+      <div class="card kpi-sm">
+        <div class="kpi-label">First-time-right shade</div>
+        <div class="kpi-num">63<span class="unit">%</span></div>
+        <div class="kpi-delta"><span class="sep">·</span> target 85</div>
+      </div>
+      <div class="card kpi-sm">
+        <div class="kpi-label">Work-in-progress</div>
+        <div class="kpi-num">18.6<span class="unit">days</span></div>
+        <div class="kpi-delta"><span class="up" style="color:var(--amber)">▲</span><span class="sep">·</span> rising</div>
+      </div>
+    </div>
 
     <!-- 4. Needs your attention -->
     <section class="attention">
@@ -261,34 +406,169 @@
       </div>
     </section>
 
-    <!-- 5. Supporting visuals -->
-    <section class="visuals">
-
-      <!-- Bar chart -->
+    <!-- 5. What your AI team is watching -->
+    <section class="watchers">
+      <div class="section-label">What your AI team is watching</div>
       <div class="card">
-        <div class="visual-title">Revenue, ₹ cr</div>
-        <svg class="barchart" viewBox="0 0 300 180" role="img" aria-label="Revenue by year: FY23 302, FY24 468, FY25 779 crore">
-          <line x1="30" y1="150" x2="276" y2="150" stroke="rgba(245,241,232,.14)" stroke-width="1"/>
-          <rect x="38"  y="101.15" width="44" height="48.85"  rx="4" fill="#C9A227"/>
-          <rect x="128" y="74.30"  width="44" height="75.70"  rx="4" fill="#C9A227"/>
-          <rect x="218" y="24.00"  width="44" height="126.00" rx="4" fill="#C9A227"/>
-          <text x="60"  y="93.15" text-anchor="middle" class="bar-val">302</text>
-          <text x="150" y="66.30" text-anchor="middle" class="bar-val">468</text>
-          <text x="240" y="16.00" text-anchor="middle" class="bar-val">779</text>
-          <text x="60"  y="166" text-anchor="middle" class="bar-lab">FY23</text>
-          <text x="150" y="166" text-anchor="middle" class="bar-lab">FY24</text>
-          <text x="240" y="166" text-anchor="middle" class="bar-lab">FY25</text>
-        </svg>
+        <div class="watch-list">
+          <div class="watch">
+            <span class="dot red"></span>
+            <div>
+              <h4>Nylon 66 PO still unplaced.</h4>
+              <p>The order slips if it isn't raised within 4 days · supply chain.</p>
+            </div>
+            <span class="w-time">06:02</span>
+          </div>
+          <div class="watch">
+            <span class="dot amber"></span>
+            <div>
+              <h4>Tender KX-309 is now 71 days against a 60-day commitment.</h4>
+              <p>Two milestones behind · product development.</p>
+            </div>
+            <span class="w-time">05:48</span>
+          </div>
+          <div class="watch">
+            <span class="dot amber"></span>
+            <div>
+              <h4>Automotive-coating margin down 9% this quarter.</h4>
+              <p>Input prices up faster than your last price revision · pricing review.</p>
+            </div>
+            <span class="w-time">05:30</span>
+          </div>
+          <div class="watch">
+            <span class="dot gold"></span>
+            <div>
+              <h4>A listed competitor filed a new NBC-protection line.</h4>
+              <p>Green-field segment worth scanning before the next tender cycle.</p>
+            </div>
+            <span class="w-time">04:10</span>
+          </div>
+          <div class="watch">
+            <span class="dot emerald"></span>
+            <div>
+              <h4>Olive-green recipe converged in 3 trials.</h4>
+              <p>Below your 6-trial average · 50-year dye records paid off.</p>
+            </div>
+            <span class="w-time">02:15</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Across the floor -->
+    <section class="across">
+      <div class="section-label">Across the floor</div>
+      <div class="floor">
+
+        <div class="card">
+          <div class="f-top"><span class="f-label">Production planning</span><span class="dot amber"></span></div>
+          <div class="f-metric">78%<span class="f-sub">adherence</span></div>
+          <div class="f-insight">June plan not yet locked across 600 looms · WIP 18.6 days and rising.</div>
+        </div>
+
+        <div class="card">
+          <div class="f-top"><span class="f-label">Dyeing &amp; shade</span><span class="dot amber"></span></div>
+          <div class="f-metric">63%<span class="f-sub">first-time-right</span></div>
+          <div class="f-insight">DY-2208 olive drifting +1.8 ΔE · a floor fix now avoids a re-dye.</div>
+        </div>
+
+        <div class="card">
+          <div class="f-top"><span class="f-label">Supply chain</span><span class="dot red"></span></div>
+          <div class="f-metric">34<span class="f-sub">of 135 parts single-vendor</span></div>
+          <div class="f-insight">Nylon 66 unplaced · 2 alternates ready in Korea and China.</div>
+        </div>
+
+        <div class="card">
+          <div class="f-top"><span class="f-label">Fabric inspection</span><span class="dot amber"></span></div>
+          <div class="f-metric">2<span class="f-sub">rolls flagged today</span></div>
+          <div class="f-insight">Streak on roll R-4471 caught whole-roll — missed by the spot meter.</div>
+        </div>
+
+        <div class="card">
+          <div class="f-top"><span class="f-label">Lab → bulk</span><span class="dot emerald"></span></div>
+          <div class="f-metric">6.2<span class="f-sub">avg trials · target 2</span></div>
+          <div class="f-insight">3 products now converging faster on AI-predicted recipes.</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 7. Live across your plants -->
+    <section class="plants-section">
+      <div class="section-label">Live across your plants</div>
+      <div class="plants">
+        <div class="plant"><div class="p-name"><span class="dot emerald"></span>Silvassa</div><div class="p-util">51%</div><div class="p-cap">capacity</div></div>
+        <div class="plant"><div class="p-name"><span class="dot emerald"></span>Vapi</div><div class="p-util">44%</div><div class="p-cap">capacity</div></div>
+        <div class="plant"><div class="p-name"><span class="dot emerald"></span>Daman</div><div class="p-util">38%</div><div class="p-cap">capacity</div></div>
+        <div class="plant"><div class="p-name"><span class="dot amber"></span>Umbergaon</div><div class="p-util">49%</div><div class="p-cap">capacity</div></div>
+        <div class="plant"><div class="p-name"><span class="dot emerald"></span>Sarigam</div><div class="p-util">41%</div><div class="p-cap">capacity</div></div>
+        <div class="plant"><div class="p-name"><span class="dot emerald"></span>Bhilad</div><div class="p-util">33%</div><div class="p-cap">capacity</div></div>
+        <div class="plant"><div class="p-name"><span class="dot emerald"></span>Tarapur</div><div class="p-util">29%</div><div class="p-cap">capacity</div></div>
+        <div class="plant"><div class="p-name"><span class="dot emerald"></span>Vasai</div><div class="p-util">53%</div><div class="p-cap">capacity</div></div>
+      </div>
+      <div class="plants-foot">Offices · Mumbai (HQ) · Ahmedabad &nbsp;—&nbsp; 8 plants running, average load 42.3%.</div>
+    </section>
+
+    <!-- 8. Trends & mix -->
+    <section class="visuals">
+      <div class="section-label">Trends &amp; mix</div>
+
+      <div class="charts-2">
+        <!-- Revenue bar -->
+        <div class="card">
+          <div class="visual-title">Revenue, ₹ cr</div>
+          <div class="visual-note">FY23 → FY25</div>
+          <svg class="barchart" viewBox="0 0 300 180" role="img" aria-label="Revenue by year: FY23 302, FY24 468, FY25 779 crore">
+            <line x1="30" y1="150" x2="276" y2="150" stroke="var(--axis)" stroke-width="1"/>
+            <rect x="38"  y="101.15" width="44" height="48.85"  rx="4" fill="var(--g1)"/>
+            <rect x="128" y="74.30"  width="44" height="75.70"  rx="4" fill="var(--g1)"/>
+            <rect x="218" y="24.00"  width="44" height="126.00" rx="4" fill="var(--g1)"/>
+            <text x="60"  y="93.15" text-anchor="middle" class="bar-val">302</text>
+            <text x="150" y="66.30" text-anchor="middle" class="bar-val">468</text>
+            <text x="240" y="16.00" text-anchor="middle" class="bar-val">779</text>
+            <text x="60"  y="166" text-anchor="middle" class="bar-lab">FY23</text>
+            <text x="150" y="166" text-anchor="middle" class="bar-lab">FY24</text>
+            <text x="240" y="166" text-anchor="middle" class="bar-lab">FY25</text>
+          </svg>
+        </div>
+
+        <!-- First-time-right shade -->
+        <div class="card">
+          <div class="visual-title">First-time-right shade, %</div>
+          <div class="visual-note">last 6 months · → target 85</div>
+          <svg class="barchart" viewBox="0 0 300 180" role="img" aria-label="First-time-right shade by month: 48, 52, 55, 58, 61, 63 percent">
+            <line x1="20" y1="150" x2="288" y2="150" stroke="var(--axis)" stroke-width="1"/>
+            <rect x="32"  y="63.6" width="28" height="86.4"  rx="4" fill="var(--g1)"/>
+            <rect x="76"  y="56.4" width="28" height="93.6"  rx="4" fill="var(--g1)"/>
+            <rect x="120" y="51.0" width="28" height="99.0"  rx="4" fill="var(--g1)"/>
+            <rect x="164" y="45.6" width="28" height="104.4" rx="4" fill="var(--g1)"/>
+            <rect x="208" y="40.2" width="28" height="109.8" rx="4" fill="var(--g1)"/>
+            <rect x="252" y="36.6" width="28" height="113.4" rx="4" fill="var(--g1)"/>
+            <text x="46"  y="55.6" text-anchor="middle" class="bar-val">48</text>
+            <text x="90"  y="48.4" text-anchor="middle" class="bar-val">52</text>
+            <text x="134" y="43.0" text-anchor="middle" class="bar-val">55</text>
+            <text x="178" y="37.6" text-anchor="middle" class="bar-val">58</text>
+            <text x="222" y="32.2" text-anchor="middle" class="bar-val">61</text>
+            <text x="266" y="28.6" text-anchor="middle" class="bar-val">63</text>
+            <text x="46"  y="166" text-anchor="middle" class="bar-lab">Jan</text>
+            <text x="90"  y="166" text-anchor="middle" class="bar-lab">Feb</text>
+            <text x="134" y="166" text-anchor="middle" class="bar-lab">Mar</text>
+            <text x="178" y="166" text-anchor="middle" class="bar-lab">Apr</text>
+            <text x="222" y="166" text-anchor="middle" class="bar-lab">May</text>
+            <text x="266" y="166" text-anchor="middle" class="bar-lab">Jun</text>
+          </svg>
+        </div>
       </div>
 
       <!-- Donut -->
-      <div class="card">
+      <div class="card donut-card">
         <div class="visual-title">Where revenue comes from</div>
+        <div class="visual-note">FY25 segment mix · ₹ cr</div>
         <div class="donut-block">
           <div class="donut-wrap">
             <svg viewBox="0 0 200 200" role="img" aria-label="Revenue mix: Defence and Aerospace Fabrics 48.6%, Defence and Aerospace Solutions 29.1%, Automotive and Industrial 14.8%, Outdoor and Lifestyle 7.5%">
               <g transform="rotate(-90 100 100)" fill="none" stroke-width="26">
-                <circle cx="100" cy="100" r="80" stroke="rgba(245,241,232,.06)"/>
+                <circle cx="100" cy="100" r="80" stroke="var(--track)"/>
                 <circle cx="100" cy="100" r="80" stroke="var(--g1)" stroke-dasharray="244.071 258.584" stroke-dashoffset="0">
                   <title>Defence &amp; Aerospace Fabrics — ₹370 cr</title>
                 </circle>
@@ -316,11 +596,35 @@
           </div>
         </div>
       </div>
+    </section>
 
+    <!-- 9. IPO readiness -->
+    <section class="ipo">
+      <div class="section-label">IPO readiness · listing in 22 days</div>
+      <div class="card">
+        <div class="ipo-grid">
+          <div class="ipo-check">
+            <div class="ipo-sub">Where you stand</div>
+            <div class="ipo-row"><span class="dot emerald"></span><div><div class="ir-main">RHP filed</div><div class="ir-note">Submitted to the registrar today.</div></div></div>
+            <div class="ipo-row"><span class="dot gold"></span><div><div class="ir-main">10-day anchor window open</div><div class="ir-note">The critical stretch before listing.</div></div></div>
+            <div class="ipo-row"><span class="dot gold"></span><div><div class="ir-main">Roadshow underway</div><div class="ir-note">Listing in 22 days · ₹650 cr offer.</div></div></div>
+            <div class="ipo-row"><span class="dot amber"></span><div><div class="ir-main">Customer concentration 84.7%</div><div class="ir-note">Top 10 customers — prep your answer.</div></div></div>
+          </div>
+          <div class="ipo-q">
+            <div class="ipo-sub">Questions to pre-answer</div>
+            <ul>
+              <li>Top 10 = 84.7% of revenue — how durable are these defence relationships?</li>
+              <li>Defence orders are lumpy — how predictable is the ₹612 cr order book?</li>
+              <li>Capacity at 42.3% — what does the headroom mean for the growth story?</li>
+            </ul>
+            <button class="quiet-action" data-toast="Investor brief opened — talking points ready.">Open investor brief</button>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Footer -->
-    <footer class="foot">Kusumgar Limited · live view across 6 plants · powered by muns.ai</footer>
+    <footer class="foot">Kusumgar Limited · live across 8 plants &amp; 2 offices · powered by muns.ai</footer>
 
   </div>
 
@@ -343,6 +647,26 @@
       setInterval(tick, 1000);
     })();
 
+    // Theme toggle — persisted, updates browser chrome colour
+    (function(){
+      var btn = document.getElementById('themeToggle');
+      if(!btn) return;
+      var meta = document.querySelector('meta[name="theme-color"]');
+      var BG = { dark:'#0A1A2F', light:'#F3EEE2' };
+      function sync(t){
+        btn.setAttribute('aria-label', t === 'light' ? 'Switch to dark mode' : 'Switch to light mode');
+        btn.setAttribute('aria-pressed', t === 'light' ? 'true' : 'false');
+        if(meta) meta.setAttribute('content', BG[t] || BG.dark);
+      }
+      sync(document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
+      btn.addEventListener('click', function(){
+        var next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', next);
+        try{ localStorage.setItem('kc-theme', next); }catch(e){}
+        sync(next);
+      });
+    })();
+
     // Toast — single reusable, fades after ~2s
     (function(){
       var toast = document.getElementById('toast');
@@ -353,7 +677,7 @@
         clearTimeout(timer);
         timer = setTimeout(function(){ toast.classList.remove('show'); }, 2000);
       }
-      document.querySelectorAll('.attn-action').forEach(function(btn){
+      document.querySelectorAll('[data-toast]').forEach(function(btn){
         btn.addEventListener('click', function(){ showToast(btn.dataset.toast); });
       });
     })();
