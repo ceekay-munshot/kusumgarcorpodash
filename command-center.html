@@ -189,14 +189,6 @@
   .qa .q:before{ content:"Q"; color:var(--gold); font-family:var(--mono); }
   .qa .a{ font-size:13px; color:var(--muted); line-height:1.6; margin-top:9px; padding-left:25px; }
 
-  /* Timeline */
-  .timeline{ display:flex; flex-direction:column; }
-  .tl-item{ display:grid; grid-template-columns:84px 1fr; gap:16px; padding:14px 0; border-top:1px solid var(--hairline); }
-  .tl-item:first-child{ border-top:none; }
-  .tl-when{ font-family:var(--mono); font-size:12px; color:var(--gold); }
-  .tl-item h5{ font-size:14px; font-weight:600; }
-  .tl-item p{ font-size:12.5px; color:var(--muted); margin-top:3px; line-height:1.5; }
-
   /* Solution cards */
   .sol h4{ font-size:15px; font-weight:600; }
   .sol .sol-n{ font-family:var(--mono); font-size:12px; color:var(--gold); }
@@ -207,25 +199,53 @@
   .barchart{ width:100%; height:auto; display:block; }
   .bar-val{ font-family:var(--mono); font-size:13px; fill:var(--cream); }
   .bar-lab{ font-family:var(--font); font-size:11px; letter-spacing:.08em; fill:var(--muted); }
-  .donut-block{ display:grid; grid-template-columns:200px 1fr; align-items:center; gap:40px; }
-  .donut-wrap{ position:relative; width:200px; height:200px; }
-  .donut-wrap svg{ width:200px; height:200px; display:block; }
-  .donut-center{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; pointer-events:none; }
-  .donut-center .dc-lab{ font-size:10px; letter-spacing:.20em; text-transform:uppercase; color:var(--faint); }
-  .donut-center .dc-yr{ font-family:var(--serif); font-size:22px; color:var(--cream); }
-  .legend{ display:flex; flex-direction:column; gap:15px; }
-  .legend-row{ display:grid; grid-template-columns:11px 1fr auto; align-items:center; gap:12px; }
-  .legend-row .sw{ width:11px; height:11px; border-radius:3px; }
-  .legend-row .nm{ font-size:13px; color:var(--cream); }
-  .legend-row .pc{ font-family:var(--mono); font-size:13px; color:var(--muted); }
 
   /* Footer */
   .data-note{ margin-top:56px; text-align:center; font-size:11.5px; color:var(--faint); line-height:1.6; max-width:780px; margin-left:auto; margin-right:auto; }
   .foot{ margin-top:14px; text-align:center; font-size:12px; color:var(--faint); }
 
   /* Toast */
-  .toast{ position:fixed; left:50%; bottom:34px; transform:translateX(-50%) translateY(8px); background:var(--card-2); color:var(--cream); border:1px solid var(--hairline); border-radius:12px; padding:13px 22px; font-size:13.5px; box-shadow:0 18px 40px -18px rgba(0,0,0,.45); opacity:0; pointer-events:none; z-index:50; transition:opacity .3s ease, transform .3s ease; }
+  .toast{ position:fixed; left:50%; bottom:34px; transform:translateX(-50%) translateY(8px); background:var(--card-2); color:var(--cream); border:1px solid var(--hairline); border-radius:12px; padding:13px 22px; font-size:13.5px; box-shadow:0 18px 40px -18px rgba(0,0,0,.45); opacity:0; pointer-events:none; z-index:120; transition:opacity .3s ease, transform .3s ease; }
   .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  /* Modal */
+  .modal-overlay{ position:fixed; inset:0; background:rgba(5,12,24,.62); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; padding:24px; opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:100; }
+  .modal-overlay.show{ opacity:1; pointer-events:auto; }
+  .modal{ display:none; background:var(--card); border:1px solid var(--hairline); border-radius:var(--r-card); box-shadow:0 30px 80px -28px rgba(0,0,0,.8); width:100%; max-width:600px; max-height:86vh; overflow-y:auto; }
+  .modal.active{ display:block; }
+  .modal-overlay.show .modal.active{ animation:modalIn .26s cubic-bezier(.22,.61,.36,1) both; }
+  @keyframes modalIn{ from{ opacity:0; transform:translateY(12px) scale(.99); } to{ opacity:1; transform:none; } }
+  .modal-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:16px; padding:26px 28px 0; }
+  .modal-kicker{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); }
+  .modal-title{ font-family:var(--serif); font-size:21px; font-weight:600; margin-top:7px; line-height:1.2; }
+  .modal-close{ flex:none; width:32px; height:32px; border-radius:50%; border:1px solid var(--hairline); background:transparent; color:var(--muted); cursor:pointer; font-size:14px; line-height:1; transition:background .18s ease, color .18s ease; }
+  .modal-close:hover{ background:var(--gold-soft); color:var(--cream); }
+  .modal-body{ padding:20px 28px 6px; }
+  .modal-foot{ display:flex; gap:10px; padding:18px 28px 26px; flex-wrap:wrap; }
+  .btn-primary{ background:var(--gold); color:#0A1A2F; border:none; border-radius:var(--r-btn); padding:11px 20px; font-size:13.5px; font-weight:600; font-family:var(--font); cursor:pointer; }
+  [data-theme="light"] .btn-primary{ color:#FFFFFF; }
+  .btn-ghost{ background:transparent; color:var(--cream); border:1px solid var(--gold-line); border-radius:var(--r-btn); padding:11px 20px; font-size:13.5px; font-family:var(--font); cursor:pointer; }
+  .btn-ghost:hover{ background:var(--gold-soft); }
+  .modal-lead{ font-size:13.5px; color:var(--muted); line-height:1.6; margin-bottom:18px; }
+  .modal-h{ font-size:11px; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); margin:20px 0 10px; }
+  .modal-p{ font-size:13.5px; color:var(--muted); line-height:1.65; }
+  .modal-quote{ font-size:14px; color:var(--cream); line-height:1.55; padding:14px 16px; border-left:2px solid var(--gold-line); background:var(--gold-soft); border-radius:0 10px 10px 0; }
+  .modal-ul{ list-style:none; margin-top:4px; }
+  .modal-ul li{ font-size:13px; color:var(--muted); line-height:1.55; padding:8px 0 8px 18px; position:relative; }
+  .modal-ul li:before{ content:"—"; position:absolute; left:0; color:var(--gold); }
+  .email{ border:1px solid var(--hairline); border-radius:14px; overflow:hidden; }
+  .email-row{ display:grid; grid-template-columns:64px 1fr; gap:12px; padding:11px 16px; border-bottom:1px solid var(--hairline); font-size:13px; }
+  .email-row .lbl{ color:var(--faint); }
+  .email-body{ padding:18px 16px; font-size:13.5px; line-height:1.7; color:var(--muted); white-space:pre-line; }
+  .email-body .sig{ display:block; color:var(--cream); margin-top:14px; }
+  .po-card, .hibox{ border:1px solid var(--hairline); border-radius:14px; padding:16px; margin-top:16px; }
+  .po-top{ display:flex; justify-content:space-between; align-items:center; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+  .kv-row{ display:flex; justify-content:space-between; gap:16px; padding:9px 0; border-top:1px solid var(--hairline); font-size:13px; }
+  .kv-row:first-of-type{ border-top:none; }
+  .kv-row .k{ color:var(--muted); } .kv-row .v{ text-align:right; }
+  .delta-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .delta-grid .d-lab{ font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+  .delta-grid .d-val{ font-family:var(--mono); font-size:18px; margin-top:5px; }
 
   /* Motion */
   @keyframes rise{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:translateY(0); } }
@@ -237,7 +257,8 @@
   .tab-panel.active{ animation:fadeUp .28s ease both; }
   @media (prefers-reduced-motion:reduce){
     .cascade .attn{ animation:none; opacity:1; } .attn{ opacity:1; } .attn .dot.red{ animation:none; }
-    .tab-panel.active{ animation:none; } .toast,.theme-toggle,.attn-action,.quiet-action,.tab{ transition:none; }
+    .tab-panel.active{ animation:none; } .modal-overlay.show .modal.active{ animation:none; }
+    .toast,.theme-toggle,.attn-action,.quiet-action,.tab,.modal-overlay{ transition:none; }
   }
 
   /* Responsive */
@@ -245,7 +266,6 @@
     .kpis{ grid-template-columns:repeat(2,1fr); }
     .attn-grid{ grid-template-columns:1fr; } .attn{ min-height:0; }
     .grid-2,.grid-3{ grid-template-columns:1fr; }
-    .donut-block{ grid-template-columns:1fr; justify-items:start; gap:26px; }
     .alts{ grid-template-columns:1fr; }
   }
   @media (max-width:680px){ .page{ padding:22px 18px 40px; } section{ margin-top:var(--s6); } .card{ padding:22px; } }
@@ -254,7 +274,7 @@
     .topbar{ flex-direction:column; gap:18px; } .topbar-right{ align-self:stretch; justify-content:space-between; } .topbar-meta{ align-items:flex-start; }
     .watch{ grid-template-columns:auto 1fr; } .watch .w-time{ grid-column:2; padding-top:0; }
     .risk{ grid-template-columns:auto 1fr; } .risk .r-side{ grid-column:2; text-align:left; }
-    .tl-item{ grid-template-columns:1fr; gap:4px; }
+    .modal-head,.modal-body,.modal-foot{ padding-left:20px; padding-right:20px; }
   }
 </style>
 </head>
@@ -298,26 +318,10 @@
       </section>
 
       <section class="kpis">
-        <div class="card">
-          <div class="kpi-label">Re-dyes this month</div>
-          <div class="kpi-num">₹26<span class="unit">L</span></div>
-          <div class="kpi-delta"><span class="warn">first-time-right 63%</span></div>
-        </div>
-        <div class="card">
-          <div class="kpi-label">Cash stuck in WIP</div>
-          <div class="kpi-num">₹74<span class="unit">cr</span></div>
-          <div class="kpi-delta"><span class="down">▲ 18.6 days</span><span class="sep">·</span> rising</div>
-        </div>
-        <div class="card">
-          <div class="kpi-label">Order value at risk</div>
-          <div class="kpi-num">₹4.8<span class="unit">cr</span></div>
-          <div class="kpi-delta"><span class="down">Nylon 66 slip</span></div>
-        </div>
-        <div class="card">
-          <div class="kpi-label">Idle new capacity</div>
-          <div class="kpi-num">57.7<span class="unit">%</span></div>
-          <div class="kpi-delta"><span class="sep">·</span> Surat line · room to fill</div>
-        </div>
+        <div class="card"><div class="kpi-label">Re-dyes this month</div><div class="kpi-num">₹26<span class="unit">L</span></div><div class="kpi-delta"><span class="warn">first-time-right 63%</span></div></div>
+        <div class="card"><div class="kpi-label">Cash stuck in WIP</div><div class="kpi-num">₹74<span class="unit">cr</span></div><div class="kpi-delta"><span class="down">▲ 18.6 days</span><span class="sep">·</span> rising</div></div>
+        <div class="card"><div class="kpi-label">Order value at risk</div><div class="kpi-num">₹4.8<span class="unit">cr</span></div><div class="kpi-delta"><span class="down">Nylon 66 slip</span></div></div>
+        <div class="card"><div class="kpi-label">Idle new capacity</div><div class="kpi-num">57.7<span class="unit">%</span></div><div class="kpi-delta"><span class="sep">·</span> Surat line · room to fill</div></div>
       </section>
 
       <section class="attention">
@@ -328,21 +332,21 @@
             <h3>A parachute-fabric order will slip 21 days — unless a PO goes today.</h3>
             <p>PS-CFF-Mk2 · Nylon 66 1260D base yarn, single-vendor (Toray).</p>
             <div class="why">Lead time 11 wk vs 8 wk to deliver · <b>2 alternates already qualified</b> (Korea, China).</div>
-            <button class="attn-action" data-toast="RFQ sent to Hyosung &amp; Zhejiang · PO drafted for Toray.">Send RFQ &amp; draft PO</button>
+            <button class="attn-action" data-modal="rfq">Send RFQ &amp; draft PO</button>
           </div>
           <div class="card attn">
             <span class="dot amber"></span>
             <h3>A live dye batch is drifting — fix it before it becomes a re-dye.</h3>
             <p>Batch DY-2208, olive green · Jigger J-4 · 40 min in, ΔE 1.8.</p>
             <div class="why">Root cause found: <b>wrong dye lot + 2.4 min over-mix</b> · a floor fix saves ₹2.3 L.</div>
-            <button class="attn-action" data-toast="Correction sent to J-4 · hold 6 min @ 88°C.">Send fix to floor</button>
+            <button class="attn-action" data-modal="floor">Send fix to floor</button>
           </div>
           <div class="card attn">
             <span class="dot gold"></span>
             <h3>One investor answer worth locking before the roadshow.</h3>
             <p>Top 10 customers = 84.7% of revenue — the question you'll be asked.</p>
             <div class="why">Your prepared answer + <b>what not to volunteer</b> are drafted.</div>
-            <button class="attn-action" data-toast="Concentration brief opened — answer &amp; guardrails ready.">Open brief</button>
+            <button class="attn-action" data-modal="brief">Open brief</button>
           </div>
         </div>
       </section>
@@ -363,7 +367,6 @@
 
     <!-- ============ COLOUR & SHADE ============ -->
     <div class="tab-panel" role="tabpanel" data-panel="colour">
-
       <section>
         <div class="section-label">Live dye monitor</div>
         <div class="grid-2">
@@ -383,7 +386,6 @@
               <text x="290" y="90" text-anchor="end" class="trace-pt">now</text>
             </svg>
           </div>
-
           <div class="card">
             <div class="card-title">Root cause — traced through the lifecycle</div>
             <div style="margin-top:16px;">
@@ -393,7 +395,7 @@
             <div style="margin-top:18px;padding-top:18px;border-top:1px solid var(--hairline);">
               <div class="card-title" style="color:var(--gold)">Recommended fix</div>
               <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-top:9px;">Hold the dye 6 more min at 88 °C and add 0.4% levelling agent → predicted <b style="color:var(--cream);font-weight:600">ΔE 0.4</b>. Avoids a full re-dye: <span class="mono" style="color:var(--cream)">₹2.3 L</span>, 4,200 m, 16,000 L water, 9 hrs.</p>
-              <button class="quiet-action" style="margin-top:16px;" data-toast="Correction sent to J-4 · hold 6 min @ 88°C, +0.4% leveller.">Send fix to floor</button>
+              <button class="quiet-action" style="margin-top:16px;" data-modal="floor">Send fix to floor</button>
             </div>
           </div>
         </div>
@@ -483,7 +485,6 @@
 
     <!-- ============ SUPPLY CHAIN ============ -->
     <div class="tab-panel" role="tabpanel" data-panel="supply">
-
       <section>
         <div class="section-label">One parachute system · 135 components</div>
         <div class="grid-2">
@@ -508,7 +509,7 @@
               <div class="alt"><h6>Hyosung · Korea</h6><div class="a-meta">9 wk · sample approved · +2.1% price</div></div>
               <div class="alt"><h6>Zhejiang · China</h6><div class="a-meta">10 wk · trial lot cleared · −1.4% price</div></div>
             </div>
-            <button class="quiet-action" style="margin-top:16px;" data-toast="RFQ sent to Hyosung &amp; Zhejiang · Toray PO drafted.">Send RFQ &amp; draft PO</button>
+            <button class="quiet-action" style="margin-top:16px;" data-modal="rfq">Send RFQ &amp; draft PO</button>
           </div>
         </div>
       </section>
@@ -549,7 +550,6 @@
 
     <!-- ============ PLANNING & FLOOR ============ -->
     <div class="tab-panel" role="tabpanel" data-panel="planning">
-
       <section>
         <div class="section-label">Production plan · 600 looms + 15 process lines</div>
         <div class="grid-2">
@@ -571,7 +571,7 @@
               <div><div class="stat-lab">Planner hours freed</div><div class="stat-num" style="font-size:24px;">~140 / mo</div></div>
               <div><div class="stat-lab">Cash released</div><div class="stat-num" style="font-size:24px;">₹24 cr</div></div>
             </div>
-            <button class="quiet-action" style="margin-top:18px;" data-toast="June plan locked &amp; pushed to the floor tablets.">Lock June plan</button>
+            <button class="quiet-action" style="margin-top:18px;" data-modal="plan">Lock June plan</button>
           </div>
         </div>
       </section>
@@ -611,7 +611,6 @@
 
     <!-- ============ INVESTORS & INTEL ============ -->
     <div class="tab-panel" role="tabpanel" data-panel="intel">
-
       <section>
         <div class="section-label">Roadshow prep · the questions you'll be asked</div>
         <div class="grid-2">
@@ -630,7 +629,7 @@
               <div class="risk"><span class="dot amber"></span><div><h5>Working-capital / WIP days</h5><p>Lead with the plan to bring it down, not today's number.</p></div></div>
               <div class="risk"><span class="dot amber"></span><div><h5>Automotive-coating margin dip</h5><p>Frame as a re-pricing already in motion.</p></div></div>
             </div>
-            <button class="quiet-action" style="margin-top:16px;" data-toast="Roadshow brief opened — answers &amp; guardrails ready.">Open full brief</button>
+            <button class="quiet-action" style="margin-top:16px;" data-modal="brief">Open full brief</button>
           </div>
         </div>
       </section>
@@ -638,22 +637,9 @@
       <section>
         <div class="section-label">Market intelligence · the moves you can't see from the floor</div>
         <div class="grid-3">
-          <div class="card sol">
-            <span class="sol-n">Green-field</span>
-            <h4>Competitor filed a new NBC line</h4>
-            <p>A listed peer's DRHP (p.142) reveals a fresh N.B.C.-protection division — a space you already hold AS9100D approval for. First-mover window before they ramp.</p>
-          </div>
-          <div class="card sol">
-            <span class="sol-n">New market</span>
-            <h4>Airship &amp; aerostat fabric</h4>
-            <p>Three credible global makers identified; founders &amp; programme leads matched on LinkedIn. A tailored outreach note — in your voice — is drafted and ready to send.</p>
-            <button class="quiet-action" style="margin-top:14px;" data-toast="Outreach draft opened — ready in your voice.">Open draft</button>
-          </div>
-          <div class="card sol">
-            <span class="sol-n">Tailwind</span>
-            <h4>The market is doubling</h4>
-            <p>India's aerospace &amp; defence engineered-fabrics market is projected to grow ₹50.0 bn → ₹124.4 bn by FY30 (~20% CAGR) — and you're 77% exposed to it.</p>
-          </div>
+          <div class="card sol"><span class="sol-n">Green-field</span><h4>Competitor filed a new NBC line</h4><p>A listed peer's DRHP (p.142) reveals a fresh N.B.C.-protection division — a space you already hold AS9100D approval for. First-mover window before they ramp.</p></div>
+          <div class="card sol"><span class="sol-n">New market</span><h4>Airship &amp; aerostat fabric</h4><p>Three credible global makers identified; founders &amp; programme leads matched on LinkedIn. A tailored outreach note — in your voice — is drafted and ready to send.</p><button class="quiet-action" style="margin-top:14px;" data-modal="draft">Open draft</button></div>
+          <div class="card sol"><span class="sol-n">Tailwind</span><h4>The market is doubling</h4><p>India's aerospace &amp; defence engineered-fabrics market is projected to grow ₹50.0 bn → ₹124.4 bn by FY30 (~20% CAGR) — and you're 77% exposed to it.</p></div>
         </div>
       </section>
     </div>
@@ -661,6 +647,114 @@
     <!-- Footer -->
     <div class="data-note">This is a live view of what your AI team surfaces from Dynamics, your dashboards and floor feeds — root causes, predictions and actions. Operational figures shown (shades, lots, lead times, savings) are illustrative of the working system; IPO &amp; market context draws on Kusumgar's public filings.</div>
     <footer class="foot">Kusumgar Limited · live across Vapi · Sarigam · Surat · UP · powered by muns.ai</footer>
+
+  </div>
+
+  <!-- Modals -->
+  <div class="modal-overlay" id="overlay" aria-hidden="true">
+
+    <div class="modal" data-modal-id="rfq" role="dialog" aria-modal="true" aria-label="RFQ and PO draft">
+      <div class="modal-head"><div><div class="modal-kicker">Procurement · drafted for approval</div><div class="modal-title">RFQ &amp; PO — Nylon 66 1260D base yarn</div></div><button class="modal-close" data-close aria-label="Close">✕</button></div>
+      <div class="modal-body">
+        <p class="modal-lead">Two qualified alternates, plus a fallback PO for the part on PS-CFF-Mk2's critical path — ready to send.</p>
+        <div class="email">
+          <div class="email-row"><span class="lbl">To</span><span>sourcing@hyosung.com · cc: export@zhejiang-tex.cn</span></div>
+          <div class="email-row"><span class="lbl">Subject</span><span>RFQ — Nylon 66 1260D base yarn (AS9100D) · PS-CFF-Mk2</span></div>
+          <div class="email-body">Dear partners,
+
+We are sourcing Nylon 66 1260D base yarn to AS9100D specification for an aerospace &amp; defence programme, required on site by 22 Aug 2026.
+
+Please confirm your earliest lead time, price per kg and MOQ. Sample lots from both mills are already approved at our end.
+
+Kusumgar Limited · Sourcing</div>
+        </div>
+        <div class="po-card">
+          <div class="po-top"><span>Fallback PO · draft</span><span class="chip gold">awaiting approval</span></div>
+          <div class="kv-row"><span class="k">Vendor</span><span class="v">Toray (current single-source)</span></div>
+          <div class="kv-row"><span class="k">Item</span><span class="v">Nylon 66 1260D base yarn</span></div>
+          <div class="kv-row"><span class="k">Quantity</span><span class="v">Full PS-CFF-Mk2 requirement</span></div>
+          <div class="kv-row"><span class="k">Order value</span><span class="v mono">₹4.8 cr</span></div>
+          <div class="kv-row"><span class="k">Deliver by</span><span class="v mono">22 Aug 2026</span></div>
+        </div>
+      </div>
+      <div class="modal-foot"><button class="btn-primary" data-toast="RFQ sent to both mills · Toray PO queued for approval.">Approve &amp; send</button><button class="btn-ghost" data-close>Edit</button></div>
+    </div>
+
+    <div class="modal" data-modal-id="floor" role="dialog" aria-modal="true" aria-label="Floor instruction">
+      <div class="modal-head"><div><div class="modal-kicker">Shop-floor instruction</div><div class="modal-title">Correction for Jigger J-4</div></div><button class="modal-close" data-close aria-label="Close">✕</button></div>
+      <div class="modal-body">
+        <p class="modal-lead">Batch DY-2208 is drifting. This correction goes straight to the J-4 floor tablet and the shift supervisor.</p>
+        <div class="hibox">
+          <div class="kv-row"><span class="k">Batch</span><span class="v">DY-2208 · olive green</span></div>
+          <div class="kv-row"><span class="k">Machine</span><span class="v">Jigger J-4</span></div>
+          <div class="kv-row"><span class="k">Now</span><span class="v mono">ΔE 1.8 · target ≤ 0.8</span></div>
+        </div>
+        <div class="modal-h">Action</div>
+        <div class="modal-quote">Hold the dye 6 more minutes at 88 °C and add 0.4% levelling agent.</div>
+        <div class="modal-h">Predicted result</div>
+        <p class="modal-p">ΔE 0.4 — back within tolerance. Avoids a full re-dye: <b style="color:var(--cream);font-weight:600">₹2.3 L</b>, 4,200 m fabric, 16,000 L water, 9 hours.</p>
+      </div>
+      <div class="modal-foot"><button class="btn-primary" data-toast="Sent to J-4 · shift supervisor notified.">Push to floor tablet</button><button class="btn-ghost" data-close>Cancel</button></div>
+    </div>
+
+    <div class="modal" data-modal-id="brief" role="dialog" aria-modal="true" aria-label="Investor brief">
+      <div class="modal-head"><div><div class="modal-kicker">Roadshow brief</div><div class="modal-title">Customer concentration — your answer</div></div><button class="modal-close" data-close aria-label="Close">✕</button></div>
+      <div class="modal-body">
+        <div class="modal-quote">"Your top 10 customers are 84.7% of revenue. How durable is that?"</div>
+        <div class="modal-h">Your prepared answer</div>
+        <p class="modal-p">The concentration reflects the scale of multi-year defence programmes built on transferred technology — combat free-fall parachutes, extreme cold-weather systems — not fragile relationships. Qualification and approval barriers make these positions hard to displace, and Aerospace &amp; Defence Solutions is actively broadening the base.</p>
+        <div class="modal-h">Lead with</div>
+        <ul class="modal-ul">
+          <li>Multi-year programmes on DRDO-transferred technology — high switching cost.</li>
+          <li>AS9100D / programme qualification is a years-long barrier for any replacement.</li>
+          <li>Solutions revenue went ₹0.86 cr → ₹221.9 cr in a year — the base is widening.</li>
+        </ul>
+        <div class="modal-h" style="color:var(--amber)">Don't volunteer</div>
+        <ul class="modal-ul">
+          <li>The single-customer share inside the top 10 — speak to the programme, not the name.</li>
+          <li>Today's WIP days — lead with the plan to bring them down.</li>
+        </ul>
+      </div>
+      <div class="modal-foot"><button class="btn-primary" data-toast="Added to the roadshow deck.">Add to roadshow deck</button><button class="btn-ghost" data-close>Close</button></div>
+    </div>
+
+    <div class="modal" data-modal-id="draft" role="dialog" aria-modal="true" aria-label="Outreach draft">
+      <div class="modal-head"><div><div class="modal-kicker">Outreach · in your voice</div><div class="modal-title">Airship &amp; aerostat fabric — introduction</div></div><button class="modal-close" data-close aria-label="Close">✕</button></div>
+      <div class="modal-body">
+        <p class="modal-lead">Drafted from your last 20 emails, so it reads the way you write.</p>
+        <div class="email">
+          <div class="email-row"><span class="lbl">To</span><span>Founder &amp; CEO · a leading airship programme</span></div>
+          <div class="email-row"><span class="lbl">Subject</span><span>Engineered fabrics for your envelope &amp; ballonet — Kusumgar</span></div>
+          <div class="email-body">Dear [Name],
+
+I lead Kusumgar, an Indian engineered-fabrics company — we make the base fabric for India's combat free-fall parachutes and are the country's only producer of NBC-protection cloth and zero-porosity parachute fabric.
+
+I've been following your work, and I think our coated, zero-porosity laminates could be a strong fit for your envelope and ballonet — lighter weight, with the gas-retention and weatherability your missions demand.
+
+Might we find 30 minutes to explore it? I'd be glad to share samples.
+
+Warm regards,<span class="sig">Sapna Kusumgar
+Joint Managing Director, Kusumgar Limited</span></div>
+        </div>
+      </div>
+      <div class="modal-foot"><button class="btn-primary" data-toast="Outreach sent · a follow-up reminder is set for day 4.">Send</button><button class="btn-ghost" data-close>Edit tone</button></div>
+    </div>
+
+    <div class="modal" data-modal-id="plan" role="dialog" aria-modal="true" aria-label="Lock the June plan">
+      <div class="modal-head"><div><div class="modal-kicker">Production planning</div><div class="modal-title">Lock the June plan?</div></div><button class="modal-close" data-close aria-label="Close">✕</button></div>
+      <div class="modal-body">
+        <p class="modal-lead">Locking pushes the AI-sequenced plan to all 600 looms and the floor tablets — replacing the week-by-week Excel scramble. Your 12 planners move from firefighting to exceptions only.</p>
+        <div class="hibox">
+          <div class="delta-grid">
+            <div><div class="d-lab">WIP</div><div class="d-val">18.6 → 12.4 d</div></div>
+            <div><div class="d-lab">On-time</div><div class="d-val">91 → 96%</div></div>
+            <div><div class="d-lab">Planner hours freed</div><div class="d-val">~140 / mo</div></div>
+            <div><div class="d-lab">Cash released</div><div class="d-val">₹24 cr</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-foot"><button class="btn-primary" data-toast="June plan locked · pushed to the floor tablets.">Confirm &amp; lock</button><button class="btn-ghost" data-close>Not yet</button></div>
+    </div>
 
   </div>
 
@@ -703,8 +797,23 @@
 
     (function(){
       var toast=document.getElementById('toast'), timer;
-      function showToast(m){ toast.textContent=m; toast.classList.add('show'); clearTimeout(timer); timer=setTimeout(function(){ toast.classList.remove('show'); },2000); }
-      document.querySelectorAll('[data-toast]').forEach(function(b){ b.addEventListener('click', function(){ showToast(b.dataset.toast); }); });
+      function showToast(m){ toast.textContent=m; toast.classList.add('show'); clearTimeout(timer); timer=setTimeout(function(){ toast.classList.remove('show'); },2200); }
+
+      var overlay=document.getElementById('overlay');
+      var modals=overlay ? overlay.querySelectorAll('.modal') : [];
+      function openModal(id){ modals.forEach(function(m){ m.classList.toggle('active', m.dataset.modalId===id); }); overlay.classList.add('show'); document.body.style.overflow='hidden'; }
+      function closeModal(){ if(!overlay) return; overlay.classList.remove('show'); document.body.style.overflow=''; }
+
+      document.querySelectorAll('[data-modal]').forEach(function(b){ b.addEventListener('click', function(){ openModal(b.dataset.modal); }); });
+      if(overlay){
+        overlay.addEventListener('click', function(e){ if(e.target===overlay) closeModal(); });
+        overlay.querySelectorAll('[data-close]').forEach(function(c){ c.addEventListener('click', closeModal); });
+        document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModal(); });
+      }
+
+      document.querySelectorAll('[data-toast]').forEach(function(b){
+        b.addEventListener('click', function(){ showToast(b.dataset.toast); if(b.closest('.modal')) closeModal(); });
+      });
     })();
 
     document.addEventListener('DOMContentLoaded', function(){ document.getElementById('attnGrid').classList.add('cascade'); });
