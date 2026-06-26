@@ -7,7 +7,6 @@
 <title>Kusumgar · Command Center</title>
 
 <script>
-  /* Set theme before first paint to avoid a flash. */
   (function(){
     try{
       var t = localStorage.getItem('kc-theme');
@@ -40,7 +39,6 @@
     --font:'Inter', system-ui, -apple-system, sans-serif;
     --mono:'JetBrains Mono', ui-monospace, monospace;
   }
-
   [data-theme="light"]{
     --bg:#F3EEE2; --card:#FFFFFF; --card-2:#FAF6EC;
     --cream:#13243A; --muted:rgba(19,36,58,.62); --faint:rgba(19,36,58,.42);
@@ -54,269 +52,208 @@
   }
 
   *{ box-sizing:border-box; margin:0; padding:0; }
-
   body{
     background:var(--bg); color:var(--cream); font-family:var(--font);
     font-size:16px; line-height:1.5; min-height:100vh;
     -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
     background-image:var(--glow); background-attachment:fixed;
   }
-
   .page{ max-width:1280px; margin:0 auto; padding:30px 32px 56px; }
-
-  .card{
-    background:var(--card); border:1px solid var(--hairline);
-    border-radius:var(--r-card); box-shadow:var(--shadow); padding:28px;
-  }
-  .section-label{
-    font-family:var(--serif); font-weight:500; font-size:13px;
-    letter-spacing:.20em; text-transform:uppercase; color:var(--muted); margin-bottom:20px;
-  }
+  .card{ background:var(--card); border:1px solid var(--hairline); border-radius:var(--r-card); box-shadow:var(--shadow); padding:28px; }
+  .section-label{ font-family:var(--serif); font-weight:500; font-size:13px; letter-spacing:.20em; text-transform:uppercase; color:var(--muted); margin-bottom:20px; }
   .mono{ font-family:var(--mono); font-variant-numeric:tabular-nums; }
+  .card-title{ font-size:11px; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); }
+  .card-note{ font-size:11.5px; color:var(--faint); margin-top:4px; }
 
-  /* ── Header ───────────────────────────────────────── */
+  /* Header */
   .topbar{ display:flex; justify-content:space-between; align-items:flex-start; gap:24px; }
   .brand{ display:flex; flex-direction:column; }
   .brand-line{ display:flex; align-items:baseline; gap:12px; }
-  .wordmark{ font-family:var(--serif); font-weight:600; font-size:23px; letter-spacing:.005em; }
+  .wordmark{ font-family:var(--serif); font-weight:600; font-size:23px; }
   .cc{ font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:var(--muted); }
   .pb{ font-size:10.5px; letter-spacing:.04em; color:var(--faint); margin-top:5px; }
   .topbar-right{ display:flex; align-items:center; gap:14px; }
   .topbar-meta{ display:flex; flex-direction:column; align-items:flex-end; gap:11px; }
   .clock{ font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:13px; color:var(--muted); }
   .clock .time{ color:var(--cream); }
-  .ipo-chip{
-    font-size:12px; color:var(--gold); background:var(--gold-soft);
-    border:1px solid var(--gold-line); padding:7px 15px; border-radius:var(--r-pill); white-space:nowrap;
-  }
-  .theme-toggle{
-    width:38px; height:38px; flex:none; padding:0;
-    display:inline-flex; align-items:center; justify-content:center;
-    background:transparent; border:1px solid var(--hairline); border-radius:50%;
-    color:var(--gold); cursor:pointer; transition:background .18s ease, border-color .18s ease;
-  }
+  .ipo-chip{ font-size:12px; color:var(--gold); background:var(--gold-soft); border:1px solid var(--gold-line); padding:7px 15px; border-radius:var(--r-pill); white-space:nowrap; }
+  .theme-toggle{ width:38px; height:38px; flex:none; padding:0; display:inline-flex; align-items:center; justify-content:center; background:transparent; border:1px solid var(--hairline); border-radius:50%; color:var(--gold); cursor:pointer; transition:background .18s ease, border-color .18s ease; }
   .theme-toggle:hover{ background:var(--gold-soft); border-color:var(--gold-line); }
   .theme-toggle svg{ width:18px; height:18px; display:block; }
   .theme-toggle .i-moon{ display:none; }
   [data-theme="light"] .theme-toggle .i-sun{ display:none; }
   [data-theme="light"] .theme-toggle .i-moon{ display:block; }
 
-  /* ── Tab bar ──────────────────────────────────────── */
+  /* Tabs */
   .tabs{ display:flex; gap:4px; margin-top:30px; border-bottom:1px solid var(--hairline); overflow-x:auto; }
-  .tab{
-    background:transparent; border:none; color:var(--muted); font-family:var(--font);
-    font-size:13.5px; letter-spacing:.03em; padding:14px 18px; cursor:pointer; white-space:nowrap;
-    border-bottom:2px solid transparent; margin-bottom:-1px; transition:color .18s ease, border-color .18s ease;
-  }
+  .tab{ background:transparent; border:none; color:var(--muted); font-family:var(--font); font-size:13.5px; letter-spacing:.03em; padding:14px 18px; cursor:pointer; white-space:nowrap; border-bottom:2px solid transparent; margin-bottom:-1px; transition:color .18s ease, border-color .18s ease; }
   .tab:hover{ color:var(--cream); }
   .tab.active{ color:var(--cream); border-bottom-color:var(--gold); }
-
   .tab-panel{ display:none; }
   .tab-panel.active{ display:block; }
-
   section{ margin-top:var(--s7); }
   .tab-panel > section:first-child{ margin-top:42px; }
 
-  /* ── Greeting ─────────────────────────────────────── */
+  /* Greeting */
   .greeting h1{ font-family:var(--serif); font-weight:600; font-size:clamp(30px,4.4vw,46px); line-height:1.12; }
   .greeting .sub{ font-family:var(--serif); font-weight:400; color:var(--muted); font-size:clamp(18px,2.4vw,24px); margin-top:9px; }
   .brief{ margin-top:16px; font-size:13px; color:var(--faint); }
   .brief .live-dot{ display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--emerald); margin-right:9px; vertical-align:middle; }
 
-  /* ── KPI / stat tiles ─────────────────────────────── */
+  /* KPI tiles */
   .kpis{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-top:36px; }
-  .kpis-2{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-top:18px; }
   .kpi-label{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
-  .kpi-num{ font-family:var(--mono); font-variant-numeric:tabular-nums; font-weight:500; font-size:38px; line-height:1.05; margin:12px 0 9px; }
-  .kpi-num .unit{ font-size:18px; color:var(--muted); margin-left:5px; }
+  .kpi-num{ font-family:var(--mono); font-variant-numeric:tabular-nums; font-weight:500; font-size:34px; line-height:1.05; margin:12px 0 9px; }
+  .kpi-num .unit{ font-size:16px; color:var(--muted); margin-left:5px; }
   .kpi-delta{ font-size:12.5px; color:var(--muted); display:flex; align-items:center; gap:7px; }
-  .kpi-delta .up{ color:var(--emerald); font-variant-numeric:tabular-nums; }
+  .kpi-delta .down{ color:var(--red); } .kpi-delta .up{ color:var(--emerald); } .kpi-delta .warn{ color:var(--amber); }
   .kpi-delta .sep{ color:var(--faint); }
-  .card.kpi-sm{ padding:20px 22px; }
-  .kpi-sm .kpi-num{ font-size:25px; margin:9px 0 6px; }
-  .kpi-sm .kpi-num .unit{ font-size:13px; }
 
-  /* ── Attention cards ──────────────────────────────── */
+  /* Attention cards */
   .attn-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
-  .attn{ display:flex; flex-direction:column; gap:14px; min-height:208px; opacity:0; }
-  .attn .dot, .watch .dot, .f-top .dot, .ipo-row .dot{ border-radius:50%; flex:none; }
+  .attn{ display:flex; flex-direction:column; gap:13px; min-height:214px; opacity:0; }
+  .dot{ border-radius:50%; flex:none; }
   .attn .dot{ width:9px; height:9px; }
-  .attn .dot.red{ background:var(--red); }
-  .attn .dot.amber{ background:var(--amber); }
-  .attn .dot.gold{ background:var(--gold); }
-  .attn h3{ font-size:17px; line-height:1.42; font-weight:600; letter-spacing:-.005em; }
-  .attn p{ font-size:13.5px; color:var(--muted); line-height:1.55; }
-  .attn-action, .quiet-action{
-    align-self:flex-start; background:transparent; color:var(--cream);
-    border:1px solid var(--gold-line); border-radius:var(--r-btn);
-    padding:9px 17px; font-size:13px; font-family:var(--font); cursor:pointer;
-    transition:background .18s ease, border-color .18s ease;
-  }
+  .dot.red{ background:var(--red); } .dot.amber{ background:var(--amber); } .dot.gold{ background:var(--gold); } .dot.emerald{ background:var(--emerald); }
+  .attn h3{ font-size:17px; line-height:1.42; font-weight:600; }
+  .attn p{ font-size:13px; color:var(--muted); line-height:1.55; }
+  .attn .why{ font-size:12px; color:var(--faint); }
+  .attn .why b{ color:var(--gold); font-weight:500; }
+  .attn-action, .quiet-action{ align-self:flex-start; background:transparent; color:var(--cream); border:1px solid var(--gold-line); border-radius:var(--r-btn); padding:9px 17px; font-size:13px; font-family:var(--font); cursor:pointer; transition:background .18s ease, border-color .18s ease; }
   .attn-action{ margin-top:auto; }
   .attn-action:hover, .quiet-action:hover{ background:var(--gold-soft); border-color:var(--gold); }
 
-  /* ── Watcher feed ─────────────────────────────────── */
+  /* Watch feed */
   .watch-list{ display:flex; flex-direction:column; }
   .watch{ display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:start; padding:17px 0; border-top:1px solid var(--hairline); }
   .watch:first-child{ border-top:none; padding-top:2px; }
   .watch .dot{ width:9px; height:9px; margin-top:5px; }
-  .watch .dot.red{ background:var(--red); } .watch .dot.amber{ background:var(--amber); }
-  .watch .dot.gold{ background:var(--gold); } .watch .dot.emerald{ background:var(--emerald); }
   .watch h4{ font-size:14.5px; font-weight:600; line-height:1.4; }
   .watch p{ font-size:12.5px; color:var(--muted); margin-top:3px; line-height:1.5; }
   .watch .w-time{ font-family:var(--mono); font-size:11.5px; color:var(--faint); white-space:nowrap; padding-top:2px; }
 
-  /* ── Generic grids ────────────────────────────────── */
-  .grid-auto{ display:grid; grid-template-columns:repeat(auto-fit, minmax(232px,1fr)); gap:18px; }
+  /* Grids */
   .grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .grid-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+  .grid-auto{ display:grid; grid-template-columns:repeat(auto-fit, minmax(232px,1fr)); gap:18px; }
 
-  /* ── Floor pillars ────────────────────────────────── */
-  .floor .card{ display:flex; flex-direction:column; gap:11px; }
-  .f-top{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
-  .f-label{ font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
-  .f-top .dot{ width:8px; height:8px; }
-  .f-top .dot.emerald{ background:var(--emerald); } .f-top .dot.amber{ background:var(--amber); } .f-top .dot.red{ background:var(--red); }
-  .f-metric{ font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:23px; line-height:1.1; }
-  .f-metric .f-sub{ font-family:var(--font); font-size:12px; color:var(--faint); margin-left:4px; }
-  .f-insight{ font-size:12.5px; color:var(--muted); line-height:1.5; }
-
-  /* ── Stat blocks ──────────────────────────────────── */
+  /* Stat block */
   .stat .stat-lab{ font-size:11px; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); }
-  .stat .stat-num{ font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:30px; margin:11px 0 7px; }
+  .stat .stat-num{ font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:28px; margin:11px 0 7px; }
   .stat .stat-sub{ font-size:12.5px; color:var(--muted); line-height:1.5; }
 
-  /* ── Chips / tags ─────────────────────────────────── */
+  /* Chips */
   .chip-row{ display:flex; flex-wrap:wrap; gap:9px; margin-top:12px; }
   .chip{ font-size:11.5px; color:var(--muted); border:1px solid var(--hairline); border-radius:var(--r-pill); padding:5px 12px; }
   .chip.gold{ color:var(--gold); border-color:var(--gold-line); background:var(--gold-soft); }
 
-  /* ── Facility / segment cards ─────────────────────── */
-  .facility h4, .seg h4{ font-size:15.5px; font-weight:600; }
-  .facility .loc{ font-size:12px; color:var(--faint); margin-top:3px; }
-  .seg .seg-top{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; }
-  .seg .seg-val{ font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:20px; }
-  .seg .seg-pc{ font-size:12px; color:var(--gold); }
-  .seg p{ font-size:12.5px; color:var(--muted); line-height:1.55; margin-top:10px; }
-  .seg .sw{ display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:9px; vertical-align:middle; }
+  /* Live scope */
+  .scope-big{ font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:48px; line-height:1; }
+  .scope-big .u{ font-size:17px; color:var(--muted); margin-left:6px; }
+  .trace{ width:100%; height:auto; display:block; margin-top:16px; }
+  .trace-pt{ font-family:var(--font); font-size:10px; fill:var(--faint); letter-spacing:.04em; }
 
-  /* ── Finance table ────────────────────────────────── */
-  .fin-table{ width:100%; border-collapse:collapse; }
-  .fin-table th, .fin-table td{ padding:15px 10px; text-align:right; border-bottom:1px solid var(--hairline); font-size:14px; }
-  .fin-table thead th{ font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); font-weight:500; }
-  .fin-table th:first-child, .fin-table td:first-child{ text-align:left; color:var(--muted); }
-  .fin-table td.num{ font-family:var(--mono); font-variant-numeric:tabular-nums; color:var(--cream); }
-  .fin-table td.hi{ color:var(--gold); }
-  .fin-table tbody tr:last-child td{ border-bottom:none; }
-  .table-note{ font-size:11.5px; color:var(--faint); margin-top:14px; line-height:1.5; }
+  /* Labeled bars */
+  .lbar{ display:flex; flex-direction:column; gap:7px; padding:9px 0; }
+  .lbar-top{ display:flex; justify-content:space-between; gap:12px; font-size:13px; }
+  .lbar-top .v{ font-family:var(--mono); color:var(--muted); }
+  .lbar-track{ height:8px; background:var(--track); border-radius:4px; overflow:hidden; }
+  .lbar-fill{ height:100%; background:var(--gold); border-radius:4px; }
 
-  /* ── Charts ───────────────────────────────────────── */
-  .visual-title{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+  /* Risk rows */
+  .risk{ display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:start; padding:15px 0; border-top:1px solid var(--hairline); }
+  .risk:first-child{ border-top:none; }
+  .risk .dot{ width:8px; height:8px; margin-top:6px; }
+  .risk h5{ font-size:14px; font-weight:600; }
+  .risk p{ font-size:12px; color:var(--muted); margin-top:3px; line-height:1.5; }
+  .risk .r-side{ font-family:var(--mono); font-size:12.5px; color:var(--muted); text-align:right; white-space:nowrap; }
+
+  /* Alternates */
+  .alts{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:16px; }
+  .alt{ border:1px solid var(--hairline); border-radius:12px; padding:14px; }
+  .alt h6{ font-size:13px; font-weight:600; }
+  .alt .a-meta{ font-size:11.5px; color:var(--muted); margin-top:5px; }
+
+  /* Margin lines */
+  .mline{ display:grid; grid-template-columns:1fr auto; gap:14px; align-items:baseline; padding:14px 0; border-top:1px solid var(--hairline); }
+  .mline:first-child{ border-top:none; }
+  .mline .m-name{ font-size:14px; }
+  .mline .m-why{ font-size:11.5px; color:var(--faint); margin-top:4px; }
+  .mline .m-val{ font-family:var(--mono); font-size:16px; white-space:nowrap; }
+  .mline .m-val.down{ color:var(--red); } .mline .m-val.up{ color:var(--emerald); } .mline .m-val.flat{ color:var(--muted); }
+
+  /* Q&A */
+  .qa{ padding:17px 0; border-top:1px solid var(--hairline); }
+  .qa:first-of-type{ border-top:none; }
+  .qa .q{ font-size:14.5px; font-weight:600; display:flex; gap:11px; }
+  .qa .q:before{ content:"Q"; color:var(--gold); font-family:var(--mono); }
+  .qa .a{ font-size:13px; color:var(--muted); line-height:1.6; margin-top:9px; padding-left:25px; }
+
+  /* Timeline */
+  .timeline{ display:flex; flex-direction:column; }
+  .tl-item{ display:grid; grid-template-columns:84px 1fr; gap:16px; padding:14px 0; border-top:1px solid var(--hairline); }
+  .tl-item:first-child{ border-top:none; }
+  .tl-when{ font-family:var(--mono); font-size:12px; color:var(--gold); }
+  .tl-item h5{ font-size:14px; font-weight:600; }
+  .tl-item p{ font-size:12.5px; color:var(--muted); margin-top:3px; line-height:1.5; }
+
+  /* Solution cards */
+  .sol h4{ font-size:15px; font-weight:600; }
+  .sol .sol-n{ font-family:var(--mono); font-size:12px; color:var(--gold); }
+  .sol p{ font-size:12.5px; color:var(--muted); line-height:1.55; margin-top:10px; }
+
+  /* Charts */
   .visual-note{ font-size:11.5px; color:var(--faint); margin-bottom:18px; }
   .barchart{ width:100%; height:auto; display:block; }
   .bar-val{ font-family:var(--mono); font-size:13px; fill:var(--cream); }
   .bar-lab{ font-family:var(--font); font-size:11px; letter-spacing:.08em; fill:var(--muted); }
-
   .donut-block{ display:grid; grid-template-columns:200px 1fr; align-items:center; gap:40px; }
   .donut-wrap{ position:relative; width:200px; height:200px; }
   .donut-wrap svg{ width:200px; height:200px; display:block; }
   .donut-center{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; pointer-events:none; }
   .donut-center .dc-lab{ font-size:10px; letter-spacing:.20em; text-transform:uppercase; color:var(--faint); }
   .donut-center .dc-yr{ font-family:var(--serif); font-size:22px; color:var(--cream); }
-  .legend{ display:flex; flex-direction:column; gap:16px; }
+  .legend{ display:flex; flex-direction:column; gap:15px; }
   .legend-row{ display:grid; grid-template-columns:11px 1fr auto; align-items:center; gap:12px; }
   .legend-row .sw{ width:11px; height:11px; border-radius:3px; }
-  .legend-row .nm{ font-size:13.5px; color:var(--cream); line-height:1.3; }
-  .legend-row .pc{ font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:13.5px; color:var(--muted); }
+  .legend-row .nm{ font-size:13px; color:var(--cream); }
+  .legend-row .pc{ font-family:var(--mono); font-size:13px; color:var(--muted); }
 
-  /* ── Timeline ─────────────────────────────────────── */
-  .timeline{ display:flex; flex-direction:column; }
-  .tl-item{ display:grid; grid-template-columns:96px 1fr; gap:16px; padding:15px 0; border-top:1px solid var(--hairline); }
-  .tl-item:first-child{ border-top:none; }
-  .tl-when{ font-family:var(--mono); font-size:12px; color:var(--gold); }
-  .tl-item h5{ font-size:14px; font-weight:600; }
-  .tl-item p{ font-size:12.5px; color:var(--muted); margin-top:3px; line-height:1.5; }
+  /* Footer */
+  .data-note{ margin-top:56px; text-align:center; font-size:11.5px; color:var(--faint); line-height:1.6; max-width:780px; margin-left:auto; margin-right:auto; }
+  .foot{ margin-top:14px; text-align:center; font-size:12px; color:var(--faint); }
 
-  /* ── Plant strip ──────────────────────────────────── */
-  .plants{ display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:14px; }
-  .plant{ background:var(--card); border:1px solid var(--hairline); border-radius:14px; box-shadow:var(--shadow); padding:16px; display:flex; flex-direction:column; gap:9px; }
-  .plant .p-name{ display:flex; align-items:center; gap:8px; font-size:13.5px; font-weight:500; }
-  .plant .dot{ width:7px; height:7px; border-radius:50%; flex:none; }
-  .plant .dot.emerald{ background:var(--emerald); } .plant .dot.amber{ background:var(--amber); }
-  .plant .p-meta{ font-size:11.5px; color:var(--faint); }
-
-  /* ── IPO ──────────────────────────────────────────── */
-  .ofs{ display:flex; flex-direction:column; gap:16px; }
-  .ofs-top{ display:flex; justify-content:space-between; gap:12px; font-size:13.5px; }
-  .ofs-top .v{ font-family:var(--mono); }
-  .ofs-track{ height:8px; background:var(--track); border-radius:4px; margin-top:8px; overflow:hidden; }
-  .ofs-fill{ height:100%; background:var(--gold); border-radius:4px; }
-  .kv-row{ display:flex; justify-content:space-between; gap:18px; padding:12px 0; border-top:1px solid var(--hairline); font-size:13.5px; }
-  .kv-row:first-child{ border-top:none; }
-  .kv-row .k{ color:var(--muted); }
-  .kv-row .v{ text-align:right; }
-  .ipo-row{ display:grid; grid-template-columns:auto 1fr; gap:13px; align-items:start; padding:13px 0; border-top:1px solid var(--hairline); }
-  .ipo-row:first-of-type{ border-top:none; }
-  .ipo-row .dot{ width:8px; height:8px; margin-top:6px; }
-  .ipo-row .dot.emerald{ background:var(--emerald); } .ipo-row .dot.gold{ background:var(--gold); } .ipo-row .dot.amber{ background:var(--amber); }
-  .ipo-row .ir-main{ font-size:14px; line-height:1.4; }
-  .ipo-row .ir-note{ font-size:12px; color:var(--faint); margin-top:2px; }
-  .ipo-sub{ font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
-  .ipo-q ul{ list-style:none; }
-  .ipo-q li{ font-size:13px; color:var(--muted); line-height:1.5; padding:11px 0; border-top:1px solid var(--hairline); display:flex; gap:11px; }
-  .ipo-q li:first-child{ border-top:none; }
-  .ipo-q li:before{ content:"—"; color:var(--gold); flex:none; }
-  .ipo-q .quiet-action{ margin-top:18px; }
-
-  /* ── Footer ───────────────────────────────────────── */
-  .data-note{ margin-top:56px; text-align:center; font-size:11.5px; color:var(--faint); line-height:1.6; max-width:760px; margin-left:auto; margin-right:auto; }
-  .foot{ margin-top:14px; text-align:center; font-size:12px; letter-spacing:.02em; color:var(--faint); }
-
-  /* ── Toast ────────────────────────────────────────── */
-  .toast{
-    position:fixed; left:50%; bottom:34px; transform:translateX(-50%) translateY(8px);
-    background:var(--card-2); color:var(--cream); border:1px solid var(--hairline); border-radius:12px;
-    padding:13px 22px; font-size:13.5px; box-shadow:0 18px 40px -18px rgba(0,0,0,.45);
-    opacity:0; pointer-events:none; z-index:50; transition:opacity .3s ease, transform .3s ease;
-  }
+  /* Toast */
+  .toast{ position:fixed; left:50%; bottom:34px; transform:translateX(-50%) translateY(8px); background:var(--card-2); color:var(--cream); border:1px solid var(--hairline); border-radius:12px; padding:13px 22px; font-size:13.5px; box-shadow:0 18px 40px -18px rgba(0,0,0,.45); opacity:0; pointer-events:none; z-index:50; transition:opacity .3s ease, transform .3s ease; }
   .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
 
-  /* ── Motion ───────────────────────────────────────── */
+  /* Motion */
   @keyframes rise{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:translateY(0); } }
   .cascade .attn{ animation:rise .55s cubic-bezier(.22,.61,.36,1) both; }
-  .cascade .attn:nth-child(1){ animation-delay:0ms; }
-  .cascade .attn:nth-child(2){ animation-delay:120ms; }
-  .cascade .attn:nth-child(3){ animation-delay:240ms; }
+  .cascade .attn:nth-child(1){ animation-delay:0ms; } .cascade .attn:nth-child(2){ animation-delay:120ms; } .cascade .attn:nth-child(3){ animation-delay:240ms; }
   @keyframes softpulse{ 0%,100%{ box-shadow:0 0 0 0 rgba(226,87,76,.45); } 50%{ box-shadow:0 0 0 7px rgba(226,87,76,0); } }
   .attn .dot.red{ animation:softpulse 2.8s ease-in-out infinite; }
   @keyframes fadeUp{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:translateY(0); } }
   .tab-panel.active{ animation:fadeUp .28s ease both; }
-
   @media (prefers-reduced-motion:reduce){
-    .cascade .attn{ animation:none; opacity:1; }
-    .attn{ opacity:1; } .attn .dot.red{ animation:none; }
-    .tab-panel.active{ animation:none; }
-    .toast, .theme-toggle, .attn-action, .quiet-action, .tab{ transition:none; }
+    .cascade .attn{ animation:none; opacity:1; } .attn{ opacity:1; } .attn .dot.red{ animation:none; }
+    .tab-panel.active{ animation:none; } .toast,.theme-toggle,.attn-action,.quiet-action,.tab{ transition:none; }
   }
 
-  /* ── Responsive ───────────────────────────────────── */
+  /* Responsive */
   @media (max-width:980px){
-    .kpis, .kpis-2{ grid-template-columns:repeat(2,1fr); }
+    .kpis{ grid-template-columns:repeat(2,1fr); }
     .attn-grid{ grid-template-columns:1fr; } .attn{ min-height:0; }
-    .grid-2{ grid-template-columns:1fr; }
+    .grid-2,.grid-3{ grid-template-columns:1fr; }
     .donut-block{ grid-template-columns:1fr; justify-items:start; gap:26px; }
+    .alts{ grid-template-columns:1fr; }
   }
-  @media (max-width:680px){
-    .page{ padding:22px 18px 40px; }
-    section{ margin-top:var(--s6); }
-    .card{ padding:22px; }
-  }
+  @media (max-width:680px){ .page{ padding:22px 18px 40px; } section{ margin-top:var(--s6); } .card{ padding:22px; } }
   @media (max-width:560px){
-    .kpis, .kpis-2{ grid-template-columns:1fr; }
-    .topbar{ flex-direction:column; gap:18px; }
-    .topbar-right{ align-self:stretch; justify-content:space-between; }
-    .topbar-meta{ align-items:flex-start; }
+    .kpis{ grid-template-columns:1fr; }
+    .topbar{ flex-direction:column; gap:18px; } .topbar-right{ align-self:stretch; justify-content:space-between; } .topbar-meta{ align-items:flex-start; }
     .watch{ grid-template-columns:auto 1fr; } .watch .w-time{ grid-column:2; padding-top:0; }
-    .legend{ width:100%; max-width:320px; }
+    .risk{ grid-template-columns:auto 1fr; } .risk .r-side{ grid-column:2; text-align:left; }
     .tl-item{ grid-template-columns:1fr; gap:4px; }
   }
 </style>
@@ -328,20 +265,13 @@
     <!-- Header -->
     <header class="topbar">
       <div class="brand">
-        <div class="brand-line">
-          <span class="wordmark">Kusumgar</span>
-          <span class="cc">Command Center</span>
-        </div>
+        <div class="brand-line"><span class="wordmark">Kusumgar</span><span class="cc">Command Center</span></div>
         <span class="pb">powered by muns.ai</span>
       </div>
       <div class="topbar-right">
         <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false">
-          <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
-            <circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.4 4.4l1.6 1.6M18 18l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.4 19.6l1.6-1.6M18 6l1.6-1.6"/>
-          </svg>
-          <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 14.5A8 8 0 1 1 9.5 4a6.3 6.3 0 0 0 10.5 10.5z"/>
-          </svg>
+          <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.4 4.4l1.6 1.6M18 18l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.4 19.6l1.6-1.6M18 6l1.6-1.6"/></svg>
+          <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.3 6.3 0 0 0 10.5 10.5z"/></svg>
         </button>
         <div class="topbar-meta">
           <div class="clock"><span id="date">—</span> · <span class="time" id="time">—</span></div>
@@ -350,427 +280,386 @@
       </div>
     </header>
 
-    <!-- Tab bar -->
-    <nav class="tabs" role="tablist" aria-label="Command Center sections">
-      <button class="tab active" role="tab" data-tab="overview"   aria-selected="true">Overview</button>
-      <button class="tab"        role="tab" data-tab="financials"  aria-selected="false">Financials</button>
-      <button class="tab"        role="tab" data-tab="operations"  aria-selected="false">Operations</button>
-      <button class="tab"        role="tab" data-tab="products"    aria-selected="false">Products &amp; Segments</button>
-      <button class="tab"        role="tab" data-tab="ipo"         aria-selected="false">IPO &amp; Investors</button>
+    <!-- Tabs -->
+    <nav class="tabs" role="tablist" aria-label="Command Center">
+      <button class="tab active" role="tab" data-tab="today"    aria-selected="true">Today</button>
+      <button class="tab"        role="tab" data-tab="colour"   aria-selected="false">Colour &amp; Shade</button>
+      <button class="tab"        role="tab" data-tab="supply"   aria-selected="false">Supply Chain</button>
+      <button class="tab"        role="tab" data-tab="planning" aria-selected="false">Planning &amp; Floor</button>
+      <button class="tab"        role="tab" data-tab="intel"    aria-selected="false">Investors &amp; Intel</button>
     </nav>
 
-    <!-- ===================== OVERVIEW ===================== -->
-    <div class="tab-panel active" role="tabpanel" data-panel="overview">
-
+    <!-- ============ TODAY ============ -->
+    <div class="tab-panel active" role="tabpanel" data-panel="today">
       <section class="greeting">
         <h1>Good morning, Sapna.</h1>
         <div class="sub">3 things need your attention today.</div>
-        <div class="brief"><span class="live-dot"></span>Your AI team read Dynamics, your live dashboards and 6 mailboxes overnight · last synced 06:00.</div>
+        <div class="brief"><span class="live-dot"></span>Overnight your AI team read Dynamics, 11 dashboards and 6 mailboxes — and found ₹38 L quietly leaking that no report flagged.</div>
       </section>
 
       <section class="kpis">
         <div class="card">
-          <div class="kpi-label">Revenue FY25</div>
-          <div class="kpi-num">₹779<span class="unit">cr</span></div>
-          <div class="kpi-delta"><span class="up">▲ +66%</span><span class="sep">·</span> YoY</div>
+          <div class="kpi-label">Re-dyes this month</div>
+          <div class="kpi-num">₹26<span class="unit">L</span></div>
+          <div class="kpi-delta"><span class="warn">first-time-right 63%</span></div>
         </div>
         <div class="card">
-          <div class="kpi-label">EBITDA FY25</div>
-          <div class="kpi-num">₹188<span class="unit">cr</span></div>
-          <div class="kpi-delta"><span class="sep">·</span> 24.2% margin</div>
+          <div class="kpi-label">Cash stuck in WIP</div>
+          <div class="kpi-num">₹74<span class="unit">cr</span></div>
+          <div class="kpi-delta"><span class="down">▲ 18.6 days</span><span class="sep">·</span> rising</div>
         </div>
         <div class="card">
-          <div class="kpi-label">Defence &amp; Aerospace</div>
-          <div class="kpi-num">77<span class="unit">%</span></div>
-          <div class="kpi-delta"><span class="sep">·</span> of revenue</div>
+          <div class="kpi-label">Order value at risk</div>
+          <div class="kpi-num">₹4.8<span class="unit">cr</span></div>
+          <div class="kpi-delta"><span class="down">Nylon 66 slip</span></div>
         </div>
         <div class="card">
-          <div class="kpi-label">Capacity used</div>
-          <div class="kpi-num">42.3<span class="unit">%</span></div>
-          <div class="kpi-delta"><span class="sep">·</span> room to scale</div>
+          <div class="kpi-label">Idle new capacity</div>
+          <div class="kpi-num">57.7<span class="unit">%</span></div>
+          <div class="kpi-delta"><span class="sep">·</span> Surat line · room to fill</div>
         </div>
       </section>
 
-      <div class="kpis-2">
-        <div class="card kpi-sm">
-          <div class="kpi-label">Net profit FY25</div>
-          <div class="kpi-num">₹112<span class="unit">cr</span></div>
-          <div class="kpi-delta"><span class="up">▲ +33%</span><span class="sep">·</span> YoY</div>
-        </div>
-        <div class="card kpi-sm">
-          <div class="kpi-label">Return on equity</div>
-          <div class="kpi-num">56.3<span class="unit">%</span></div>
-          <div class="kpi-delta"><span class="sep">·</span> FY25</div>
-        </div>
-        <div class="card kpi-sm">
-          <div class="kpi-label">Net debt</div>
-          <div class="kpi-num">₹205<span class="unit">cr</span></div>
-          <div class="kpi-delta"><span class="sep">·</span> 1.09× EBITDA</div>
-        </div>
-        <div class="card kpi-sm">
-          <div class="kpi-label">Installed capacity</div>
-          <div class="kpi-num">127.8<span class="unit">M m</span></div>
-          <div class="kpi-delta"><span class="up">▲ 2.6×</span><span class="sep">·</span> in FY25</div>
-        </div>
-      </div>
-
       <section class="attention">
-        <div class="section-label">Needs your attention</div>
+        <div class="section-label">Needs your decision</div>
         <div class="attn-grid" id="attnGrid">
           <div class="card attn">
             <span class="dot red"></span>
-            <h3>A parachute-fabric order may slip 6 days.</h3>
-            <p>Nylon 66 base-yarn PO not placed yet · 2 alternate suppliers ready.</p>
-            <button class="attn-action" data-toast="PO drafted — sent to procurement.">Place PO</button>
+            <h3>A parachute-fabric order will slip 21 days — unless a PO goes today.</h3>
+            <p>PS-CFF-Mk2 · Nylon 66 1260D base yarn, single-vendor (Toray).</p>
+            <div class="why">Lead time 11 wk vs 8 wk to deliver · <b>2 alternates already qualified</b> (Korea, China).</div>
+            <button class="attn-action" data-toast="RFQ sent to Hyosung &amp; Zhejiang · PO drafted for Toray.">Send RFQ &amp; draft PO</button>
           </div>
           <div class="card attn">
             <span class="dot amber"></span>
-            <h3>Colour is drifting on a live dye batch.</h3>
-            <p>Batch DY-2208, olive green · a small floor fix now avoids a full re-dye.</p>
-            <button class="attn-action" data-toast="Sent to the floor — DY-2208 flagged.">Send fix to floor</button>
+            <h3>A live dye batch is drifting — fix it before it becomes a re-dye.</h3>
+            <p>Batch DY-2208, olive green · Jigger J-4 · 40 min in, ΔE 1.8.</p>
+            <div class="why">Root cause found: <b>wrong dye lot + 2.4 min over-mix</b> · a floor fix saves ₹2.3 L.</div>
+            <button class="attn-action" data-toast="Correction sent to J-4 · hold 6 min @ 88°C.">Send fix to floor</button>
           </div>
           <div class="card attn">
             <span class="dot gold"></span>
-            <h3>One investor question worth preparing.</h3>
-            <p>Top 10 customers = 84.7% of revenue · have your answer ready before the roadshow.</p>
-            <button class="attn-action" data-toast="Brief opened — concentration note ready.">Open brief</button>
+            <h3>One investor answer worth locking before the roadshow.</h3>
+            <p>Top 10 customers = 84.7% of revenue — the question you'll be asked.</p>
+            <div class="why">Your prepared answer + <b>what not to volunteer</b> are drafted.</div>
+            <button class="attn-action" data-toast="Concentration brief opened — answer &amp; guardrails ready.">Open brief</button>
           </div>
         </div>
       </section>
 
       <section class="watchers">
-        <div class="section-label">What your AI team is watching</div>
+        <div class="section-label">Your AI team is watching — before it bites</div>
         <div class="card">
           <div class="watch-list">
-            <div class="watch"><span class="dot red"></span><div><h4>Nylon 66 PO still unplaced.</h4><p>The order slips if it isn't raised within 4 days · supply chain.</p></div><span class="w-time">06:02</span></div>
-            <div class="watch"><span class="dot amber"></span><div><h4>Tender KX-309 is now 71 days against a 60-day commitment.</h4><p>Two milestones behind · product development.</p></div><span class="w-time">05:48</span></div>
-            <div class="watch"><span class="dot amber"></span><div><h4>Automotive-coating margin down 9% this quarter.</h4><p>Input prices up faster than your last price revision · pricing review.</p></div><span class="w-time">05:30</span></div>
-            <div class="watch"><span class="dot gold"></span><div><h4>A listed competitor filed a new NBC-protection line.</h4><p>Green-field segment worth scanning before the next tender cycle.</p></div><span class="w-time">04:10</span></div>
-            <div class="watch"><span class="dot emerald"></span><div><h4>Olive-green recipe converged in 3 trials.</h4><p>Below your 6-trial average · 50-year dye records paid off.</p></div><span class="w-time">02:15</span></div>
+            <div class="watch"><span class="dot red"></span><div><h4>Nylon 66 PO unplaced → PS-CFF-Mk2 slips 21 days.</h4><p>₹4.8 cr order at risk · lead 11 wk, only 8 wk to deliver · 2 alternates qualified.</p></div><span class="w-time">06:02</span></div>
+            <div class="watch"><span class="dot amber"></span><div><h4>Tender KX-309 is at day 71 of a 60-day commitment.</h4><p>Critical path runs through 2 single-vendor parts · suitcase contingency flagged.</p></div><span class="w-time">05:48</span></div>
+            <div class="watch"><span class="dot amber"></span><div><h4>Automotive-coating margin down 9% this quarter.</h4><p>Input nylon +6%; your last price revision was 4 months ago — re-price.</p></div><span class="w-time">05:30</span></div>
+            <div class="watch"><span class="dot gold"></span><div><h4>A listed competitor filed a new NBC-protection division.</h4><p>Green-field you're already AS9100D-certified for · DRHP, p.142.</p></div><span class="w-time">04:10</span></div>
+            <div class="watch"><span class="dot emerald"></span><div><h4>Olive-green converged in 3 trials, not 6 — ₹1.9 L saved.</h4><p>AI recipe matched bulk on trial 3 · 50 years of dye records paid off.</p></div><span class="w-time">02:15</span></div>
           </div>
         </div>
       </section>
     </div>
 
-    <!-- ===================== FINANCIALS ===================== -->
-    <div class="tab-panel" role="tabpanel" data-panel="financials">
+    <!-- ============ COLOUR & SHADE ============ -->
+    <div class="tab-panel" role="tabpanel" data-panel="colour">
 
       <section>
-        <div class="section-label">Three-year performance · ₹ cr</div>
-        <div class="card">
-          <table class="fin-table">
-            <thead>
-              <tr><th>Standalone</th><th>FY23</th><th>FY24</th><th>FY25</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Revenue from operations</td><td class="num">301.65</td><td class="num">467.91</td><td class="num hi">779.00</td></tr>
-              <tr><td>EBITDA margin</td><td class="num">~24%</td><td class="num">~25%</td><td class="num hi">24.2%</td></tr>
-              <tr><td>Net profit (PAT)</td><td class="num">37.2</td><td class="num">84.4</td><td class="num hi">112.0</td></tr>
-              <tr><td>PAT margin</td><td class="num">12.3%</td><td class="num">18.0%</td><td class="num hi">14.4%</td></tr>
-            </tbody>
-          </table>
-          <div class="table-note">Revenue from operations grew ~158% over two years (FY23→FY25). Figures from Kusumgar's public DRHP / CARE Ratings; EBITDA shown at the disclosed ~24% PBILDT margin band.</div>
-        </div>
-      </section>
-
-      <section>
-        <div class="section-label">Growth, charted</div>
+        <div class="section-label">Live dye monitor</div>
         <div class="grid-2">
           <div class="card">
-            <div class="visual-title">Revenue, ₹ cr</div>
-            <div class="visual-note">FY23 → FY25</div>
-            <svg class="barchart" viewBox="0 0 300 180" role="img" aria-label="Revenue: FY23 302, FY24 468, FY25 779 crore">
-              <line x1="30" y1="150" x2="276" y2="150" stroke="var(--axis)" stroke-width="1"/>
-              <rect x="38"  y="101.15" width="44" height="48.85"  rx="4" fill="var(--g1)"/>
-              <rect x="128" y="74.30"  width="44" height="75.70"  rx="4" fill="var(--g1)"/>
-              <rect x="218" y="24.00"  width="44" height="126.00" rx="4" fill="var(--g1)"/>
-              <text x="60"  y="93.15" text-anchor="middle" class="bar-val">302</text>
-              <text x="150" y="66.30" text-anchor="middle" class="bar-val">468</text>
-              <text x="240" y="16.00" text-anchor="middle" class="bar-val">779</text>
-              <text x="60"  y="166" text-anchor="middle" class="bar-lab">FY23</text>
-              <text x="150" y="166" text-anchor="middle" class="bar-lab">FY24</text>
-              <text x="240" y="166" text-anchor="middle" class="bar-lab">FY25</text>
+            <div class="card-title">Batch DY-2208 · olive green · Jigger J-4</div>
+            <div class="card-note">started 04:12 · 40 min in · target ΔE ≤ 0.8</div>
+            <div style="display:flex;align-items:baseline;gap:14px;margin-top:18px;">
+              <span class="scope-big" style="color:var(--amber)">1.8<span class="u">ΔE</span></span>
+              <span style="font-size:12.5px;color:var(--faint)">and climbing</span>
+            </div>
+            <svg class="trace" viewBox="0 0 300 96" role="img" aria-label="Shade drift rising from 0.3 to 1.8 ΔE, past the 0.8 target">
+              <line x1="10" y1="56.7" x2="290" y2="56.7" stroke="var(--axis)" stroke-width="1" stroke-dasharray="4 4"/>
+              <text x="290" y="52" text-anchor="end" class="trace-pt">target 0.8</text>
+              <polyline points="10,71.25 66,65.42 122,59.58 178,50.83 234,39.17 290,27.5" fill="none" stroke="var(--g1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="290" cy="27.5" r="4" fill="var(--amber)"/>
+              <text x="10" y="90" class="trace-pt">04:12</text>
+              <text x="290" y="90" text-anchor="end" class="trace-pt">now</text>
             </svg>
           </div>
+
           <div class="card">
-            <div class="visual-title">Net profit, ₹ cr</div>
-            <div class="visual-note">FY23 → FY25</div>
-            <svg class="barchart" viewBox="0 0 300 180" role="img" aria-label="Net profit: FY23 37, FY24 84, FY25 112 crore">
-              <line x1="30" y1="150" x2="276" y2="150" stroke="var(--axis)" stroke-width="1"/>
-              <rect x="38"  y="111.15" width="44" height="38.85"  rx="4" fill="var(--g1)"/>
-              <rect x="128" y="61.80"  width="44" height="88.20"  rx="4" fill="var(--g1)"/>
-              <rect x="218" y="32.40"  width="44" height="117.60" rx="4" fill="var(--g1)"/>
-              <text x="60"  y="103.15" text-anchor="middle" class="bar-val">37</text>
-              <text x="150" y="53.80"  text-anchor="middle" class="bar-val">84</text>
-              <text x="240" y="24.40"  text-anchor="middle" class="bar-val">112</text>
-              <text x="60"  y="166" text-anchor="middle" class="bar-lab">FY23</text>
-              <text x="150" y="166" text-anchor="middle" class="bar-lab">FY24</text>
-              <text x="240" y="166" text-anchor="middle" class="bar-lab">FY25</text>
+            <div class="card-title">Root cause — traced through the lifecycle</div>
+            <div style="margin-top:16px;">
+              <div class="risk"><span class="dot red"></span><div><h5>Wrong dye lot on the floor</h5><p>Lot DL-7741 (floor stock) used, not the lab-qualified DL-7738 — 2 other batches this week hit the same swap.</p></div><span class="r-side">+1.1 ΔE</span></div>
+              <div class="risk"><span class="dot amber"></span><div><h5>Over-mixed compound</h5><p>CCTV timing on J-4: 12.4 min vs the 10.0 min lab spec.</p></div><span class="r-side">+0.5 ΔE</span></div>
+            </div>
+            <div style="margin-top:18px;padding-top:18px;border-top:1px solid var(--hairline);">
+              <div class="card-title" style="color:var(--gold)">Recommended fix</div>
+              <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-top:9px;">Hold the dye 6 more min at 88 °C and add 0.4% levelling agent → predicted <b style="color:var(--cream);font-weight:600">ΔE 0.4</b>. Avoids a full re-dye: <span class="mono" style="color:var(--cream)">₹2.3 L</span>, 4,200 m, 16,000 L water, 9 hrs.</p>
+              <button class="quiet-action" style="margin-top:16px;" data-toast="Correction sent to J-4 · hold 6 min @ 88°C, +0.4% leveller.">Send fix to floor</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-label">Where colour trouble actually starts</div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Root cause of shade failures · last 90 days</div>
+            <div style="margin-top:16px;">
+              <div class="lbar"><div class="lbar-top"><span>Wrong / mixed dye lot</span><span class="v">38%</span></div><div class="lbar-track"><div class="lbar-fill" style="width:38%"></div></div></div>
+              <div class="lbar"><div class="lbar-top"><span>Mixing-time variance</span><span class="v">22%</span></div><div class="lbar-track"><div class="lbar-fill" style="width:22%"></div></div></div>
+              <div class="lbar"><div class="lbar-top"><span>Incoming yarn / sizing</span><span class="v">19%</span></div><div class="lbar-track"><div class="lbar-fill" style="width:19%"></div></div></div>
+              <div class="lbar"><div class="lbar-top"><span>Water / temperature</span><span class="v">13%</span></div><div class="lbar-track"><div class="lbar-fill" style="width:13%"></div></div></div>
+              <div class="lbar"><div class="lbar-top"><span>Machine setting</span><span class="v">8%</span></div><div class="lbar-track"><div class="lbar-fill" style="width:8%"></div></div></div>
+            </div>
+            <div class="card-note" style="margin-top:14px;">60% of misses trace to two fixable habits — lot discipline and mix timing.</div>
+          </div>
+          <div class="card">
+            <div class="card-title">First-time-right shade · %</div>
+            <div class="visual-note">last 6 months · → target 85</div>
+            <svg class="barchart" viewBox="0 0 300 180" role="img" aria-label="First-time-right shade: 48 52 55 58 61 63 percent">
+              <line x1="20" y1="150" x2="288" y2="150" stroke="var(--axis)" stroke-width="1"/>
+              <rect x="32" y="63.6" width="28" height="86.4" rx="4" fill="var(--g1)"/>
+              <rect x="76" y="56.4" width="28" height="93.6" rx="4" fill="var(--g1)"/>
+              <rect x="120" y="51.0" width="28" height="99.0" rx="4" fill="var(--g1)"/>
+              <rect x="164" y="45.6" width="28" height="104.4" rx="4" fill="var(--g1)"/>
+              <rect x="208" y="40.2" width="28" height="109.8" rx="4" fill="var(--g1)"/>
+              <rect x="252" y="36.6" width="28" height="113.4" rx="4" fill="var(--g1)"/>
+              <text x="46" y="55.6" text-anchor="middle" class="bar-val">48</text>
+              <text x="90" y="48.4" text-anchor="middle" class="bar-val">52</text>
+              <text x="134" y="43.0" text-anchor="middle" class="bar-val">55</text>
+              <text x="178" y="37.6" text-anchor="middle" class="bar-val">58</text>
+              <text x="222" y="32.2" text-anchor="middle" class="bar-val">61</text>
+              <text x="266" y="28.6" text-anchor="middle" class="bar-val">63</text>
+              <text x="46" y="166" text-anchor="middle" class="bar-lab">Jan</text>
+              <text x="90" y="166" text-anchor="middle" class="bar-lab">Feb</text>
+              <text x="134" y="166" text-anchor="middle" class="bar-lab">Mar</text>
+              <text x="178" y="166" text-anchor="middle" class="bar-lab">Apr</text>
+              <text x="222" y="166" text-anchor="middle" class="bar-lab">May</text>
+              <text x="266" y="166" text-anchor="middle" class="bar-lab">Jun</text>
             </svg>
           </div>
         </div>
       </section>
 
       <section>
-        <div class="section-label">Balance &amp; returns</div>
-        <div class="kpis">
-          <div class="card stat"><div class="stat-lab">Return on equity</div><div class="stat-num">56.3%</div><div class="stat-sub">FY25 · on a lean equity base.</div></div>
-          <div class="card stat"><div class="stat-lab">Net debt</div><div class="stat-num">₹205 cr</div><div class="stat-sub">1.09× EBITDA · comfortably geared.</div></div>
-          <div class="card stat"><div class="stat-lab">PAT CAGR</div><div class="stat-num">~73%</div><div class="stat-sub">FY23 → FY25.</div></div>
-          <div class="card stat"><div class="stat-lab">A&amp;D revenue share</div><div class="stat-num">76.9%</div><div class="stat-sub">Defence &amp; aerospace, FY25.</div></div>
-        </div>
-      </section>
-
-      <section>
-        <div class="section-label">The growth engine</div>
-        <div class="card">
-          <div class="stat-lab">Aerospace &amp; Defence Solutions revenue</div>
-          <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-top:12px;">
-            <span class="mono" style="font-size:18px;color:var(--muted);">FY24 ₹0.86 cr</span>
-            <span style="color:var(--gold);font-size:18px;">→</span>
-            <span class="mono" style="font-size:34px;color:var(--gold);">FY25 ₹221.9 cr</span>
-          </div>
-          <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-top:14px;max-width:640px;">Finished parachute systems, camouflage nets and deployable shelters went from almost nothing to a quarter of revenue in a single year — the single biggest driver of FY25 growth.</p>
-        </div>
-      </section>
-    </div>
-
-    <!-- ===================== OPERATIONS ===================== -->
-    <div class="tab-panel" role="tabpanel" data-panel="operations">
-
-      <section>
-        <div class="section-label">Manufacturing footprint</div>
-        <div class="grid-auto">
-          <div class="card facility">
-            <h4>Vapi</h4><div class="loc">Gujarat</div>
-            <div class="chip-row"><span class="chip">Weaving</span><span class="chip">Coating</span><span class="chip">Lamination</span></div>
-          </div>
-          <div class="card facility">
-            <h4>Sarigam</h4><div class="loc">Gujarat</div>
-            <div class="chip-row"><span class="chip">Weaving</span><span class="chip">Coating</span><span class="chip">Lamination</span></div>
-          </div>
-          <div class="card facility">
-            <h4>Surat · Kothwa</h4><div class="loc">Gujarat · commissioned FY25</div>
-            <div class="chip-row"><span class="chip gold">New</span><span class="chip">Weaving</span><span class="chip">Processing</span></div>
-          </div>
-          <div class="card facility">
-            <h4>Uttar Pradesh</h4><div class="loc">Fabrication unit</div>
-            <div class="chip-row"><span class="chip">Parachute systems</span><span class="chip">Shelters</span></div>
-          </div>
-        </div>
-        <div class="brief" style="margin-top:18px;"><span class="live-dot"></span>Registered office in Mumbai · vertically integrated weaving → finishing → coating → lamination → finished products.</div>
-      </section>
-
-      <section>
-        <div class="section-label">Capacity &amp; capability</div>
-        <div class="kpis">
-          <div class="card stat"><div class="stat-lab">Installed capacity</div><div class="stat-num">127.8M m</div><div class="stat-sub">Up from 48.86M m a year earlier — a 2.6× step-up in FY25.</div></div>
-          <div class="card stat"><div class="stat-lab">Capacity used</div><div class="stat-num">42.3%</div><div class="stat-sub">Headroom from the new Surat line — room to scale into the order book.</div></div>
-          <div class="card stat"><div class="stat-lab">Fabric range</div><div class="stat-num">15–3000 D</div><div class="stat-sub">Over 1,000 unique fabric configurations (SKUs).</div></div>
-          <div class="card stat"><div class="stat-lab">Looms</div><div class="stat-num">4 types</div><div class="stat-sub">Dornier rapier · water-jet · Sulzer flexible rapier · shuttle.</div></div>
-        </div>
-      </section>
-
-      <section>
-        <div class="section-label">Across the floor</div>
-        <div class="floor grid-auto">
-          <div class="card"><div class="f-top"><span class="f-label">Production planning</span><span class="dot amber"></span></div><div class="f-metric">78%<span class="f-sub">adherence</span></div><div class="f-insight">June plan not yet locked across the looms · WIP 18.6 days and rising.</div></div>
-          <div class="card"><div class="f-top"><span class="f-label">Dyeing &amp; shade</span><span class="dot amber"></span></div><div class="f-metric">63%<span class="f-sub">first-time-right</span></div><div class="f-insight">DY-2208 olive drifting +1.8 ΔE · a floor fix now avoids a re-dye.</div></div>
-          <div class="card"><div class="f-top"><span class="f-label">Supply chain</span><span class="dot red"></span></div><div class="f-metric">34<span class="f-sub">of 135 parts single-vendor</span></div><div class="f-insight">Nylon 66 unplaced · 2 alternates ready in Korea and China.</div></div>
-          <div class="card"><div class="f-top"><span class="f-label">Fabric inspection</span><span class="dot amber"></span></div><div class="f-metric">2<span class="f-sub">rolls flagged today</span></div><div class="f-insight">Streak on roll R-4471 caught whole-roll — missed by the spot meter.</div></div>
-          <div class="card"><div class="f-top"><span class="f-label">Lab → bulk</span><span class="dot emerald"></span></div><div class="f-metric">6.2<span class="f-sub">avg trials · target 2</span></div><div class="f-insight">3 products now converging faster on AI-predicted recipes.</div></div>
-        </div>
-      </section>
-
-      <section>
-        <div class="section-label">First-time-right shade · %</div>
-        <div class="card" style="max-width:560px;">
-          <div class="visual-note">last 6 months · → target 85</div>
-          <svg class="barchart" viewBox="0 0 300 180" role="img" aria-label="First-time-right shade: 48, 52, 55, 58, 61, 63 percent">
-            <line x1="20" y1="150" x2="288" y2="150" stroke="var(--axis)" stroke-width="1"/>
-            <rect x="32"  y="63.6" width="28" height="86.4"  rx="4" fill="var(--g1)"/>
-            <rect x="76"  y="56.4" width="28" height="93.6"  rx="4" fill="var(--g1)"/>
-            <rect x="120" y="51.0" width="28" height="99.0"  rx="4" fill="var(--g1)"/>
-            <rect x="164" y="45.6" width="28" height="104.4" rx="4" fill="var(--g1)"/>
-            <rect x="208" y="40.2" width="28" height="109.8" rx="4" fill="var(--g1)"/>
-            <rect x="252" y="36.6" width="28" height="113.4" rx="4" fill="var(--g1)"/>
-            <text x="46"  y="55.6" text-anchor="middle" class="bar-val">48</text>
-            <text x="90"  y="48.4" text-anchor="middle" class="bar-val">52</text>
-            <text x="134" y="43.0" text-anchor="middle" class="bar-val">55</text>
-            <text x="178" y="37.6" text-anchor="middle" class="bar-val">58</text>
-            <text x="222" y="32.2" text-anchor="middle" class="bar-val">61</text>
-            <text x="266" y="28.6" text-anchor="middle" class="bar-val">63</text>
-            <text x="46"  y="166" text-anchor="middle" class="bar-lab">Jan</text>
-            <text x="90"  y="166" text-anchor="middle" class="bar-lab">Feb</text>
-            <text x="134" y="166" text-anchor="middle" class="bar-lab">Mar</text>
-            <text x="178" y="166" text-anchor="middle" class="bar-lab">Apr</text>
-            <text x="222" y="166" text-anchor="middle" class="bar-lab">May</text>
-            <text x="266" y="166" text-anchor="middle" class="bar-lab">Jun</text>
-          </svg>
-        </div>
-      </section>
-
-      <section>
-        <div class="section-label">Certifications &amp; approvals</div>
-        <div class="card">
-          <div class="chip-row">
-            <span class="chip gold">ISO 9001:2015</span>
-            <span class="chip gold">AS9100D · aerospace</span>
-            <span class="chip gold">IATF 16949 · automotive</span>
-            <span class="chip">OEKO-TEX Standard 100</span>
-            <span class="chip">Global Recycle Standard</span>
-            <span class="chip">DRDO technology transfers</span>
-          </div>
-        </div>
-      </section>
-    </div>
-
-    <!-- ===================== PRODUCTS & SEGMENTS ===================== -->
-    <div class="tab-panel" role="tabpanel" data-panel="products">
-
-      <section>
-        <div class="section-label">Where revenue comes from · FY25</div>
-        <div class="card">
-          <div class="donut-block">
-            <div class="donut-wrap">
-              <svg viewBox="0 0 200 200" role="img" aria-label="Revenue mix: A&D Fabrics 48.6%, A&D Solutions 29.1%, Industrial & Automotive 14.8%, Outdoor & Lifestyle 7.5%">
-                <g transform="rotate(-90 100 100)" fill="none" stroke-width="26">
-                  <circle cx="100" cy="100" r="80" stroke="var(--track)"/>
-                  <circle cx="100" cy="100" r="80" stroke="var(--g1)" stroke-dasharray="244.071 258.584" stroke-dashoffset="0"><title>Aerospace &amp; Defence Fabrics — ₹370 cr</title></circle>
-                  <circle cx="100" cy="100" r="80" stroke="var(--g2)" stroke-dasharray="146.443 356.212" stroke-dashoffset="-244.071"><title>Aerospace &amp; Defence Solutions — ₹222 cr</title></circle>
-                  <circle cx="100" cy="100" r="80" stroke="var(--g3)" stroke-dasharray="74.541 428.114" stroke-dashoffset="-390.514"><title>Industrial &amp; Automotive — ₹113 cr</title></circle>
-                  <circle cx="100" cy="100" r="80" stroke="var(--g4)" stroke-dasharray="37.600 465.055" stroke-dashoffset="-465.055"><title>Outdoor &amp; Lifestyle — ₹57 cr</title></circle>
-                </g>
-              </svg>
-              <div class="donut-center"><span class="dc-yr">FY25</span><span class="dc-lab">Revenue mix</span></div>
-            </div>
-            <div class="legend">
-              <div class="legend-row"><span class="sw" style="background:var(--g1)"></span><span class="nm">Aerospace &amp; Defence Fabrics</span><span class="pc">48.1%</span></div>
-              <div class="legend-row"><span class="sw" style="background:var(--g2)"></span><span class="nm">Aerospace &amp; Defence Solutions</span><span class="pc">28.8%</span></div>
-              <div class="legend-row"><span class="sw" style="background:var(--g3)"></span><span class="nm">Industrial &amp; Automotive</span><span class="pc">14.6%</span></div>
-              <div class="legend-row"><span class="sw" style="background:var(--g4)"></span><span class="nm">Outdoor &amp; Lifestyle</span><span class="pc">7.4%</span></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <div class="section-label">The four segments</div>
+        <div class="section-label">Four ways we hold the colour</div>
         <div class="grid-2">
-          <div class="card seg">
-            <div class="seg-top"><h4><span class="sw" style="background:var(--g1)"></span>Aerospace &amp; Defence Fabrics</h4><div><span class="seg-val">₹374 cr</span> <span class="seg-pc">48%</span></div></div>
-            <p>Zero-porosity parachute fabric, ballistic protection, stealth &amp; camouflage textiles, tactical combat clothing.</p>
+          <div class="card sol"><span class="sol-n">01</span><h4>Get it right on the first run</h4><p>50 years of dye records predict the exact recipe for the fabric, so the colour lands first time — saving dye, water, energy and rejected cloth.</p></div>
+          <div class="card sol"><span class="sol-n">02</span><h4>Catch the drift live</h4><p>We read the shade <i>during</i> the dye run, not just at the end — and suggest the fix on the spot, while the batch can still be saved.</p></div>
+          <div class="card sol"><span class="sol-n">03</span><h4>Find the real source</h4><p>Every stage — yarn, dye lot, water, machine — is tracked back to where the colour actually went wrong, so a bad incoming batch is flagged before it's used.</p></div>
+          <div class="card sol"><span class="sol-n">04</span><h4>See the whole roll</h4><p>A camera scans the entire fabric like your most experienced colourist — catching streaks and patches the single-spot spectrometer never sees.</p></div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-label">Whole-roll vision · what the spot meter missed</div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Roll R-4471 · olive green · 1,200 m</div>
+            <div style="margin-top:16px;">
+              <div class="risk"><span class="dot amber"></span><div><h5>Streak · 380–410 m</h5><p>Fine warp-way streak, ~0.6 ΔE local.</p></div><span class="r-side">caught</span></div>
+              <div class="risk"><span class="dot amber"></span><div><h5>Shade patch · 920 m</h5><p>Light patch across full width.</p></div><span class="r-side">caught</span></div>
+              <div class="risk"><span class="dot emerald"></span><div><h5>Spectrometer reading · 600 m</h5><p>Single 2 cm spot — landed on good cloth, passed the roll.</p></div><span class="r-side">would pass</span></div>
+            </div>
           </div>
-          <div class="card seg">
-            <div class="seg-top"><h4><span class="sw" style="background:var(--g2)"></span>Aerospace &amp; Defence Solutions</h4><div><span class="seg-val">₹222 cr</span> <span class="seg-pc">29%</span></div></div>
-            <p>Finished parachute systems, camouflage nets, deployable shelters &amp; tentage, stealth solutions.</p>
-          </div>
-          <div class="card seg">
-            <div class="seg-top"><h4><span class="sw" style="background:var(--g3)"></span>Industrial &amp; Automotive</h4><div><span class="seg-val">₹114 cr</span> <span class="seg-pc">15%</span></div></div>
-            <p>Tyre-industry fabrics, filtration media, geosynthetics, beltings, coated tarpaulin.</p>
-          </div>
-          <div class="card seg">
-            <div class="seg-top"><h4><span class="sw" style="background:var(--g4)"></span>Outdoor &amp; Lifestyle</h4><div><span class="seg-val">₹58 cr</span> <span class="seg-pc">7%</span></div></div>
-            <p>Cordura, recreational &amp; parasail fabrics, luggage, sportswear and functional furnishings.</p>
+          <div class="card stat" style="display:flex;flex-direction:column;justify-content:center;">
+            <div class="stat-lab">Caught today the spot meter would miss</div>
+            <div class="stat-num" style="font-size:34px;">2 rolls</div>
+            <div class="stat-sub">≈ 1,940 m of fabric held back before it shipped to a defence customer — and a complaint that never happens.</div>
           </div>
         </div>
       </section>
 
       <section>
-        <div class="section-label">Defence &amp; aerospace milestones</div>
-        <div class="card">
-          <div class="timeline">
-            <div class="tl-item"><div class="tl-when">Feb 2020</div><div><h5>DRDO ToT — Combat Free Fall parachute system</h5><p>Technology transfer received at DefExpo · jumps to 30,000 ft with ~30 km glide (HAHO / HALO).</p></div></div>
-            <div class="tl-item"><div class="tl-when">Dec 2021</div><div><h5>DRDO–DIPAS ToT — extreme cold-weather clothing</h5><p>One of five companies licensed for the −50°C to +15°C protection system.</p></div></div>
-            <div class="tl-item"><div class="tl-when">Ongoing</div><div><h5>Gaganyaan parachutes</h5><p>Engaged on parachutes for India's human spaceflight programme (ISRO).</p></div></div>
-            <div class="tl-item"><div class="tl-when">Distinction</div><div><h5>Only Indian producer of NBC warfare clothing</h5><p>And of zero-porosity parachute fabric — "we start where others stop."</p></div></div>
-          </div>
-        </div>
-      </section>
-
-      <section>
-        <div class="section-label">Market tailwind</div>
-        <div class="card stat" style="max-width:560px;">
-          <div class="stat-lab">India aerospace &amp; defence engineered-fabrics market</div>
-          <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-top:12px;">
-            <span class="mono" style="font-size:20px;color:var(--muted);">₹50.0 bn</span>
-            <span style="color:var(--gold);">→</span>
-            <span class="mono" style="font-size:30px;color:var(--gold);">₹124.4 bn</span>
-          </div>
-          <div class="stat-sub" style="margin-top:10px;">FY25 → FY30 · ~20% CAGR (per DRHP).</div>
+        <div class="section-label">What getting it right first time returns</div>
+        <div class="kpis">
+          <div class="card stat"><div class="stat-lab">Re-dyes avoided</div><div class="stat-num">~31 / mo</div><div class="stat-sub">if first-time-right reaches 85%.</div></div>
+          <div class="card stat"><div class="stat-lab">Direct saving</div><div class="stat-num">₹71 L / yr</div><div class="stat-sub">dye, chemicals &amp; rejected fabric.</div></div>
+          <div class="card stat"><div class="stat-lab">Water saved</div><div class="stat-num">0.5 M L / yr</div><div class="stat-sub">fewer full re-dye cycles.</div></div>
+          <div class="card stat"><div class="stat-lab">Capacity freed</div><div class="stat-num">~9%</div><div class="stat-sub">dye-house hours back for new orders.</div></div>
         </div>
       </section>
     </div>
 
-    <!-- ===================== IPO & INVESTORS ===================== -->
-    <div class="tab-panel" role="tabpanel" data-panel="ipo">
+    <!-- ============ SUPPLY CHAIN ============ -->
+    <div class="tab-panel" role="tabpanel" data-panel="supply">
 
       <section>
-        <div class="section-label">The offer</div>
-        <div class="kpis">
-          <div class="card stat"><div class="stat-lab">Offer size</div><div class="stat-num">₹650 cr</div><div class="stat-sub">100% Offer for Sale · no fresh issue.</div></div>
-          <div class="card stat"><div class="stat-lab">Listing</div><div class="stat-num">NSE · BSE</div><div class="stat-sub">Face value ₹1 · QIB 50 / NII 15 / Retail 35.</div></div>
-          <div class="card stat"><div class="stat-lab">Promoter holding</div><div class="stat-num">~90.5%</div><div class="stat-sub">Pre-IPO · monetised via the OFS.</div></div>
-          <div class="card stat"><div class="stat-lab">Pre-IPO anchor</div><div class="stat-num">₹100 cr</div><div class="stat-sub">Motilal Oswal Alternates · Sep 2025.</div></div>
+        <div class="section-label">One parachute system · 135 components</div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">PS-CFF-Mk2 · Combat Free Fall system</div>
+            <div style="display:flex;gap:36px;flex-wrap:wrap;margin-top:18px;">
+              <div><div class="scope-big" style="font-size:40px;">135</div><div class="card-note">components in</div></div>
+              <div><div class="scope-big" style="font-size:40px;color:var(--amber)">34</div><div class="card-note">single-vendor parts</div></div>
+              <div><div class="scope-big" style="font-size:40px;color:var(--red)">1</div><div class="card-note">on the critical path</div></div>
+            </div>
+            <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-top:18px;">A new order means 135 POs to chase. AI watches all of them at once and surfaces only the ones that can actually hurt the delivery.</p>
+          </div>
+          <div class="card">
+            <div class="card-title" style="color:var(--red)">Critical · Nylon 66 1260D base yarn</div>
+            <div class="card-note">single-vendor: Toray · order value ₹4.8 cr</div>
+            <div style="margin-top:14px;">
+              <div class="lbar"><div class="lbar-top"><span>Lead time</span><span class="v">11 wk</span></div><div class="lbar-track"><div class="lbar-fill" style="width:100%;background:var(--red)"></div></div></div>
+              <div class="lbar"><div class="lbar-top"><span>Time to deliver</span><span class="v">8 wk</span></div><div class="lbar-track"><div class="lbar-fill" style="width:73%"></div></div></div>
+            </div>
+            <div class="card-note" style="margin-top:6px;">PO not placed → 21-day slip. Two alternates already qualified:</div>
+            <div class="alts">
+              <div class="alt"><h6>Hyosung · Korea</h6><div class="a-meta">9 wk · sample approved · +2.1% price</div></div>
+              <div class="alt"><h6>Zhejiang · China</h6><div class="a-meta">10 wk · trial lot cleared · −1.4% price</div></div>
+            </div>
+            <button class="quiet-action" style="margin-top:16px;" data-toast="RFQ sent to Hyosung &amp; Zhejiang · Toray PO drafted.">Send RFQ &amp; draft PO</button>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-label">PO watcher · what slips if nothing is raised this week</div>
+        <div class="card">
+          <div class="risk"><span class="dot red"></span><div><h5>Nylon 66 1260D · PS-CFF-Mk2</h5><p>PO age 0 of 0 allowed · lead 11 wk against an 8-wk deadline.</p></div><span class="r-side">−21 days</span></div>
+          <div class="risk"><span class="dot amber"></span><div><h5>Silicone elastomer coating · KX-309</h5><p>Raise within 5 days or the coating window moves.</p></div><span class="r-side">−6 days</span></div>
+          <div class="risk"><span class="dot amber"></span><div><h5>Ripcord assembly hardware · PS-CFF-Mk2</h5><p>Two-week buffer left before it touches assembly.</p></div><span class="r-side">−3 days</span></div>
+          <div class="risk"><span class="dot emerald"></span><div><h5>PU film · laminate line</h5><p>Stock + open PO cover the next 6 weeks.</p></div><span class="r-side">on time</span></div>
         </div>
       </section>
 
       <section>
         <div class="grid-2">
           <div class="card">
-            <div class="ipo-sub">Offer for sale · ₹650 cr</div>
-            <div class="ofs">
-              <div class="ofs-item">
-                <div class="ofs-top"><span>Siddharth Y. Kusumgar</span><span class="v">₹420 cr</span></div>
-                <div class="ofs-track"><div class="ofs-fill" style="width:64.6%"></div></div>
-              </div>
-              <div class="ofs-item">
-                <div class="ofs-top"><span>Sapna S. Kusumgar</span><span class="v">₹200 cr</span></div>
-                <div class="ofs-track"><div class="ofs-fill" style="width:30.8%"></div></div>
-              </div>
-              <div class="ofs-item">
-                <div class="ofs-top"><span>Siddharth Y. Kusumgar HUF</span><span class="v">₹30 cr</span></div>
-                <div class="ofs-track"><div class="ofs-fill" style="width:4.6%"></div></div>
-              </div>
+            <div class="card-title">Defence delivery countdown · Tender KX-309</div>
+            <div style="display:flex;align-items:baseline;gap:14px;margin-top:16px;">
+              <span class="scope-big" style="color:var(--amber)">47<span class="u">days left</span></span>
+            </div>
+            <div style="margin-top:16px;">
+              <div class="lbar"><div class="lbar-top"><span>Elapsed (of 60-day commitment)</span><span class="v">71 days*</span></div><div class="lbar-track"><div class="lbar-fill" style="width:100%;background:var(--amber)"></div></div></div>
+            </div>
+            <p class="card-note" style="margin-top:8px;">*Re-baselined scope. Two single-vendor parts on the critical path; suitcase-import contingency pre-cleared as a last resort.</p>
+          </div>
+          <div class="card">
+            <div class="card-title">Input price watch · renegotiate before the next PO</div>
+            <div style="margin-top:14px;">
+              <div class="risk"><span class="dot amber"></span><div><h5>Nylon 66 base yarn</h5><p>Latest quote vs your last PO.</p></div><span class="r-side" style="color:var(--red)">+4.2%</span></div>
+              <div class="risk"><span class="dot amber"></span><div><h5>PU coating resin</h5><p>Spot moved above contract.</p></div><span class="r-side" style="color:var(--red)">+2.8%</span></div>
+              <div class="risk"><span class="dot emerald"></span><div><h5>Polyester filament</h5><p>Softer than last buy — pull forward.</p></div><span class="r-side" style="color:var(--emerald)">−3.1%</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ============ PLANNING & FLOOR ============ -->
+    <div class="tab-panel" role="tabpanel" data-panel="planning">
+
+      <section>
+        <div class="section-label">Production plan · 600 looms + 15 process lines</div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">June plan · still on Excel, not yet locked</div>
+            <div class="card-note">12 planners · ~12 hrs/day · hand-to-mouth</div>
+            <div style="margin-top:18px;">
+              <div class="lbar"><div class="lbar-top"><span>Looms loaded</span><span class="v">41%</span></div><div class="lbar-track"><div class="lbar-fill" style="width:41%"></div></div></div>
+              <div class="lbar"><div class="lbar-top"><span>Schedule adherence</span><span class="v">78%</span></div><div class="lbar-track"><div class="lbar-fill" style="width:78%"></div></div></div>
+              <div class="lbar"><div class="lbar-top"><span>Coating line CL-3 (the constraint)</span><span class="v">92%</span></div><div class="lbar-track"><div class="lbar-fill" style="width:92%;background:var(--amber)"></div></div></div>
             </div>
           </div>
           <div class="card">
-            <div class="ipo-sub">Deal facts</div>
-            <div class="kv-row"><span class="k">Book-running lead managers</span><span class="v">Axis · IIFL · Motilal Oswal</span></div>
-            <div class="kv-row"><span class="k">Registrar</span><span class="v">Bigshare Services</span></div>
-            <div class="kv-row"><span class="k">DRHP filed</span><span class="v mono">27 Sep 2025</span></div>
-            <div class="kv-row"><span class="k">SEBI observation</span><span class="v mono">~07 Jan 2026</span></div>
-            <div class="kv-row"><span class="k">Price band &amp; dates</span><span class="v">To be announced</span></div>
+            <div class="card-title" style="color:var(--gold)">AI monthly plan · ready to lock</div>
+            <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-top:14px;">Sequenced across looms, dyeing and coating with the continuous + batch mix respected. One click replaces the week-by-week scramble.</p>
+            <div class="kpis" style="grid-template-columns:1fr 1fr;gap:14px;margin-top:18px;">
+              <div><div class="stat-lab">WIP</div><div class="stat-num" style="font-size:24px;">18.6 → 12.4 d</div></div>
+              <div><div class="stat-lab">On-time</div><div class="stat-num" style="font-size:24px;">91 → 96%</div></div>
+              <div><div class="stat-lab">Planner hours freed</div><div class="stat-num" style="font-size:24px;">~140 / mo</div></div>
+              <div><div class="stat-lab">Cash released</div><div class="stat-num" style="font-size:24px;">₹24 cr</div></div>
+            </div>
+            <button class="quiet-action" style="margin-top:18px;" data-toast="June plan locked &amp; pushed to the floor tablets.">Lock June plan</button>
           </div>
         </div>
       </section>
 
       <section>
-        <div class="section-label">Readiness &amp; investor prep</div>
+        <div class="section-label">Lab → bulk · cutting the trials</div>
         <div class="grid-2">
           <div class="card">
-            <div class="ipo-sub">Where you stand</div>
-            <div class="ipo-row"><span class="dot emerald"></span><div><div class="ir-main">DRHP filed &amp; SEBI cleared</div><div class="ir-note">Observation received ~7 Jan 2026.</div></div></div>
-            <div class="ipo-row"><span class="dot gold"></span><div><div class="ir-main">Roadshow underway</div><div class="ir-note">Listing in 22 days · ₹650 cr offer.</div></div></div>
-            <div class="ipo-row"><span class="dot gold"></span><div><div class="ir-main">Price band next</div><div class="ir-note">Band, dates &amp; lot size still to be announced.</div></div></div>
-            <div class="ipo-row"><span class="dot amber"></span><div><div class="ir-main">Customer concentration 84.7%</div><div class="ir-note">Top 10 customers — prep your answer.</div></div></div>
+            <div class="card-title">Average trials, lab to bulk</div>
+            <div style="display:flex;align-items:baseline;gap:14px;margin-top:16px;">
+              <span class="scope-big">6.2</span><span style="color:var(--gold);font-size:20px;">→</span><span class="scope-big" style="color:var(--gold)">2.3</span>
+              <span style="font-size:12.5px;color:var(--faint)">on AI recipes</span>
+            </div>
+            <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-top:16px;">The lab–bulk gap traced to two settings — <b style="color:var(--cream);font-weight:600">mixing time and liquor ratio</b>. Match them and bulk lands in 2 runs, not 10.</p>
           </div>
-          <div class="card ipo-q">
-            <div class="ipo-sub">Questions to pre-answer</div>
-            <ul>
-              <li>Top 10 = 84.7% of revenue — how durable are these defence relationships?</li>
-              <li>Defence orders are lumpy — how predictable is the order book?</li>
-              <li>It's a 100% OFS — how is future growth funded without fresh capital?</li>
-              <li>Capacity at 42.3% — what does the 2.6× headroom mean for the story?</li>
-            </ul>
-            <button class="quiet-action" data-toast="Investor brief opened — talking points ready.">Open investor brief</button>
+          <div class="card">
+            <div class="card-title">Products converging now</div>
+            <div style="margin-top:14px;">
+              <div class="risk"><span class="dot emerald"></span><div><h5>Olive-green parachute fabric</h5><p>Matched bulk on trial 3 (was averaging 7).</p></div><span class="r-side" style="color:var(--emerald)">3 trials</span></div>
+              <div class="risk"><span class="dot emerald"></span><div><h5>Coated tarpaulin · grey</h5><p>Liquor-ratio correction applied.</p></div><span class="r-side" style="color:var(--emerald)">2 trials</span></div>
+              <div class="risk"><span class="dot amber"></span><div><h5>NBC laminate · charcoal</h5><p>On trial 4 — incoming film variance.</p></div><span class="r-side">in progress</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-label">Where margin is moving — and why</div>
+        <div class="card">
+          <div class="mline"><div><div class="m-name">Automotive &amp; industrial coating</div><div class="m-why">Input nylon +6% · no price revision in 4 months — re-price now</div></div><div class="m-val down">−9.0%</div></div>
+          <div class="mline"><div><div class="m-name">Outdoor &amp; lifestyle · Cordura</div><div class="m-why">Freight + dye cost · partly passed through</div></div><div class="m-val down">−3.1%</div></div>
+          <div class="mline"><div><div class="m-name">A&amp;D fabrics</div><div class="m-why">Mix &amp; yield holding</div></div><div class="m-val flat">flat</div></div>
+          <div class="mline"><div><div class="m-name">A&amp;D solutions</div><div class="m-why">Scale on finished parachute systems</div></div><div class="m-val up">+2.4%</div></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ============ INVESTORS & INTEL ============ -->
+    <div class="tab-panel" role="tabpanel" data-panel="intel">
+
+      <section>
+        <div class="section-label">Roadshow prep · the questions you'll be asked</div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Likely questions · your prepared answer</div>
+            <div style="margin-top:8px;">
+              <div class="qa"><div class="q">Top 10 customers are 84.7% of revenue — how durable is that?</div><div class="a">Multi-year defence programmes on transferred technology (CFF, cold-weather) with high switching cost; concentration reflects programme scale, not fragility — and Solutions is broadening the base.</div></div>
+              <div class="qa"><div class="q">Defence orders are lumpy — how predictable is the order book?</div><div class="a">Order book ≈ 9 months of cover; tenders convert on fixed timelines; Surat capacity de-risks delivery on win.</div></div>
+              <div class="qa"><div class="q">It's a 100% OFS — how is growth funded?</div><div class="a">Internal accruals plus 1.09× net-debt headroom; the FY25 capacity was already built — this offer is promoter monetisation, not a growth-capital need.</div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title" style="color:var(--amber)">Steer the conversation — don't volunteer</div>
+            <div style="margin-top:14px;">
+              <div class="risk"><span class="dot amber"></span><div><h5>Single-customer share within the top 10</h5><p>Speak to the programme, not the name.</p></div></div>
+              <div class="risk"><span class="dot amber"></span><div><h5>Working-capital / WIP days</h5><p>Lead with the plan to bring it down, not today's number.</p></div></div>
+              <div class="risk"><span class="dot amber"></span><div><h5>Automotive-coating margin dip</h5><p>Frame as a re-pricing already in motion.</p></div></div>
+            </div>
+            <button class="quiet-action" style="margin-top:16px;" data-toast="Roadshow brief opened — answers &amp; guardrails ready.">Open full brief</button>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-label">Market intelligence · the moves you can't see from the floor</div>
+        <div class="grid-3">
+          <div class="card sol">
+            <span class="sol-n">Green-field</span>
+            <h4>Competitor filed a new NBC line</h4>
+            <p>A listed peer's DRHP (p.142) reveals a fresh N.B.C.-protection division — a space you already hold AS9100D approval for. First-mover window before they ramp.</p>
+          </div>
+          <div class="card sol">
+            <span class="sol-n">New market</span>
+            <h4>Airship &amp; aerostat fabric</h4>
+            <p>Three credible global makers identified; founders &amp; programme leads matched on LinkedIn. A tailored outreach note — in your voice — is drafted and ready to send.</p>
+            <button class="quiet-action" style="margin-top:14px;" data-toast="Outreach draft opened — ready in your voice.">Open draft</button>
+          </div>
+          <div class="card sol">
+            <span class="sol-n">Tailwind</span>
+            <h4>The market is doubling</h4>
+            <p>India's aerospace &amp; defence engineered-fabrics market is projected to grow ₹50.0 bn → ₹124.4 bn by FY30 (~20% CAGR) — and you're 77% exposed to it.</p>
           </div>
         </div>
       </section>
     </div>
 
     <!-- Footer -->
-    <div class="data-note">Financials, segment mix, capacity, products and IPO details are drawn from Kusumgar's public DRHP and filings (FY25); confirm against the filing before any decision. Live operational metrics (shade, WIP, watcher alerts, supplier status) are illustrative.</div>
+    <div class="data-note">This is a live view of what your AI team surfaces from Dynamics, your dashboards and floor feeds — root causes, predictions and actions. Operational figures shown (shades, lots, lead times, savings) are illustrative of the working system; IPO &amp; market context draws on Kusumgar's public filings.</div>
     <footer class="foot">Kusumgar Limited · live across Vapi · Sarigam · Surat · UP · powered by muns.ai</footer>
 
   </div>
@@ -778,69 +667,47 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
-    // Live clock
     (function(){
-      var dEl = document.getElementById('date'), tEl = document.getElementById('time');
-      var DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-      var MON  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      var dEl=document.getElementById('date'), tEl=document.getElementById('time');
+      var DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      var MON=['January','February','March','April','May','June','July','August','September','October','November','December'];
       function p(n){ return String(n).padStart(2,'0'); }
-      function tick(){
-        var n = new Date();
-        dEl.textContent = DAYS[n.getDay()] + ', ' + n.getDate() + ' ' + MON[n.getMonth()] + ' ' + n.getFullYear();
-        tEl.textContent = p(n.getHours()) + ':' + p(n.getMinutes()) + ':' + p(n.getSeconds());
-      }
-      tick(); setInterval(tick, 1000);
+      function tick(){ var n=new Date();
+        dEl.textContent=DAYS[n.getDay()]+', '+n.getDate()+' '+MON[n.getMonth()]+' '+n.getFullYear();
+        tEl.textContent=p(n.getHours())+':'+p(n.getMinutes())+':'+p(n.getSeconds()); }
+      tick(); setInterval(tick,1000);
     })();
 
-    // Theme toggle
     (function(){
-      var btn = document.getElementById('themeToggle'); if(!btn) return;
-      var meta = document.querySelector('meta[name="theme-color"]');
-      var BG = { dark:'#0A1A2F', light:'#F3EEE2' };
-      function sync(t){
-        btn.setAttribute('aria-label', t === 'light' ? 'Switch to dark mode' : 'Switch to light mode');
-        btn.setAttribute('aria-pressed', t === 'light' ? 'true' : 'false');
-        if(meta) meta.setAttribute('content', BG[t] || BG.dark);
-      }
-      sync(document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
+      var btn=document.getElementById('themeToggle'); if(!btn) return;
+      var meta=document.querySelector('meta[name="theme-color"]'); var BG={dark:'#0A1A2F',light:'#F3EEE2'};
+      function sync(t){ btn.setAttribute('aria-label', t==='light'?'Switch to dark mode':'Switch to light mode'); btn.setAttribute('aria-pressed', t==='light'?'true':'false'); if(meta) meta.setAttribute('content', BG[t]||BG.dark); }
+      sync(document.documentElement.getAttribute('data-theme')==='light'?'light':'dark');
       btn.addEventListener('click', function(){
-        var next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        var next=document.documentElement.getAttribute('data-theme')==='light'?'dark':'light';
         document.documentElement.setAttribute('data-theme', next);
         try{ localStorage.setItem('kc-theme', next); }catch(e){}
         sync(next);
       });
     })();
 
-    // Tabs
     (function(){
-      var tabs = document.querySelectorAll('.tab');
-      var panels = document.querySelectorAll('.tab-panel');
-      tabs.forEach(function(t){
-        t.addEventListener('click', function(){
-          var name = t.dataset.tab;
-          tabs.forEach(function(x){ var on = x.dataset.tab === name; x.classList.toggle('active', on); x.setAttribute('aria-selected', on ? 'true':'false'); });
-          panels.forEach(function(p){ p.classList.toggle('active', p.dataset.panel === name); });
-          window.scrollTo({ top:0, behavior:'smooth' });
-        });
-      });
+      var tabs=document.querySelectorAll('.tab'), panels=document.querySelectorAll('.tab-panel');
+      tabs.forEach(function(t){ t.addEventListener('click', function(){
+        var name=t.dataset.tab;
+        tabs.forEach(function(x){ var on=x.dataset.tab===name; x.classList.toggle('active',on); x.setAttribute('aria-selected', on?'true':'false'); });
+        panels.forEach(function(p){ p.classList.toggle('active', p.dataset.panel===name); });
+        window.scrollTo({ top:0, behavior:'smooth' });
+      }); });
     })();
 
-    // Toast
     (function(){
-      var toast = document.getElementById('toast'); var timer;
-      function showToast(msg){
-        toast.textContent = msg; toast.classList.add('show');
-        clearTimeout(timer); timer = setTimeout(function(){ toast.classList.remove('show'); }, 2000);
-      }
-      document.querySelectorAll('[data-toast]').forEach(function(btn){
-        btn.addEventListener('click', function(){ showToast(btn.dataset.toast); });
-      });
+      var toast=document.getElementById('toast'), timer;
+      function showToast(m){ toast.textContent=m; toast.classList.add('show'); clearTimeout(timer); timer=setTimeout(function(){ toast.classList.remove('show'); },2000); }
+      document.querySelectorAll('[data-toast]').forEach(function(b){ b.addEventListener('click', function(){ showToast(b.dataset.toast); }); });
     })();
 
-    // One-time card cascade on load
-    document.addEventListener('DOMContentLoaded', function(){
-      document.getElementById('attnGrid').classList.add('cascade');
-    });
+    document.addEventListener('DOMContentLoaded', function(){ document.getElementById('attnGrid').classList.add('cascade'); });
   </script>
 </body>
 </html>
