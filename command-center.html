@@ -59,11 +59,22 @@
     background-image:var(--glow); background-attachment:fixed;
   }
   .page{ max-width:1280px; margin:0 auto; padding:30px 32px 56px; }
-  .card{ background:var(--card); border:1px solid var(--hairline); border-radius:var(--r-card); box-shadow:var(--shadow); padding:28px; }
+  .card{ background:var(--card); border:1px solid var(--hairline); border-radius:var(--r-card); box-shadow:var(--shadow); padding:28px; transition:border-color .2s ease, box-shadow .2s ease, transform .2s ease; }
+  .card:hover{ border-color:rgba(201,162,39,.20); }
+  .attn:hover{ border-color:var(--gold-line); box-shadow:0 26px 52px -26px rgba(0,0,0,.72); }
+  .sol:hover, .stat:hover, .kpis > .card:hover{ transform:translateY(-3px); border-color:var(--gold-line); box-shadow:0 26px 52px -26px rgba(0,0,0,.72); }
+  [data-theme="light"] .attn:hover, [data-theme="light"] .sol:hover, [data-theme="light"] .stat:hover, [data-theme="light"] .kpis > .card:hover{ box-shadow:0 24px 44px -24px rgba(24,34,52,.34); }
   .section-label{ font-family:var(--serif); font-weight:500; font-size:13px; letter-spacing:.20em; text-transform:uppercase; color:var(--muted); margin-bottom:20px; }
   .mono{ font-family:var(--mono); font-variant-numeric:tabular-nums; }
   .card-title{ font-size:11px; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); }
   .card-note{ font-size:11.5px; color:var(--faint); margin-top:4px; }
+
+  /* Click-to-drill affordance */
+  [data-detail]{ cursor:pointer; }
+  .watch[data-detail], .risk[data-detail], .mline[data-detail], .qa[data-detail], .lbar[data-detail]{ transition:background .15s ease; border-radius:9px; }
+  .watch[data-detail]:hover, .risk[data-detail]:hover, .mline[data-detail]:hover, .qa[data-detail]:hover, .lbar[data-detail]:hover{ background:rgba(201,162,39,.06); }
+  .more{ font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); opacity:0; transition:opacity .18s ease; margin-top:14px; }
+  .card[data-detail]:hover .more, .sol[data-detail]:hover .more, .stat[data-detail]:hover .more{ opacity:1; }
 
   /* Header */
   .topbar{ display:flex; justify-content:space-between; align-items:flex-start; gap:24px; }
@@ -125,8 +136,8 @@
 
   /* Watch feed */
   .watch-list{ display:flex; flex-direction:column; }
-  .watch{ display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:start; padding:17px 0; border-top:1px solid var(--hairline); }
-  .watch:first-child{ border-top:none; padding-top:2px; }
+  .watch{ display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:start; padding:17px 14px; border-top:1px solid var(--hairline); }
+  .watch:first-child{ border-top:none; }
   .watch .dot{ width:9px; height:9px; margin-top:5px; }
   .watch h4{ font-size:14.5px; font-weight:600; line-height:1.4; }
   .watch p{ font-size:12.5px; color:var(--muted); margin-top:3px; line-height:1.5; }
@@ -135,17 +146,11 @@
   /* Grids */
   .grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
   .grid-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
-  .grid-auto{ display:grid; grid-template-columns:repeat(auto-fit, minmax(232px,1fr)); gap:18px; }
 
   /* Stat block */
   .stat .stat-lab{ font-size:11px; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); }
   .stat .stat-num{ font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:28px; margin:11px 0 7px; }
   .stat .stat-sub{ font-size:12.5px; color:var(--muted); line-height:1.5; }
-
-  /* Chips */
-  .chip-row{ display:flex; flex-wrap:wrap; gap:9px; margin-top:12px; }
-  .chip{ font-size:11.5px; color:var(--muted); border:1px solid var(--hairline); border-radius:var(--r-pill); padding:5px 12px; }
-  .chip.gold{ color:var(--gold); border-color:var(--gold-line); background:var(--gold-soft); }
 
   /* Live scope */
   .scope-big{ font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:48px; line-height:1; }
@@ -158,10 +163,11 @@
   .lbar-top{ display:flex; justify-content:space-between; gap:12px; font-size:13px; }
   .lbar-top .v{ font-family:var(--mono); color:var(--muted); }
   .lbar-track{ height:8px; background:var(--track); border-radius:4px; overflow:hidden; }
-  .lbar-fill{ height:100%; background:var(--gold); border-radius:4px; }
+  .lbar-fill{ height:100%; background:var(--gold); border-radius:4px; transition:filter .15s ease; }
+  .lbar:hover .lbar-fill{ filter:brightness(1.14); }
 
   /* Risk rows */
-  .risk{ display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:start; padding:15px 0; border-top:1px solid var(--hairline); }
+  .risk{ display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:start; padding:15px 14px; border-top:1px solid var(--hairline); }
   .risk:first-child{ border-top:none; }
   .risk .dot{ width:8px; height:8px; margin-top:6px; }
   .risk h5{ font-size:14px; font-weight:600; }
@@ -175,7 +181,7 @@
   .alt .a-meta{ font-size:11.5px; color:var(--muted); margin-top:5px; }
 
   /* Margin lines */
-  .mline{ display:grid; grid-template-columns:1fr auto; gap:14px; align-items:baseline; padding:14px 0; border-top:1px solid var(--hairline); }
+  .mline{ display:grid; grid-template-columns:1fr auto; gap:14px; align-items:baseline; padding:14px; border-top:1px solid var(--hairline); }
   .mline:first-child{ border-top:none; }
   .mline .m-name{ font-size:14px; }
   .mline .m-why{ font-size:11.5px; color:var(--faint); margin-top:4px; }
@@ -183,7 +189,7 @@
   .mline .m-val.down{ color:var(--red); } .mline .m-val.up{ color:var(--emerald); } .mline .m-val.flat{ color:var(--muted); }
 
   /* Q&A */
-  .qa{ padding:17px 0; border-top:1px solid var(--hairline); }
+  .qa{ padding:17px 14px; border-top:1px solid var(--hairline); }
   .qa:first-of-type{ border-top:none; }
   .qa .q{ font-size:14.5px; font-weight:600; display:flex; gap:11px; }
   .qa .q:before{ content:"Q"; color:var(--gold); font-family:var(--mono); }
@@ -199,6 +205,33 @@
   .barchart{ width:100%; height:auto; display:block; }
   .bar-val{ font-family:var(--mono); font-size:13px; fill:var(--cream); }
   .bar-lab{ font-family:var(--font); font-size:11px; letter-spacing:.08em; fill:var(--muted); }
+  .barchart rect[data-tip]{ cursor:pointer; transition:opacity .15s ease; }
+  .barchart rect[data-tip]:hover{ opacity:.82; }
+  .trace circle[data-tip]{ cursor:pointer; transition:fill .15s ease; }
+  .trace circle[data-tip]:hover{ fill:rgba(201,162,39,.14); }
+  .chart-tip{ position:fixed; z-index:200; pointer-events:none; background:var(--card-2); color:var(--cream); border:1px solid var(--hairline); border-radius:10px; padding:8px 12px; font-size:12.5px; box-shadow:0 14px 34px -14px rgba(0,0,0,.6); opacity:0; transform:translateY(4px); transition:opacity .14s ease, transform .14s ease; white-space:nowrap; }
+  .chart-tip.show{ opacity:1; transform:translateY(0); }
+  .chart-tip .t-val{ font-family:var(--mono); font-variant-numeric:tabular-nums; font-weight:500; }
+  .chart-tip .t-sub{ display:block; color:var(--muted); font-size:11px; margin-top:2px; }
+
+  /* Supply: products & component map */
+  .prod-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:18px; }
+  .prod h4{ font-size:15px; font-weight:600; }
+  .prod .p-sub{ font-size:12px; color:var(--faint); margin-top:4px; }
+  .prod .p-stats{ display:flex; gap:24px; margin-top:16px; }
+  .prod .ps-n{ font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:19px; }
+  .prod .ps-l{ font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--faint); margin-top:3px; }
+  .prod .p-save{ font-family:var(--mono); font-size:13px; color:var(--emerald); margin-top:14px; }
+  .comp-head{ display:grid; grid-template-columns:1fr 110px 120px; gap:16px; padding:0 14px 12px; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--faint); }
+  .comp-head .r{ text-align:right; }
+  .comp-row{ display:grid; grid-template-columns:1fr 110px 120px; gap:16px; align-items:center; padding:15px 14px; border-top:1px solid var(--hairline); cursor:pointer; border-radius:9px; transition:background .15s ease; }
+  .comp-row:hover{ background:rgba(201,162,39,.06); }
+  .comp-row .c-name{ font-size:14px; font-weight:600; }
+  .comp-row .c-sub{ font-size:11.5px; color:var(--faint); margin-top:4px; }
+  .comp-row .c-lever{ display:inline-block; font-size:10px; letter-spacing:.05em; text-transform:uppercase; color:var(--gold); border:1px solid var(--gold-line); border-radius:999px; padding:2px 9px; margin-top:8px; }
+  .comp-row .c-spend{ font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:13px; color:var(--muted); text-align:right; }
+  .comp-row .c-save{ font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:14px; color:var(--emerald); text-align:right; }
+  @media (max-width:560px){ .comp-head{ display:none; } .comp-row{ grid-template-columns:1fr auto; } .comp-row .c-spend{ display:none; } }
 
   /* Footer */
   .data-note{ margin-top:56px; text-align:center; font-size:11.5px; color:var(--faint); line-height:1.6; max-width:780px; margin-left:auto; margin-right:auto; }
@@ -258,7 +291,8 @@
   @media (prefers-reduced-motion:reduce){
     .cascade .attn{ animation:none; opacity:1; } .attn{ opacity:1; } .attn .dot.red{ animation:none; }
     .tab-panel.active{ animation:none; } .modal-overlay.show .modal.active{ animation:none; }
-    .toast,.theme-toggle,.attn-action,.quiet-action,.tab,.modal-overlay{ transition:none; }
+    .sol:hover, .stat:hover, .kpis > .card:hover{ transform:none; }
+    .toast,.theme-toggle,.attn-action,.quiet-action,.tab,.modal-overlay,.card,.chart-tip,.more{ transition:none; }
   }
 
   /* Responsive */
@@ -314,14 +348,14 @@
       <section class="greeting">
         <h1>Good morning, Sapna.</h1>
         <div class="sub">3 things need your attention today.</div>
-        <div class="brief"><span class="live-dot"></span>Overnight your AI team read Dynamics, 11 dashboards and 6 mailboxes — and found ₹38 L quietly leaking that no report flagged.</div>
+        <div class="brief"><span class="live-dot"></span>Overnight your AI team read Dynamics, 11 dashboards and 6 mailboxes — and found ₹38 L quietly leaking that no report flagged. <span style="color:var(--gold)">Tap any figure to go deeper.</span></div>
       </section>
 
       <section class="kpis">
-        <div class="card"><div class="kpi-label">Re-dyes this month</div><div class="kpi-num">₹26<span class="unit">L</span></div><div class="kpi-delta"><span class="warn">first-time-right 63%</span></div></div>
-        <div class="card"><div class="kpi-label">Cash stuck in WIP</div><div class="kpi-num">₹74<span class="unit">cr</span></div><div class="kpi-delta"><span class="down">▲ 18.6 days</span><span class="sep">·</span> rising</div></div>
-        <div class="card"><div class="kpi-label">Order value at risk</div><div class="kpi-num">₹4.8<span class="unit">cr</span></div><div class="kpi-delta"><span class="down">Nylon 66 slip</span></div></div>
-        <div class="card"><div class="kpi-label">Idle new capacity</div><div class="kpi-num">57.7<span class="unit">%</span></div><div class="kpi-delta"><span class="sep">·</span> Surat line · room to fill</div></div>
+        <div class="card" data-detail="redyes"><div class="kpi-label">Re-dyes this month</div><div class="kpi-num">₹26<span class="unit">L</span></div><div class="kpi-delta"><span class="warn">first-time-right 63%</span></div><div class="more">View breakdown →</div></div>
+        <div class="card" data-detail="wip"><div class="kpi-label">Cash stuck in WIP</div><div class="kpi-num">₹74<span class="unit">cr</span></div><div class="kpi-delta"><span class="down">▲ 18.6 days</span><span class="sep">·</span> rising</div><div class="more">View breakdown →</div></div>
+        <div class="card" data-detail="atrisk"><div class="kpi-label">Order value at risk</div><div class="kpi-num">₹4.8<span class="unit">cr</span></div><div class="kpi-delta"><span class="down">Nylon 66 slip</span></div><div class="more">View detail →</div></div>
+        <div class="card" data-detail="idlecap"><div class="kpi-label">Idle new capacity</div><div class="kpi-num">57.7<span class="unit">%</span></div><div class="kpi-delta"><span class="sep">·</span> Surat line · room to fill</div><div class="more">View detail →</div></div>
       </section>
 
       <section class="attention">
@@ -355,11 +389,11 @@
         <div class="section-label">Your AI team is watching — before it bites</div>
         <div class="card">
           <div class="watch-list">
-            <div class="watch"><span class="dot red"></span><div><h4>Nylon 66 PO unplaced → PS-CFF-Mk2 slips 21 days.</h4><p>₹4.8 cr order at risk · lead 11 wk, only 8 wk to deliver · 2 alternates qualified.</p></div><span class="w-time">06:02</span></div>
-            <div class="watch"><span class="dot amber"></span><div><h4>Tender KX-309 is at day 71 of a 60-day commitment.</h4><p>Critical path runs through 2 single-vendor parts · suitcase contingency flagged.</p></div><span class="w-time">05:48</span></div>
-            <div class="watch"><span class="dot amber"></span><div><h4>Automotive-coating margin down 9% this quarter.</h4><p>Input nylon +6%; your last price revision was 4 months ago — re-price.</p></div><span class="w-time">05:30</span></div>
-            <div class="watch"><span class="dot gold"></span><div><h4>A listed competitor filed a new NBC-protection division.</h4><p>Green-field you're already AS9100D-certified for · DRHP, p.142.</p></div><span class="w-time">04:10</span></div>
-            <div class="watch"><span class="dot emerald"></span><div><h4>Olive-green converged in 3 trials, not 6 — ₹1.9 L saved.</h4><p>AI recipe matched bulk on trial 3 · 50 years of dye records paid off.</p></div><span class="w-time">02:15</span></div>
+            <div class="watch" data-detail="w-nylon"><span class="dot red"></span><div><h4>Nylon 66 PO unplaced → PS-CFF-Mk2 slips 21 days.</h4><p>₹4.8 cr order at risk · lead 11 wk, only 8 wk to deliver · 2 alternates qualified.</p></div><span class="w-time">06:02</span></div>
+            <div class="watch" data-detail="w-tender"><span class="dot amber"></span><div><h4>Tender KX-309 is at day 71 of a 60-day commitment.</h4><p>Critical path runs through 2 single-vendor parts · suitcase contingency flagged.</p></div><span class="w-time">05:48</span></div>
+            <div class="watch" data-detail="w-margin"><span class="dot amber"></span><div><h4>Automotive-coating margin down 9% this quarter.</h4><p>Input nylon +6%; your last price revision was 4 months ago — re-price.</p></div><span class="w-time">05:30</span></div>
+            <div class="watch" data-detail="w-competitor"><span class="dot gold"></span><div><h4>A listed competitor filed a new NBC-protection division.</h4><p>Green-field you're already AS9100D-certified for · DRHP, p.142.</p></div><span class="w-time">04:10</span></div>
+            <div class="watch" data-detail="w-olive"><span class="dot emerald"></span><div><h4>Olive-green converged in 3 trials, not 6 — ₹1.9 L saved.</h4><p>AI recipe matched bulk on trial 3 · 50 years of dye records paid off.</p></div><span class="w-time">02:15</span></div>
           </div>
         </div>
       </section>
@@ -370,7 +404,7 @@
       <section>
         <div class="section-label">Live dye monitor</div>
         <div class="grid-2">
-          <div class="card">
+          <div class="card" data-detail="batch">
             <div class="card-title">Batch DY-2208 · olive green · Jigger J-4</div>
             <div class="card-note">started 04:12 · 40 min in · target ΔE ≤ 0.8</div>
             <div style="display:flex;align-items:baseline;gap:14px;margin-top:18px;">
@@ -378,10 +412,23 @@
               <span style="font-size:12.5px;color:var(--faint)">and climbing</span>
             </div>
             <svg class="trace" viewBox="0 0 300 96" role="img" aria-label="Shade drift rising from 0.3 to 1.8 ΔE, past the 0.8 target">
+              <defs><linearGradient id="driftFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--g1)" stop-opacity=".22"/><stop offset="1" stop-color="var(--g1)" stop-opacity="0"/></linearGradient></defs>
+              <path d="M10,71.25 L66,65.42 122,59.58 178,50.83 234,39.17 290,27.5 L290,86 L10,86 Z" fill="url(#driftFill)" stroke="none"/>
               <line x1="10" y1="56.7" x2="290" y2="56.7" stroke="var(--axis)" stroke-width="1" stroke-dasharray="4 4"/>
               <text x="290" y="52" text-anchor="end" class="trace-pt">target 0.8</text>
               <polyline points="10,71.25 66,65.42 122,59.58 178,50.83 234,39.17 290,27.5" fill="none" stroke="var(--g1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="10" cy="71.25" r="2.6" fill="var(--g1)"/>
+              <circle cx="66" cy="65.42" r="2.6" fill="var(--g1)"/>
+              <circle cx="122" cy="59.58" r="2.6" fill="var(--g1)"/>
+              <circle cx="178" cy="50.83" r="2.6" fill="var(--g1)"/>
+              <circle cx="234" cy="39.17" r="2.6" fill="var(--g1)"/>
               <circle cx="290" cy="27.5" r="4" fill="var(--amber)"/>
+              <circle cx="10"  cy="71.25" r="12" fill="transparent" data-tip="ΔE 0.3|04:12 · start"/>
+              <circle cx="66"  cy="65.42" r="12" fill="transparent" data-tip="ΔE 0.5|04:20 · 8 min"/>
+              <circle cx="122" cy="59.58" r="12" fill="transparent" data-tip="ΔE 0.7|04:28 · 16 min"/>
+              <circle cx="178" cy="50.83" r="12" fill="transparent" data-tip="ΔE 1.0|04:36 · crossed target"/>
+              <circle cx="234" cy="39.17" r="12" fill="transparent" data-tip="ΔE 1.4|04:44 · 32 min"/>
+              <circle cx="290" cy="27.5" r="12" fill="transparent" data-tip="ΔE 1.8|04:52 · now"/>
               <text x="10" y="90" class="trace-pt">04:12</text>
               <text x="290" y="90" text-anchor="end" class="trace-pt">now</text>
             </svg>
@@ -389,8 +436,8 @@
           <div class="card">
             <div class="card-title">Root cause — traced through the lifecycle</div>
             <div style="margin-top:16px;">
-              <div class="risk"><span class="dot red"></span><div><h5>Wrong dye lot on the floor</h5><p>Lot DL-7741 (floor stock) used, not the lab-qualified DL-7738 — 2 other batches this week hit the same swap.</p></div><span class="r-side">+1.1 ΔE</span></div>
-              <div class="risk"><span class="dot amber"></span><div><h5>Over-mixed compound</h5><p>CCTV timing on J-4: 12.4 min vs the 10.0 min lab spec.</p></div><span class="r-side">+0.5 ΔE</span></div>
+              <div class="risk" data-detail="rc-lot"><span class="dot red"></span><div><h5>Wrong dye lot on the floor</h5><p>Lot DL-7741 (floor stock) used, not the lab-qualified DL-7738 — 2 other batches this week hit the same swap.</p></div><span class="r-side">+1.1 ΔE</span></div>
+              <div class="risk" data-detail="rc-mix"><span class="dot amber"></span><div><h5>Over-mixed compound</h5><p>CCTV timing on J-4: 12.4 min vs the 10.0 min lab spec.</p></div><span class="r-side">+0.5 ΔE</span></div>
             </div>
             <div style="margin-top:18px;padding-top:18px;border-top:1px solid var(--hairline);">
               <div class="card-title" style="color:var(--gold)">Recommended fix</div>
@@ -404,7 +451,7 @@
       <section>
         <div class="section-label">Where colour trouble actually starts</div>
         <div class="grid-2">
-          <div class="card">
+          <div class="card" data-detail="causes">
             <div class="card-title">Root cause of shade failures · last 90 days</div>
             <div style="margin-top:16px;">
               <div class="lbar"><div class="lbar-top"><span>Wrong / mixed dye lot</span><span class="v">38%</span></div><div class="lbar-track"><div class="lbar-fill" style="width:38%"></div></div></div>
@@ -415,17 +462,17 @@
             </div>
             <div class="card-note" style="margin-top:14px;">60% of misses trace to two fixable habits — lot discipline and mix timing.</div>
           </div>
-          <div class="card">
+          <div class="card" data-detail="ftr">
             <div class="card-title">First-time-right shade · %</div>
             <div class="visual-note">last 6 months · → target 85</div>
             <svg class="barchart" viewBox="0 0 300 180" role="img" aria-label="First-time-right shade: 48 52 55 58 61 63 percent">
               <line x1="20" y1="150" x2="288" y2="150" stroke="var(--axis)" stroke-width="1"/>
-              <rect x="32" y="63.6" width="28" height="86.4" rx="4" fill="var(--g1)"/>
-              <rect x="76" y="56.4" width="28" height="93.6" rx="4" fill="var(--g1)"/>
-              <rect x="120" y="51.0" width="28" height="99.0" rx="4" fill="var(--g1)"/>
-              <rect x="164" y="45.6" width="28" height="104.4" rx="4" fill="var(--g1)"/>
-              <rect x="208" y="40.2" width="28" height="109.8" rx="4" fill="var(--g1)"/>
-              <rect x="252" y="36.6" width="28" height="113.4" rx="4" fill="var(--g1)"/>
+              <rect x="32" y="63.6" width="28" height="86.4" rx="4" fill="var(--g1)" data-tip="48%|January · first-time-right"/>
+              <rect x="76" y="56.4" width="28" height="93.6" rx="4" fill="var(--g1)" data-tip="52%|February · first-time-right"/>
+              <rect x="120" y="51.0" width="28" height="99.0" rx="4" fill="var(--g1)" data-tip="55%|March · first-time-right"/>
+              <rect x="164" y="45.6" width="28" height="104.4" rx="4" fill="var(--g1)" data-tip="58%|April · first-time-right"/>
+              <rect x="208" y="40.2" width="28" height="109.8" rx="4" fill="var(--g1)" data-tip="61%|May · first-time-right"/>
+              <rect x="252" y="36.6" width="28" height="113.4" rx="4" fill="var(--g1)" data-tip="63%|June · first-time-right"/>
               <text x="46" y="55.6" text-anchor="middle" class="bar-val">48</text>
               <text x="90" y="48.4" text-anchor="middle" class="bar-val">52</text>
               <text x="134" y="43.0" text-anchor="middle" class="bar-val">55</text>
@@ -456,7 +503,7 @@
       <section>
         <div class="section-label">Whole-roll vision · what the spot meter missed</div>
         <div class="grid-2">
-          <div class="card">
+          <div class="card" data-detail="wholeroll">
             <div class="card-title">Roll R-4471 · olive green · 1,200 m</div>
             <div style="margin-top:16px;">
               <div class="risk"><span class="dot amber"></span><div><h5>Streak · 380–410 m</h5><p>Fine warp-way streak, ~0.6 ΔE local.</p></div><span class="r-side">caught</span></div>
@@ -464,7 +511,7 @@
               <div class="risk"><span class="dot emerald"></span><div><h5>Spectrometer reading · 600 m</h5><p>Single 2 cm spot — landed on good cloth, passed the roll.</p></div><span class="r-side">would pass</span></div>
             </div>
           </div>
-          <div class="card stat" style="display:flex;flex-direction:column;justify-content:center;">
+          <div class="card stat" data-detail="wholeroll" style="display:flex;flex-direction:column;justify-content:center;">
             <div class="stat-lab">Caught today the spot meter would miss</div>
             <div class="stat-num" style="font-size:34px;">2 rolls</div>
             <div class="stat-sub">≈ 1,940 m of fabric held back before it shipped to a defence customer — and a complaint that never happens.</div>
@@ -475,10 +522,10 @@
       <section>
         <div class="section-label">What getting it right first time returns</div>
         <div class="kpis">
-          <div class="card stat"><div class="stat-lab">Re-dyes avoided</div><div class="stat-num">~31 / mo</div><div class="stat-sub">if first-time-right reaches 85%.</div></div>
-          <div class="card stat"><div class="stat-lab">Direct saving</div><div class="stat-num">₹71 L / yr</div><div class="stat-sub">dye, chemicals &amp; rejected fabric.</div></div>
-          <div class="card stat"><div class="stat-lab">Water saved</div><div class="stat-num">0.5 M L / yr</div><div class="stat-sub">fewer full re-dye cycles.</div></div>
-          <div class="card stat"><div class="stat-lab">Capacity freed</div><div class="stat-num">~9%</div><div class="stat-sub">dye-house hours back for new orders.</div></div>
+          <div class="card stat" data-detail="savings"><div class="stat-lab">Re-dyes avoided</div><div class="stat-num">~31 / mo</div><div class="stat-sub">if first-time-right reaches 85%.</div></div>
+          <div class="card stat" data-detail="savings"><div class="stat-lab">Direct saving</div><div class="stat-num">₹71 L / yr</div><div class="stat-sub">dye, chemicals &amp; rejected fabric.</div></div>
+          <div class="card stat" data-detail="savings"><div class="stat-lab">Water saved</div><div class="stat-num">0.5 M L / yr</div><div class="stat-sub">fewer full re-dye cycles.</div></div>
+          <div class="card stat" data-detail="savings"><div class="stat-lab">Capacity freed</div><div class="stat-num">~9%</div><div class="stat-sub">dye-house hours back for new orders.</div></div>
         </div>
       </section>
     </div>
@@ -486,9 +533,51 @@
     <!-- ============ SUPPLY CHAIN ============ -->
     <div class="tab-panel" role="tabpanel" data-panel="supply">
       <section>
+        <div class="section-label">Where can we save · cost-savings radar</div>
+        <div class="kpis">
+          <div class="card stat"><div class="stat-lab">Identified savings</div><div class="stat-num" style="color:var(--emerald)">₹20.0 cr</div><div class="stat-sub">per year · ~4.8% of annual procurement.</div></div>
+          <div class="card stat" data-detail="lever-alt"><div class="stat-lab">Alternate vendors</div><div class="stat-num">₹8.1 cr</div><div class="stat-sub">qualified second sources at lower landed cost.</div><div class="more">View →</div></div>
+          <div class="card stat" data-detail="lever-reneg"><div class="stat-lab">Price renegotiation</div><div class="stat-num">₹7.3 cr</div><div class="stat-sub">spot &amp; benchmark gaps vs your last PO.</div><div class="more">View →</div></div>
+          <div class="card stat" data-detail="lever-credit"><div class="stat-lab">Credit-period extension</div><div class="stat-num">₹4.6 cr</div><div class="stat-sub">match the terms vendors give competitors.</div><div class="more">View →</div></div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-label">Your products &amp; their supply chains</div>
+        <div class="prod-grid">
+          <div class="card prod" data-detail="prod-cff"><h4>Combat Free Fall parachute</h4><div class="p-sub">PS-CFF-Mk2 · aerospace &amp; defence</div><div class="p-stats"><div><div class="ps-n">135</div><div class="ps-l">components</div></div><div><div class="ps-n">₹96 cr</div><div class="ps-l">spend / yr</div></div></div><div class="p-save">▾ ₹6.2 cr saving identified</div></div>
+          <div class="card prod" data-detail="prod-nbc"><h4>NBC / CBRN suit</h4><div class="p-sub">protection · only Indian maker</div><div class="p-stats"><div><div class="ps-n">72</div><div class="ps-l">components</div></div><div><div class="ps-n">₹68 cr</div><div class="ps-l">spend / yr</div></div></div><div class="p-save">▾ ₹4.1 cr saving identified</div></div>
+          <div class="card prod" data-detail="prod-cold"><h4>Cold-weather clothing</h4><div class="p-sub">DRDO-DIPAS ToT</div><div class="p-stats"><div><div class="ps-n">58</div><div class="ps-l">components</div></div><div><div class="ps-n">₹54 cr</div><div class="ps-l">spend / yr</div></div></div><div class="p-save">▾ ₹2.8 cr saving identified</div></div>
+          <div class="card prod" data-detail="prod-ballistic"><h4>Ballistic vest shell</h4><div class="p-sub">para-aramid heavy</div><div class="p-stats"><div><div class="ps-n">41</div><div class="ps-l">components</div></div><div><div class="ps-n">₹49 cr</div><div class="ps-l">spend / yr</div></div></div><div class="p-save">▾ ₹3.0 cr saving identified</div></div>
+          <div class="card prod" data-detail="prod-aerostat"><h4>Aerostat / balloon envelope</h4><div class="p-sub">green-field line</div><div class="p-stats"><div><div class="ps-n">33</div><div class="ps-l">components</div></div><div><div class="ps-n">₹38 cr</div><div class="ps-l">spend / yr</div></div></div><div class="p-save">▾ ₹1.6 cr saving identified</div></div>
+          <div class="card prod" data-detail="prod-auto"><h4>Automotive coated fabric</h4><div class="p-sub">industrial volume</div><div class="p-stats"><div><div class="ps-n">26</div><div class="ps-l">components</div></div><div><div class="ps-n">₹61 cr</div><div class="ps-l">spend / yr</div></div></div><div class="p-save">▾ ₹2.3 cr saving identified</div></div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-label">Component cost map · top spend &amp; the lever to pull</div>
+        <div class="card">
+          <div class="comp-head"><span>Component · vendor</span><span class="r">Spend / yr</span><span class="r">Saving / yr</span></div>
+          <div class="comp-row" data-detail="c-nylon"><div><div class="c-name">Nylon 66 1260D base yarn</div><div class="c-sub">Toray · Japan · single-source</div><span class="c-lever">Credit + alternate</span></div><div class="c-spend">₹38.0 cr</div><div class="c-save">₹2.1 cr</div></div>
+          <div class="comp-row" data-detail="c-polyester"><div><div class="c-name">High-tenacity polyester filament</div><div class="c-sub">Reliance · India</div><span class="c-lever">Renegotiate</span></div><div class="c-spend">₹26.5 cr</div><div class="c-save">₹1.4 cr</div></div>
+          <div class="comp-row" data-detail="c-dyes"><div><div class="c-name">Dyes &amp; specialty chemicals</div><div class="c-sub">6 vendors active</div><span class="c-lever">Consolidate</span></div><div class="c-spend">₹22.8 cr</div><div class="c-save">₹1.7 cr</div></div>
+          <div class="comp-row" data-detail="c-pu"><div><div class="c-name">PU coating resin</div><div class="c-sub">Covestro · Germany</div><span class="c-lever">Alternate vendor</span></div><div class="c-spend">₹19.2 cr</div><div class="c-save">₹1.6 cr</div></div>
+          <div class="comp-row" data-detail="c-aramid"><div><div class="c-name">Para-aramid ballistic yarn</div><div class="c-sub">Teijin · Japan</div><span class="c-lever">Alternate vendor</span></div><div class="c-spend">₹15.8 cr</div><div class="c-save">₹1.9 cr</div></div>
+          <div class="comp-row" data-detail="c-silicone"><div><div class="c-name">Silicone elastomer</div><div class="c-sub">Wacker · Germany</div><span class="c-lever">Renegotiate</span></div><div class="c-spend">₹12.4 cr</div><div class="c-save">₹0.8 cr</div></div>
+          <div class="comp-row" data-detail="c-membrane"><div><div class="c-name">ePTFE / PU membrane film</div><div class="c-sub">imported</div><span class="c-lever">Renegotiate</span></div><div class="c-spend">₹11.3 cr</div><div class="c-save">₹1.1 cr</div></div>
+          <div class="comp-row" data-detail="c-carbon"><div><div class="c-name">Activated-carbon NBC layer</div><div class="c-sub">Blücher · Germany · single-source</div><span class="c-lever">Alternate vendor</span></div><div class="c-spend">₹9.6 cr</div><div class="c-save">₹0.9 cr</div></div>
+          <div class="comp-row" data-detail="c-webbing"><div><div class="c-name">Webbing &amp; tapes</div><div class="c-sub">domestic cluster</div><span class="c-lever">Credit period</span></div><div class="c-spend">₹8.7 cr</div><div class="c-save">₹0.7 cr</div></div>
+          <div class="comp-row" data-detail="c-fr"><div><div class="c-name">Antistatic / FR finishes</div><div class="c-sub">Archroma</div><span class="c-lever">Alternate vendor</span></div><div class="c-spend">₹7.9 cr</div><div class="c-save">₹0.6 cr</div></div>
+          <div class="comp-row" data-detail="c-ripcord"><div><div class="c-name">Ripcord hardware &amp; D-rings</div><div class="c-sub">US import</div><span class="c-lever">Alternate vendor</span></div><div class="c-spend">₹6.4 cr</div><div class="c-save">₹0.9 cr</div></div>
+          <div class="comp-row" data-detail="c-zip"><div><div class="c-name">Zippers &amp; fasteners</div><div class="c-sub">YKK</div><span class="c-lever">Renegotiate</span></div><div class="c-spend">₹5.2 cr</div><div class="c-save">₹0.4 cr</div></div>
+          <div class="card-note" style="margin-top:16px;">Top 12 of 340 line items — ₹14.1 cr of the ₹20.0 cr total. Tap any component for the three levers: alternate vendor, price, credit period.</div>
+        </div>
+      </section>
+
+      <section>
         <div class="section-label">One parachute system · 135 components</div>
         <div class="grid-2">
-          <div class="card">
+          <div class="card" data-detail="bom">
             <div class="card-title">PS-CFF-Mk2 · Combat Free Fall system</div>
             <div style="display:flex;gap:36px;flex-wrap:wrap;margin-top:18px;">
               <div><div class="scope-big" style="font-size:40px;">135</div><div class="card-note">components in</div></div>
@@ -496,8 +585,9 @@
               <div><div class="scope-big" style="font-size:40px;color:var(--red)">1</div><div class="card-note">on the critical path</div></div>
             </div>
             <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-top:18px;">A new order means 135 POs to chase. AI watches all of them at once and surfaces only the ones that can actually hurt the delivery.</p>
+            <div class="more">View bill of materials →</div>
           </div>
-          <div class="card">
+          <div class="card" data-detail="nylon">
             <div class="card-title" style="color:var(--red)">Critical · Nylon 66 1260D base yarn</div>
             <div class="card-note">single-vendor: Toray · order value ₹4.8 cr</div>
             <div style="margin-top:14px;">
@@ -516,7 +606,7 @@
 
       <section>
         <div class="section-label">PO watcher · what slips if nothing is raised this week</div>
-        <div class="card">
+        <div class="card" data-detail="po">
           <div class="risk"><span class="dot red"></span><div><h5>Nylon 66 1260D · PS-CFF-Mk2</h5><p>PO age 0 of 0 allowed · lead 11 wk against an 8-wk deadline.</p></div><span class="r-side">−21 days</span></div>
           <div class="risk"><span class="dot amber"></span><div><h5>Silicone elastomer coating · KX-309</h5><p>Raise within 5 days or the coating window moves.</p></div><span class="r-side">−6 days</span></div>
           <div class="risk"><span class="dot amber"></span><div><h5>Ripcord assembly hardware · PS-CFF-Mk2</h5><p>Two-week buffer left before it touches assembly.</p></div><span class="r-side">−3 days</span></div>
@@ -526,7 +616,7 @@
 
       <section>
         <div class="grid-2">
-          <div class="card">
+          <div class="card" data-detail="countdown">
             <div class="card-title">Defence delivery countdown · Tender KX-309</div>
             <div style="display:flex;align-items:baseline;gap:14px;margin-top:16px;">
               <span class="scope-big" style="color:var(--amber)">47<span class="u">days left</span></span>
@@ -536,7 +626,7 @@
             </div>
             <p class="card-note" style="margin-top:8px;">*Re-baselined scope. Two single-vendor parts on the critical path; suitcase-import contingency pre-cleared as a last resort.</p>
           </div>
-          <div class="card">
+          <div class="card" data-detail="pricewatch">
             <div class="card-title">Input price watch · renegotiate before the next PO</div>
             <div style="margin-top:14px;">
               <div class="risk"><span class="dot amber"></span><div><h5>Nylon 66 base yarn</h5><p>Latest quote vs your last PO.</p></div><span class="r-side" style="color:var(--red)">+4.2%</span></div>
@@ -553,7 +643,7 @@
       <section>
         <div class="section-label">Production plan · 600 looms + 15 process lines</div>
         <div class="grid-2">
-          <div class="card">
+          <div class="card" data-detail="planstatus">
             <div class="card-title">June plan · still on Excel, not yet locked</div>
             <div class="card-note">12 planners · ~12 hrs/day · hand-to-mouth</div>
             <div style="margin-top:18px;">
@@ -562,7 +652,7 @@
               <div class="lbar"><div class="lbar-top"><span>Coating line CL-3 (the constraint)</span><span class="v">92%</span></div><div class="lbar-track"><div class="lbar-fill" style="width:92%;background:var(--amber)"></div></div></div>
             </div>
           </div>
-          <div class="card">
+          <div class="card" data-detail="aiplan">
             <div class="card-title" style="color:var(--gold)">AI monthly plan · ready to lock</div>
             <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-top:14px;">Sequenced across looms, dyeing and coating with the continuous + batch mix respected. One click replaces the week-by-week scramble.</p>
             <div class="kpis" style="grid-template-columns:1fr 1fr;gap:14px;margin-top:18px;">
@@ -579,7 +669,7 @@
       <section>
         <div class="section-label">Lab → bulk · cutting the trials</div>
         <div class="grid-2">
-          <div class="card">
+          <div class="card" data-detail="labbulk">
             <div class="card-title">Average trials, lab to bulk</div>
             <div style="display:flex;align-items:baseline;gap:14px;margin-top:16px;">
               <span class="scope-big">6.2</span><span style="color:var(--gold);font-size:20px;">→</span><span class="scope-big" style="color:var(--gold)">2.3</span>
@@ -587,7 +677,7 @@
             </div>
             <p style="font-size:13px;color:var(--muted);line-height:1.6;margin-top:16px;">The lab–bulk gap traced to two settings — <b style="color:var(--cream);font-weight:600">mixing time and liquor ratio</b>. Match them and bulk lands in 2 runs, not 10.</p>
           </div>
-          <div class="card">
+          <div class="card" data-detail="converging">
             <div class="card-title">Products converging now</div>
             <div style="margin-top:14px;">
               <div class="risk"><span class="dot emerald"></span><div><h5>Olive-green parachute fabric</h5><p>Matched bulk on trial 3 (was averaging 7).</p></div><span class="r-side" style="color:var(--emerald)">3 trials</span></div>
@@ -601,10 +691,10 @@
       <section>
         <div class="section-label">Where margin is moving — and why</div>
         <div class="card">
-          <div class="mline"><div><div class="m-name">Automotive &amp; industrial coating</div><div class="m-why">Input nylon +6% · no price revision in 4 months — re-price now</div></div><div class="m-val down">−9.0%</div></div>
-          <div class="mline"><div><div class="m-name">Outdoor &amp; lifestyle · Cordura</div><div class="m-why">Freight + dye cost · partly passed through</div></div><div class="m-val down">−3.1%</div></div>
-          <div class="mline"><div><div class="m-name">A&amp;D fabrics</div><div class="m-why">Mix &amp; yield holding</div></div><div class="m-val flat">flat</div></div>
-          <div class="mline"><div><div class="m-name">A&amp;D solutions</div><div class="m-why">Scale on finished parachute systems</div></div><div class="m-val up">+2.4%</div></div>
+          <div class="mline" data-detail="m-auto"><div><div class="m-name">Automotive &amp; industrial coating</div><div class="m-why">Input nylon +6% · no price revision in 4 months — re-price now</div></div><div class="m-val down">−9.0%</div></div>
+          <div class="mline" data-detail="m-cordura"><div><div class="m-name">Outdoor &amp; lifestyle · Cordura</div><div class="m-why">Freight + dye cost · partly passed through</div></div><div class="m-val down">−3.1%</div></div>
+          <div class="mline" data-detail="m-fabrics"><div><div class="m-name">A&amp;D fabrics</div><div class="m-why">Mix &amp; yield holding</div></div><div class="m-val flat">flat</div></div>
+          <div class="mline" data-detail="m-solutions"><div><div class="m-name">A&amp;D solutions</div><div class="m-why">Scale on finished parachute systems</div></div><div class="m-val up">+2.4%</div></div>
         </div>
       </section>
     </div>
@@ -617,12 +707,15 @@
           <div class="card">
             <div class="card-title">Likely questions · your prepared answer</div>
             <div style="margin-top:8px;">
-              <div class="qa"><div class="q">Top 10 customers are 84.7% of revenue — how durable is that?</div><div class="a">Multi-year defence programmes on transferred technology (CFF, cold-weather) with high switching cost; concentration reflects programme scale, not fragility — and Solutions is broadening the base.</div></div>
-              <div class="qa"><div class="q">Defence orders are lumpy — how predictable is the order book?</div><div class="a">Order book ≈ 9 months of cover; tenders convert on fixed timelines; Surat capacity de-risks delivery on win.</div></div>
-              <div class="qa"><div class="q">It's a 100% OFS — how is growth funded?</div><div class="a">Internal accruals plus 1.09× net-debt headroom; the FY25 capacity was already built — this offer is promoter monetisation, not a growth-capital need.</div></div>
+              <div class="qa" data-detail="q-conc"><div class="q">Top 10 customers are 84.7% of revenue — how durable is that?</div><div class="a">Multi-year defence programmes on transferred technology (CFF, cold-weather) with high switching cost; concentration reflects programme scale, not fragility — and Solutions is broadening the base.</div></div>
+              <div class="qa" data-detail="q-lumpy"><div class="q">Defence orders are lumpy — how predictable is the order book?</div><div class="a">Order book ≈ 9 months of cover; tenders convert on fixed timelines; Surat capacity de-risks delivery on win.</div></div>
+              <div class="qa" data-detail="q-ofs"><div class="q">It's a 100% OFS — how is growth funded?</div><div class="a">Internal accruals plus 1.09× net-debt headroom; the FY25 capacity was already built — this offer is promoter monetisation, not a growth-capital need.</div></div>
+              <div class="qa" data-detail="q-margin"><div class="q">Raw-material costs are volatile — how do you protect margin?</div><div class="a">Index-linked contracts, a 77% premium A&amp;D mix, a live margin watcher — and ₹20 cr/yr of identified procurement savings.</div></div>
+              <div class="qa" data-detail="q-capacity"><div class="q">Capacity is at 42% — when does Surat pay back?</div><div class="a">The 2.6× expansion is built and paid for; incremental orders land at strong margin, with ~9 months of order-book visibility.</div></div>
+              <div class="qa" data-detail="q-moat"><div class="q">What stops a competitor from doing this?</div><div class="a">DRDO ToTs, the only Indian NBC &amp; zero-porosity capability, AS9100D, and 50 years of process know-how — a years-long wall.</div></div>
             </div>
           </div>
-          <div class="card">
+          <div class="card" data-detail="dontvol">
             <div class="card-title" style="color:var(--amber)">Steer the conversation — don't volunteer</div>
             <div style="margin-top:14px;">
               <div class="risk"><span class="dot amber"></span><div><h5>Single-customer share within the top 10</h5><p>Speak to the programme, not the name.</p></div></div>
@@ -635,23 +728,55 @@
       </section>
 
       <section>
+        <div class="section-label">How investors grilled comparable companies</div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Indian peers · recent defence &amp; technical-textile IPOs</div>
+            <div style="margin-top:8px;">
+              <div class="risk" data-detail="peer-mtar"><span class="dot gold"></span><div><h5>MTAR Technologies</h5><p>Customer concentration &amp; order-book conversion.</p></div><span class="r-side">2021</span></div>
+              <div class="risk" data-detail="peer-datapatterns"><span class="dot gold"></span><div><h5>Data Patterns</h5><p>Margin sustainability &amp; defence lumpiness.</p></div><span class="r-side">2021</span></div>
+              <div class="risk" data-detail="peer-paras"><span class="dot gold"></span><div><h5>Paras Defence</h5><p>Execution timelines &amp; government dependence.</p></div><span class="r-side">2021</span></div>
+              <div class="risk" data-detail="peer-garware"><span class="dot gold"></span><div><h5>Garware Technical Fibres</h5><p>Raw-material pass-through &amp; export mix.</p></div><span class="r-side">listed</span></div>
+              <div class="risk" data-detail="peer-solar"><span class="dot gold"></span><div><h5>Solar Industries / Premier Explosives</h5><p>Single-customer (government) dependence.</p></div><span class="r-side">listed</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Global peers · technical-textile &amp; protection primes</div>
+            <div style="margin-top:8px;">
+              <div class="risk" data-detail="peer-avon"><span class="dot gold"></span><div><h5>Avon Protection · UK</h5><p>Contract concentration with militaries.</p></div><span class="r-side">CBRN</span></div>
+              <div class="risk" data-detail="peer-safran"><span class="dot gold"></span><div><h5>Safran / Zodiac</h5><p>Programme dependency &amp; certification moat.</p></div><span class="r-side">parachutes</span></div>
+              <div class="risk" data-detail="peer-dupont"><span class="dot gold"></span><div><h5>DuPont / W. L. Gore</h5><p>Input cost &amp; IP defensibility.</p></div><span class="r-side">materials</span></div>
+              <div class="risk" data-detail="peer-mills"><span class="dot gold"></span><div><h5>Mills Manufacturing · US</h5><p>Government-contract reliance.</p></div><span class="r-side">parachutes</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="card-note" style="margin-top:14px;text-align:center;">Tap any peer to see the question they faced, your version of it, and the answer to give.</div>
+      </section>
+
+      <section>
         <div class="section-label">Market intelligence · the moves you can't see from the floor</div>
         <div class="grid-3">
-          <div class="card sol"><span class="sol-n">Green-field</span><h4>Competitor filed a new NBC line</h4><p>A listed peer's DRHP (p.142) reveals a fresh N.B.C.-protection division — a space you already hold AS9100D approval for. First-mover window before they ramp.</p></div>
-          <div class="card sol"><span class="sol-n">New market</span><h4>Airship &amp; aerostat fabric</h4><p>Three credible global makers identified; founders &amp; programme leads matched on LinkedIn. A tailored outreach note — in your voice — is drafted and ready to send.</p><button class="quiet-action" style="margin-top:14px;" data-modal="draft">Open draft</button></div>
-          <div class="card sol"><span class="sol-n">Tailwind</span><h4>The market is doubling</h4><p>India's aerospace &amp; defence engineered-fabrics market is projected to grow ₹50.0 bn → ₹124.4 bn by FY30 (~20% CAGR) — and you're 77% exposed to it.</p></div>
+          <div class="card sol" data-detail="intel-nbc"><span class="sol-n">Green-field</span><h4>Competitor filed a new NBC line</h4><p>A listed peer's DRHP (p.142) reveals a fresh N.B.C.-protection division — a space you already hold AS9100D approval for. First-mover window before they ramp.</p><div class="more">View detail →</div></div>
+          <div class="card sol" data-detail="intel-airship"><span class="sol-n">New market</span><h4>Airship &amp; aerostat fabric</h4><p>Three credible global makers identified; founders &amp; programme leads matched on LinkedIn. A tailored outreach note — in your voice — is drafted and ready to send.</p><button class="quiet-action" style="margin-top:14px;" data-modal="draft">Open draft</button></div>
+          <div class="card sol" data-detail="intel-market"><span class="sol-n">Tailwind</span><h4>The market is doubling</h4><p>India's aerospace &amp; defence engineered-fabrics market is projected to grow ₹50.0 bn → ₹124.4 bn by FY30 (~20% CAGR) — and you're 77% exposed to it.</p><div class="more">View detail →</div></div>
         </div>
       </section>
     </div>
 
     <!-- Footer -->
-    <div class="data-note">This is a live view of what your AI team surfaces from Dynamics, your dashboards and floor feeds — root causes, predictions and actions. Operational figures shown (shades, lots, lead times, savings) are illustrative of the working system; IPO &amp; market context draws on Kusumgar's public filings.</div>
+    <div class="data-note">This is a live view of what your AI team surfaces from Dynamics, your dashboards and floor feeds — root causes, predictions and actions. Tap any figure to drill in. Operational figures shown (shades, lots, lead times, savings) are illustrative of the working system; IPO &amp; market context draws on Kusumgar's public filings.</div>
     <footer class="foot">Kusumgar Limited · live across Vapi · Sarigam · Surat · UP · powered by muns.ai</footer>
 
   </div>
 
   <!-- Modals -->
   <div class="modal-overlay" id="overlay" aria-hidden="true">
+
+    <div class="modal" data-modal-id="__detail" role="dialog" aria-modal="true">
+      <div class="modal-head"><div><div class="modal-kicker" id="dKicker"></div><div class="modal-title" id="dTitle"></div></div><button class="modal-close" data-close aria-label="Close">✕</button></div>
+      <div class="modal-body" id="dBody"></div>
+      <div class="modal-foot" id="dFoot"></div>
+    </div>
 
     <div class="modal" data-modal-id="rfq" role="dialog" aria-modal="true" aria-label="RFQ and PO draft">
       <div class="modal-head"><div><div class="modal-kicker">Procurement · drafted for approval</div><div class="modal-title">RFQ &amp; PO — Nylon 66 1260D base yarn</div></div><button class="modal-close" data-close aria-label="Close">✕</button></div>
@@ -669,7 +794,7 @@ Please confirm your earliest lead time, price per kg and MOQ. Sample lots from b
 Kusumgar Limited · Sourcing</div>
         </div>
         <div class="po-card">
-          <div class="po-top"><span>Fallback PO · draft</span><span class="chip gold">awaiting approval</span></div>
+          <div class="po-top"><span>Fallback PO · draft</span><span class="chip gold" style="font-size:11.5px;color:var(--gold);border:1px solid var(--gold-line);background:var(--gold-soft);border-radius:999px;padding:5px 12px;">awaiting approval</span></div>
           <div class="kv-row"><span class="k">Vendor</span><span class="v">Toray (current single-source)</span></div>
           <div class="kv-row"><span class="k">Item</span><span class="v">Nylon 66 1260D base yarn</span></div>
           <div class="kv-row"><span class="k">Quantity</span><span class="v">Full PS-CFF-Mk2 requirement</span></div>
@@ -761,6 +886,7 @@ Joint Managing Director, Kusumgar Limited</span></div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
+    /* Live clock */
     (function(){
       var dEl=document.getElementById('date'), tEl=document.getElementById('time');
       var DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -772,6 +898,7 @@ Joint Managing Director, Kusumgar Limited</span></div>
       tick(); setInterval(tick,1000);
     })();
 
+    /* Theme toggle */
     (function(){
       var btn=document.getElementById('themeToggle'); if(!btn) return;
       var meta=document.querySelector('meta[name="theme-color"]'); var BG={dark:'#0A1A2F',light:'#F3EEE2'};
@@ -785,34 +912,280 @@ Joint Managing Director, Kusumgar Limited</span></div>
       });
     })();
 
-    (function(){
-      var tabs=document.querySelectorAll('.tab'), panels=document.querySelectorAll('.tab-panel');
-      tabs.forEach(function(t){ t.addEventListener('click', function(){
-        var name=t.dataset.tab;
-        tabs.forEach(function(x){ var on=x.dataset.tab===name; x.classList.toggle('active',on); x.setAttribute('aria-selected', on?'true':'false'); });
-        panels.forEach(function(p){ p.classList.toggle('active', p.dataset.panel===name); });
-        window.scrollTo({ top:0, behavior:'smooth' });
-      }); });
-    })();
+    /* Detail drill-down registry */
+    var DETAILS = {
+      'lever-alt':{ kicker:'Cost radar · lever', title:'Alternate / qualified vendors — ₹8.1 cr', lead:'Second sources already sampled or trial-cleared, at a lower landed cost than the incumbent.',
+        listTitle:'Where it sits', list:['PU coating resin → domestic + Lubrizol blend, −8% landed','Para-aramid yarn → Kolon Heracron / Hyosung, −11%','Activated-carbon NBC layer → domestic developmental source','Ripcord hardware → Indian fabrication vs US import, −14%','FR finishes → Rudolf / domestic chemistry'],
+        note:'Qualification is the gate — five of these are already past sampling.' },
+      'lever-reneg':{ kicker:'Cost radar · lever', title:'Price renegotiation — ₹7.3 cr', lead:'Where the latest quote or a market benchmark sits below your last PO.',
+        listTitle:'The asks', list:['Dyes & chemicals — consolidate 6 vendors to 3 for a volume rebate (₹1.7 cr)','High-tenacity polyester — volume rebate at run-rate (₹1.4 cr)','ePTFE / PU membrane — benchmark 9% below contract (₹1.1 cr)','Silicone elastomer — index-linked re-base (₹0.8 cr)','Zippers — multi-year price hold (₹0.4 cr)'],
+        note:'Take these into the next quarterly buy — your leverage is the annual tonnage.' },
+      'lever-credit':{ kicker:'Cost radar · lever', title:'Credit-period extension — ₹4.6 cr', lead:'Several vendors give your competitors longer credit than they give you. Matching frees working capital — at ~9% that is real money.',
+        rows:[{k:'Working capital freed',v:'₹51 cr',mono:1},{k:'Interest saved (~9%)',v:'₹4.6 cr/yr',mono:1}],
+        listTitle:'The gaps', list:['Toray — competitor 60d vs your 30d','Webbing cluster — competitor 75d vs your 30d','Reliance polyester — 60d vs 45d','Coats thread — 60d vs 30d'],
+        note:'Lead with the volumes you already give them — the ask is reasonable.' },
+      'prod-cff':{ kicker:'Product · supply chain', title:'Combat Free Fall parachute · PS-CFF-Mk2', lead:'Your flagship A&D system — 135 components, ₹96 cr/yr of inputs.',
+        rows:[{k:'Components',v:'135',mono:1},{k:'Single-vendor',v:'34',mono:1},{k:'Spend / yr',v:'₹96 cr',mono:1},{k:'Saving identified',v:'₹6.2 cr',mono:1}],
+        listTitle:'Biggest levers', list:['Nylon 66 base yarn — credit + China alternate (₹2.1 cr)','Para-aramid reinforcement — alternate source (₹1.4 cr)','Ripcord hardware — Indian fabrication (₹0.9 cr)','Webbing & tapes — credit period (₹0.7 cr)'],
+        note:'Same system as the critical-path watcher below.' },
+      'prod-nbc':{ kicker:'Product · supply chain', title:'NBC / CBRN protection suit', lead:'The only Indian-made NBC clothing — 72 components, ₹68 cr/yr.',
+        rows:[{k:'Components',v:'72',mono:1},{k:'Spend / yr',v:'₹68 cr',mono:1},{k:'Saving identified',v:'₹4.1 cr',mono:1}],
+        listTitle:'Biggest levers', list:['ePTFE / PU membrane — benchmark renegotiation (₹1.1 cr)','Activated-carbon layer — domestic source in development (₹0.9 cr)','FR finishes — alternate chemistry (₹0.6 cr)'] },
+      'prod-cold':{ kicker:'Product · supply chain', title:'Extreme cold-weather clothing', lead:'DRDO-DIPAS ToT system — 58 components, ₹54 cr/yr.',
+        rows:[{k:'Components',v:'58',mono:1},{k:'Spend / yr',v:'₹54 cr',mono:1},{k:'Saving identified',v:'₹2.8 cr',mono:1}],
+        listTitle:'Biggest levers', list:['Insulation batting — two-source split','Membrane — shared with NBC for volume','Zippers & buckles — credit + renegotiate'] },
+      'prod-ballistic':{ kicker:'Product · supply chain', title:'Ballistic vest shell fabric', lead:'Para-aramid heavy — 41 components, ₹49 cr/yr.',
+        rows:[{k:'Components',v:'41',mono:1},{k:'Spend / yr',v:'₹49 cr',mono:1},{k:'Saving identified',v:'₹3.0 cr',mono:1}],
+        listTitle:'Biggest levers', list:['Para-aramid yarn — Kolon / Hyosung alternate (₹1.9 cr)','Coating resin — domestic (₹0.6 cr)','Thread — credit (₹0.2 cr)'] },
+      'prod-aerostat':{ kicker:'Product · supply chain', title:'Aerostat / balloon envelope', lead:'The green-field line — 33 components, ₹38 cr/yr.',
+        rows:[{k:'Components',v:'33',mono:1},{k:'Spend / yr',v:'₹38 cr',mono:1},{k:'Saving identified',v:'₹1.6 cr',mono:1}],
+        listTitle:'Biggest levers', list:['Helium-barrier film — qualify a second source','Seam tapes — domestic','Base fabric — internal'],
+        note:'Ties to the airship outreach in Investors & Intel.', action:{label:'Open outreach draft', modal:'draft'} },
+      'prod-auto':{ kicker:'Product · supply chain', title:'Automotive coated fabric', lead:'Industrial volume line — 26 components, ₹61 cr/yr.',
+        rows:[{k:'Components',v:'26',mono:1},{k:'Spend / yr',v:'₹61 cr',mono:1},{k:'Saving identified',v:'₹2.3 cr',mono:1},{k:'Margin',v:'−9% QoQ',mono:1}],
+        listTitle:'Biggest levers', list:['PU coating resin — alternate vendor (₹1.6 cr)','Polyester base — volume rebate','Re-price to recover the −9% margin'],
+        note:'The margin watcher flagged this line — costs and price both move.', action:{label:'Draft re-price note', toast:'Re-price note drafted for the automotive line.'} },
+      'c-nylon':{ kicker:'Component · ₹38.0 cr/yr', title:'Nylon 66 1260D base yarn', lead:'Single-sourced from Toray (Japan). ₹2.1 cr/yr across three levers.',
+        rows:[{k:'Vendor',v:'Toray · Japan'},{k:'Unit price',v:'₹612 / kg',mono:1},{k:'Lead time',v:'11 wk',mono:1},{k:'Your credit',v:'30 days',mono:1},{k:'Toray → a competitor',v:'60 days',mono:1}],
+        barsTitle:'Savings levers', bars:[{l:'Credit match 30→60 days',v:'₹1.1 cr',p:100},{l:'China alternate (−1.4%)',v:'₹0.5 cr',p:45},{l:'Volume renegotiation',v:'₹0.5 cr',p:45}],
+        note:'Biggest lever is credit — Toray gives a domestic competitor 60 days against your 30. Matching frees ~₹3.1 cr of working capital. Qualify Zhejiang as a price floor.', action:{label:'Send RFQ & draft PO', modal:'rfq'} },
+      'c-polyester':{ kicker:'Component · ₹26.5 cr/yr', title:'High-tenacity polyester filament', lead:'Reliance (India). Volume rebate plus credit — ₹1.4 cr/yr.',
+        rows:[{k:'Vendor',v:'Reliance · India'},{k:'Lead time',v:'4 wk',mono:1},{k:'Your credit',v:'45 days',mono:1},{k:'Benchmark',v:'60 days',mono:1}],
+        barsTitle:'Savings levers', bars:[{l:'Volume rebate at run-rate',v:'₹1.0 cr',p:100},{l:'Credit 45→60 days',v:'₹0.4 cr',p:40}],
+        note:'Your run-rate qualifies for the next rebate slab — lead with the annual tonnage.', action:{label:'Draft renegotiation note', toast:'Renegotiation note drafted for Reliance.'} },
+      'c-dyes':{ kicker:'Component · ₹22.8 cr/yr', title:'Dyes & specialty chemicals', lead:'Spread across 6 vendors today. Consolidating to 3 unlocks ₹1.7 cr/yr.',
+        rows:[{k:'Vendors',v:'6 active'},{k:'Target',v:'3 preferred'},{k:'Lead time',v:'4 wk',mono:1}],
+        barsTitle:'Savings levers', bars:[{l:'Vendor consolidation rebate',v:'₹1.2 cr',p:100},{l:'Index-linked re-base',v:'₹0.5 cr',p:42}],
+        note:'Fewer vendors, bigger volumes, better price — and simpler shade consistency on the floor.', action:{label:'Draft consolidation plan', toast:'Consolidation plan drafted.'} },
+      'c-pu':{ kicker:'Component · ₹19.2 cr/yr', title:'PU coating resin', lead:'Covestro (Germany). A qualified domestic + Lubrizol blend lands 8% cheaper — ₹1.6 cr/yr.',
+        rows:[{k:'Vendor',v:'Covestro · Germany'},{k:'Lead time',v:'7 wk',mono:1},{k:'Alternate',v:'domestic + Lubrizol'},{k:'Landed gap',v:'−8%',mono:1}],
+        barsTitle:'Savings levers', bars:[{l:'Alternate vendor (−8% landed)',v:'₹1.6 cr',p:100}],
+        note:'Already past lab approval — needs a bulk trial on the coating line.', action:{label:'Schedule bulk trial', toast:'Bulk trial scheduled for the PU alternate.'} },
+      'c-aramid':{ kicker:'Component · ₹15.8 cr/yr', title:'Para-aramid ballistic yarn', lead:'Teijin (Japan). Kolon Heracron and Hyosung qualify 11% lower — ₹1.9 cr/yr.',
+        rows:[{k:'Vendor',v:'Teijin · Japan'},{k:'Lead time',v:'14 wk',mono:1},{k:'Alternates',v:'Kolon, Hyosung'},{k:'Gap',v:'−11%',mono:1}],
+        barsTitle:'Savings levers', bars:[{l:'Alternate vendor (−11%)',v:'₹1.7 cr',p:100},{l:'Credit period',v:'₹0.2 cr',p:12}],
+        note:'Ballistic spec must re-certify on any switch — start the qualification now so it is ready.', action:{label:'Start qualification', toast:'Qualification started for Kolon & Hyosung.'} },
+      'c-silicone':{ kicker:'Component · ₹12.4 cr/yr', title:'Silicone elastomer', lead:'Wacker (Germany). Index-linked re-base plus credit — ₹0.8 cr/yr.',
+        rows:[{k:'Vendor',v:'Wacker · Germany'},{k:'Lead time',v:'7 wk',mono:1},{k:'Your credit',v:'30 days',mono:1},{k:'Benchmark',v:'45 days',mono:1}],
+        barsTitle:'Savings levers', bars:[{l:'Index-linked re-base',v:'₹0.5 cr',p:100},{l:'Credit 30→45 days',v:'₹0.3 cr',p:60}],
+        note:'Silicone tracks the raw index — peg the contract to it instead of a fixed rate.', action:{label:'Draft renegotiation note', toast:'Renegotiation note drafted for Wacker.'} },
+      'c-membrane':{ kicker:'Component · ₹11.3 cr/yr', title:'ePTFE / PU membrane film', lead:'Imported. The benchmark sits 9% under your contract — ₹1.1 cr/yr.',
+        rows:[{k:'Vendor',v:'imported'},{k:'Lead time',v:'8 wk',mono:1},{k:'Benchmark',v:'−9%',mono:1}],
+        barsTitle:'Savings levers', bars:[{l:'Benchmark renegotiation',v:'₹1.1 cr',p:100}],
+        note:'Shared across NBC and cold-weather — combine the volumes for leverage.', action:{label:'Draft renegotiation note', toast:'Renegotiation note drafted.'} },
+      'c-carbon':{ kicker:'Component · ₹9.6 cr/yr', title:'Activated-carbon NBC layer', lead:'Blücher (Germany), single-source. A domestic developmental source targets ₹0.9 cr/yr.',
+        rows:[{k:'Vendor',v:'Blücher · Germany'},{k:'Lead time',v:'12 wk',mono:1},{k:'Status',v:'single-source'}],
+        barsTitle:'Savings levers', bars:[{l:'Domestic alternate (in dev)',v:'₹0.9 cr',p:100}],
+        note:'Strategic to de-risk a single foreign source on a defence-critical layer.', action:{label:'Fund domestic trial', toast:'Domestic trial funding requested.'} },
+      'c-webbing':{ kicker:'Component · ₹8.7 cr/yr', title:'Webbing & tapes', lead:'Domestic cluster. A pure credit-period play — ₹0.7 cr/yr.',
+        rows:[{k:'Vendor',v:'domestic cluster'},{k:'Lead time',v:'3 wk',mono:1},{k:'Your credit',v:'30 days',mono:1},{k:'A competitor',v:'75 days',mono:1}],
+        barsTitle:'Savings levers', bars:[{l:'Credit 30→75 days',v:'₹0.7 cr',p:100}],
+        note:'They give a competitor 75 days on smaller volumes than yours — an easy ask.', action:{label:'Draft terms request', toast:'Terms request drafted for the webbing cluster.'} },
+      'c-fr':{ kicker:'Component · ₹7.9 cr/yr', title:'Antistatic / FR finishes', lead:'Archroma. Alternate chemistry (Rudolf / domestic) saves ₹0.6 cr/yr.',
+        rows:[{k:'Vendor',v:'Archroma'},{k:'Lead time',v:'6 wk',mono:1},{k:'Alternate',v:'Rudolf / domestic'}],
+        barsTitle:'Savings levers', bars:[{l:'Alternate chemistry',v:'₹0.6 cr',p:100}],
+        note:'Performance-equivalent on the spec sheet — needs a wash-durability trial.', action:{label:'Schedule trial', toast:'FR-finish trial scheduled.'} },
+      'c-ripcord':{ kicker:'Component · ₹6.4 cr/yr', title:'Ripcord hardware & D-rings', lead:'Imported from the US. Indian fabrication qualifies 14% lower — ₹0.9 cr/yr.',
+        rows:[{k:'Vendor',v:'US import'},{k:'Lead time',v:'9 wk',mono:1},{k:'Alternate',v:'Indian fabrication'},{k:'Gap',v:'−14%',mono:1}],
+        barsTitle:'Savings levers', bars:[{l:'Indian fabrication (−14%)',v:'₹0.9 cr',p:100}],
+        note:'Also cuts the lead time and the suitcase-import risk on KX-309.', action:{label:'Start qualification', toast:'Qualification started for the Indian fabricator.'} },
+      'c-zip':{ kicker:'Component · ₹5.2 cr/yr', title:'Zippers & fasteners', lead:'YKK. A multi-year price hold plus credit — ₹0.4 cr/yr.',
+        rows:[{k:'Vendor',v:'YKK'},{k:'Lead time',v:'5 wk',mono:1},{k:'Your credit',v:'30 days',mono:1},{k:'Target',v:'60 days',mono:1}],
+        barsTitle:'Savings levers', bars:[{l:'Multi-year price hold',v:'₹0.3 cr',p:100},{l:'Credit 30→60 days',v:'₹0.1 cr',p:33}],
+        note:'Bundle across every garment line for a single annual rate.', action:{label:'Draft annual rate', toast:'Annual-rate proposal drafted for YKK.'} },
+      'peer-mtar':{ kicker:'Indian peer · MTAR Technologies (2021)', title:'Customer concentration & order conversion', lead:'MTAR was pressed hard on top-customer concentration and how fast its order book converts to revenue.',
+        rows:[{k:'They were asked',v:'Top-3 high — durable?'},{k:'Your version',v:'Top-10 = 84.7%'}],
+        note:'Answer: frame concentration as programme depth on transferred technology with multi-year visibility — and point to Solutions broadening the base.', action:{label:'Add to brief', toast:'Added to the roadshow brief.'} },
+      'peer-datapatterns':{ kicker:'Indian peer · Data Patterns (2021)', title:'Margin sustainability & order lumpiness', lead:'Investors questioned whether Data Patterns could hold its high margins as it scaled, and how lumpy defence revenue is.',
+        note:'Answer: your ~24% EBITDA is structural — IP, integration and certification — and an order book of ~9 months smooths the lumpiness.', action:{label:'Add to brief', toast:'Added to the roadshow brief.'} },
+      'peer-paras':{ kicker:'Indian peer · Paras Defence (2021)', title:'Execution timelines & government dependence', lead:'Paras faced repeated questions on delivery execution and reliance on government orders.',
+        note:'Answer: the new Surat capacity de-risks execution; your customers span the armed forces, OFB / Munitions India and exports — not a single buyer.', action:{label:'Add to brief', toast:'Added to the roadshow brief.'} },
+      'peer-garware':{ kicker:'Indian peer · Garware Technical Fibres', title:'Raw-material pass-through & export mix', lead:'Garware is regularly asked about nylon / polymer price pass-through and premiumisation of the mix.',
+        note:'Answer: contracts are increasingly index-linked; a 77% premium A&D mix cushions input swings; and the margin watcher catches any lag within a quarter.', action:{label:'Add to brief', toast:'Added to the roadshow brief.'} },
+      'peer-solar':{ kicker:'Indian peer · Solar Industries / Premier Explosives', title:'Single-customer (government) dependence', lead:'Defence-materials peers get grilled on dependence on government procurement cycles.',
+        note:'Answer: defence is the moat, not the risk — high entry barriers and ToT advantages — and you also serve automotive, industrial and outdoor markets.', action:{label:'Add to brief', toast:'Added to the roadshow brief.'} },
+      'peer-avon':{ kicker:'Global peer · Avon Protection · UK (CBRN)', title:'Contract concentration with militaries', lead:'Avon (NBC / respiratory protection) is repeatedly asked about concentration in US / UK military contracts and order timing.',
+        note:'Answer: like Avon, your concentration reflects sole-qualified positions; unlike Avon, you carry a diversified non-defence tail and a fast-growing Solutions line.', action:{label:'Add to brief', toast:'Added to the roadshow brief.'} },
+      'peer-safran':{ kicker:'Global peer · Safran / Zodiac', title:'Programme dependency & certification moat', lead:'Aerospace-textile primes are asked how defensible programme positions are once certified.',
+        note:'Answer: certification (AS9100D) and technology transfer create multi-year lock-in — the same moat, at your scale and cost base.', action:{label:'Add to brief', toast:'Added to the roadshow brief.'} },
+      'peer-dupont':{ kicker:'Global peer · DuPont / W. L. Gore', title:'Input cost & IP defensibility', lead:'Material innovators are asked about input-cost exposure and how defensible their process IP is.',
+        note:'Answer: 50 years of process know-how — zero-porosity weaving, the dye records — is the IP; inputs are increasingly second-sourced, as the cost-savings radar shows.', action:{label:'Open cost-savings radar', tab:'supply'} },
+      'peer-mills':{ kicker:'Global peer · Mills Manufacturing · US', title:'Government-contract reliance', lead:'US parachute makers are pressed on reliance on government tenders and re-compete risk.',
+        note:'Answer: tenders are won on qualified technology and delivery reliability; Surat capacity and alternate-vendor depth protect re-compete margins.', action:{label:'Add to brief', toast:'Added to the roadshow brief.'} },
+      'q-margin':{ kicker:'Roadshow · prepared answer', title:'Raw-material costs are volatile — how do you protect margin?', lead:'The input-cost question every materials company gets.',
+        note:'Increasingly index-linked contracts, a 77% premium A&D mix, and a live margin watcher that flags any lag within a quarter — plus ₹20 cr/yr of identified procurement savings.', action:{label:'Open cost-savings radar', tab:'supply'} },
+      'q-capacity':{ kicker:'Roadshow · prepared answer', title:'Capacity is at 42% — when does Surat pay back?', lead:'The utilisation and return-on-capex question.',
+        note:'The 2.6× expansion is already built and paid for, so incremental orders land at strong margin; a defence order book of ~9 months gives the fill visibility.', action:{label:'Open full brief', modal:'brief'} },
+      'q-moat':{ kicker:'Roadshow · prepared answer', title:'What stops a competitor from doing this?', lead:'The moat question.',
+        note:'DRDO technology transfers (CFF, cold-weather), the only Indian NBC and zero-porosity capability, AS9100D qualification, and 50 years of process know-how. New entrants face a years-long certification wall.', action:{label:'Open full brief', modal:'brief'} },
+      redyes:{ kicker:'Today · quality cost', title:'Re-dyes this month — ₹26 L', lead:'11 re-dye events so far this month, against 63% first-time-right. Each one is dye, water, energy and a delayed roll.',
+        barsTitle:'By root cause of these 11', bars:[{l:'Wrong / mixed dye lot',v:'4 · ₹9.4 L',p:36},{l:'Mixing-time variance',v:'3 · ₹7.1 L',p:27},{l:'Incoming yarn / sizing',v:'2 · ₹4.7 L',p:18},{l:'Water / temperature',v:'1 · ₹2.6 L',p:9},{l:'Machine setting',v:'1 · ₹2.2 L',p:9}],
+        rows:[{k:'Events',v:'11'},{k:'Fabric reworked',v:'18,400 m',mono:1},{k:'Dye & chemicals',v:'₹19 L',mono:1},{k:'Water used again',v:'0.18 M L',mono:1}],
+        note:'Lifting first-time-right to 85% removes about ₹71 L a year of this.', action:{label:'Open Colour & Shade', tab:'colour'} },
+      wip:{ kicker:'Today · working capital', title:'Cash stuck in WIP — ₹74 cr', lead:'18.6 days and rising, because the June plan isn\'t locked. The cash is sitting on the floor, mid-process.',
+        barsTitle:'Where it\'s sitting', bars:[{l:'In dyeing',v:'₹24 cr',p:33},{l:'Greige / weaving',v:'₹21 cr',p:28},{l:'Coating / lamination',v:'₹18 cr',p:24},{l:'Finished · awaiting QC',v:'₹11 cr',p:15}],
+        rows:[{k:'WIP days',v:'18.6 (▲ from 16.2)',mono:1},{k:'Looms loaded',v:'41%',mono:1},{k:'Constraint',v:'Coating CL-3 · 92%'}],
+        note:'Locking the AI plan releases ₹24 cr and cuts WIP to 12.4 days.', action:{label:'Open Planning & Floor', tab:'planning'} },
+      atrisk:{ kicker:'Today · at risk', title:'Order value at risk — ₹4.8 cr', lead:'PS-CFF-Mk2 will slip 21 days unless the Nylon 66 PO goes today.',
+        rows:[{k:'Component',v:'Nylon 66 1260D'},{k:'Vendor',v:'Toray (single)'},{k:'Lead time',v:'11 wk',mono:1},{k:'Time to deliver',v:'8 wk',mono:1},{k:'Slip if unplaced',v:'21 days',mono:1}],
+        listTitle:'Alternates already qualified', list:['Hyosung (Korea) — 9 wk · sample approved · +2.1%','Zhejiang (China) — 10 wk · trial cleared · −1.4%'],
+        action:{label:'Send RFQ & draft PO', modal:'rfq'} },
+      idlecap:{ kicker:'Today · capacity', title:'Idle new capacity — 57.7%', lead:'The Surat (Kothwa) line lifted capacity 2.6× in FY25; most of it is still open — headroom to absorb new defence orders without fresh capex.',
+        rows:[{k:'Installed',v:'127.8 M m',mono:1},{k:'Used',v:'42.3%',mono:1},{k:'Idle',v:'57.7%',mono:1},{k:'Added in FY25',v:'+79 M m',mono:1}],
+        note:'The capex is already spent — every new order now lands at strong incremental margin.' },
+      'w-nylon':{ kicker:'Watcher · supply chain', title:'Nylon 66 PO unplaced', lead:'PS-CFF-Mk2 slips 21 days if the PO isn\'t raised — ₹4.8 cr at risk.',
+        rows:[{k:'Lead time',v:'11 wk',mono:1},{k:'Time to deliver',v:'8 wk',mono:1},{k:'Alternates',v:'2 qualified'}], action:{label:'Send RFQ & draft PO', modal:'rfq'} },
+      'w-tender':{ kicker:'Watcher · delivery', title:'Tender KX-309 — day 71 of 60', lead:'Two milestones behind on a 60-day commitment; the critical path runs through single-vendor parts.',
+        rows:[{k:'Days elapsed',v:'71',mono:1},{k:'Days left',v:'47',mono:1},{k:'Critical-path parts',v:'2 single-vendor'}],
+        listTitle:'On the critical path', list:['Silicone elastomer coating — raise PO within 5 days','Ripcord assembly hardware — 3-day buffer left'] },
+      'w-margin':{ kicker:'Watcher · margin', title:'Automotive-coating margin −9%', lead:'Input nylon is up 6%, and your last price revision was four months ago. The bridge is a re-price.',
+        rows:[{k:'Margin QoQ',v:'−9.0%',mono:1},{k:'Input move',v:'+6%',mono:1},{k:'Last revision',v:'4 months ago'}],
+        note:'A ~4% re-price restores the margin without losing the account.', action:{label:'Draft re-price note', toast:'Re-price note drafted for the automotive line.'} },
+      'w-competitor':{ kicker:'Watcher · market', title:'Competitor\'s new NBC division', lead:'A listed peer\'s DRHP (p.142) flags a fresh N.B.C.-protection line.',
+        list:['You already hold AS9100D for this space','Only Indian maker of NBC clothing today','First-mover window before they ramp'], action:{label:'View market intel', tab:'intel'} },
+      'w-olive':{ kicker:'Watcher · win', title:'Olive-green converged in 3 trials', lead:'The AI recipe matched bulk on trial 3, against a 6.2 average — ₹1.9 L saved on this product alone.',
+        rows:[{k:'Trials',v:'3 (was ~7)',mono:1},{k:'Saving',v:'₹1.9 L',mono:1},{k:'Driver',v:'mixing-time + liquor-ratio'}] },
+      batch:{ kicker:'Colour · live batch', title:'Batch DY-2208 · olive green', lead:'Live on Jigger J-4, 40 minutes in. ΔE is 1.8 and climbing past the 0.8 target.',
+        barsTitle:'Reading over the run', bars:[{l:'04:12 · start',v:'ΔE 0.3',p:17},{l:'04:28 · 16 min',v:'ΔE 0.7',p:39},{l:'04:36 · crossed target',v:'ΔE 1.0',p:56},{l:'04:52 · now',v:'ΔE 1.8',p:100}],
+        rows:[{k:'Machine',v:'Jigger J-4'},{k:'Fabric',v:'4,200 m',mono:1},{k:'Target',v:'ΔE ≤ 0.8',mono:1},{k:'Now',v:'ΔE 1.8',mono:1}], action:{label:'Send fix to floor', modal:'floor'} },
+      'rc-lot':{ kicker:'Colour · root cause', title:'Wrong dye lot on the floor', lead:'Lot DL-7741 (floor stock) was loaded instead of the lab-qualified DL-7738 — the single biggest contributor at +1.1 ΔE.',
+        rows:[{k:'Used',v:'DL-7741 (floor)'},{k:'Should be',v:'DL-7738 (lab)'},{k:'This week',v:'3 batches',mono:1},{k:'Impact',v:'+1.1 ΔE',mono:1}],
+        note:'Lock dye issue to the qualified lot at the weigh station — the fix is a habit, not a machine.' },
+      'rc-mix':{ kicker:'Colour · root cause', title:'Over-mixed compound', lead:'CCTV timing on J-4 shows 12.4 minutes of mixing against the 10.0 minute lab spec — worth +0.5 ΔE.',
+        rows:[{k:'Observed',v:'12.4 min',mono:1},{k:'Lab spec',v:'10.0 min',mono:1},{k:'Impact',v:'+0.5 ΔE',mono:1}],
+        note:'Mixing-time variance is the second-biggest cause of shade misses across the floor.' },
+      causes:{ kicker:'Colour · 90-day analysis', title:'Where colour trouble starts', lead:'Root cause of every shade failure over the last 90 days, traced to the real source.',
+        barsTitle:'Share of failures', bars:[{l:'Wrong / mixed dye lot',v:'38%',p:38},{l:'Mixing-time variance',v:'22%',p:22},{l:'Incoming yarn / sizing',v:'19%',p:19},{l:'Water / temperature',v:'13%',p:13},{l:'Machine setting',v:'8%',p:8}],
+        note:'60% traces to lot discipline and mix timing — both fixable today, without capex.' },
+      ftr:{ kicker:'Colour · trend', title:'First-time-right shade', lead:'Climbing from 48% to 63% over six months as the AI recipes and root-cause fixes land. Target is 85%.',
+        barsTitle:'By month', bars:[{l:'January',v:'48%',p:56},{l:'February',v:'52%',p:61},{l:'March',v:'55%',p:65},{l:'April',v:'58%',p:68},{l:'May',v:'61%',p:72},{l:'June',v:'63%',p:74}],
+        rows:[{k:'Now',v:'63%',mono:1},{k:'Target',v:'85%',mono:1},{k:'Gap',v:'22 points',mono:1},{k:'Each re-dye',v:'≈ ₹2.3 L',mono:1}] },
+      wholeroll:{ kicker:'Colour · vision', title:'Roll R-4471 · whole-roll vision', lead:'The camera caught two defects a single-spot spectrometer would have passed straight to a defence customer.',
+        rows:[{k:'Length',v:'1,200 m',mono:1},{k:'Streak',v:'380–410 m',mono:1},{k:'Shade patch',v:'920 m',mono:1},{k:'Held back',v:'1,940 m today',mono:1}],
+        note:'Two rolls stopped before dispatch — and a complaint that never happens.' },
+      savings:{ kicker:'Colour · the prize', title:'Getting colour right first time', lead:'What it returns once first-time-right reaches 85% — pure margin and dye-house hours back.',
+        rows:[{k:'Re-dyes avoided',v:'~31 / month',mono:1},{k:'Direct saving',v:'₹71 L / yr',mono:1},{k:'Water saved',v:'0.5 M L / yr',mono:1},{k:'Capacity freed',v:'~9%',mono:1}],
+        note:'The freed dye-house hours alone absorb a chunk of the new Surat capacity.' },
+      bom:{ kicker:'Supply · bill of materials', title:'PS-CFF-Mk2 · 135 components', lead:'One Combat Free Fall parachute system, 135 line items, 135 POs to chase. AI watches them all and surfaces only what can hurt delivery.',
+        barsTitle:'Vendor exposure', bars:[{l:'Multi-vendor (safe)',v:'101',p:75},{l:'Single-vendor (watch)',v:'34',p:25},{l:'Single-vendor on critical path',v:'1',p:3}],
+        rows:[{k:'Components',v:'135',mono:1},{k:'POs open',v:'112',mono:1},{k:'Single-vendor',v:'34',mono:1},{k:'On critical path',v:'1',mono:1}] },
+      nylon:{ kicker:'Supply · critical part', title:'Nylon 66 1260D base yarn', lead:'The one part on the critical path — single-sourced from Toray, with no buffer left.',
+        rows:[{k:'Vendor',v:'Toray (single)'},{k:'Order value',v:'₹4.8 cr',mono:1},{k:'Lead time',v:'11 wk',mono:1},{k:'Time to deliver',v:'8 wk',mono:1},{k:'Slip if unplaced',v:'21 days',mono:1}],
+        listTitle:'Qualified alternates', list:['Hyosung (Korea) — 9 wk · sample approved · +2.1%','Zhejiang (China) — 10 wk · trial cleared · −1.4%'], action:{label:'Send RFQ & draft PO', modal:'rfq'} },
+      po:{ kicker:'Supply · PO watcher', title:'What slips this week', lead:'Lead time minus days-to-deadline, watched continuously across open orders.',
+        list:['Nylon 66 1260D · PS-CFF-Mk2 — −21 days','Silicone elastomer coating · KX-309 — −6 days','Ripcord assembly hardware · PS-CFF-Mk2 — −3 days','PU film · laminate line — on time'],
+        note:'Raise the top three this week and the slip disappears.' },
+      countdown:{ kicker:'Supply · defence delivery', title:'Tender KX-309 · 47 days left', lead:'Re-baselined scope; 71 days into what was a 60-day commitment. Two single-vendor parts decide whether it lands.',
+        rows:[{k:'Days left',v:'47',mono:1},{k:'Critical-path parts',v:'2 single-vendor'},{k:'Contingency',v:'suitcase-import pre-cleared'}],
+        note:'Last time a part like this was flown in by hand at the last minute — the watcher is there so it isn\'t again.' },
+      pricewatch:{ kicker:'Supply · price watch', title:'Input price watch', lead:'Latest quotes against your last PO — where to push back and where to pull forward.',
+        rows:[{k:'Nylon 66 base yarn',v:'+4.2%',mono:1},{k:'PU coating resin',v:'+2.8%',mono:1},{k:'Polyester filament',v:'−3.1%',mono:1}],
+        note:'Pull polyester forward; push back on nylon and PU before the next buy.', action:{label:'Draft renegotiation note', toast:'Renegotiation note drafted for nylon & PU.'} },
+      planstatus:{ kicker:'Planning · current state', title:'June plan — not yet locked', lead:'600 looms and 15 process lines, still sequenced by 12 planners on Excel, ~12 hours a day, hand-to-mouth.',
+        barsTitle:'Where it stands', bars:[{l:'Looms loaded',v:'41%',p:41},{l:'Schedule adherence',v:'78%',p:78},{l:'Coating CL-3 (constraint)',v:'92%',p:92}],
+        rows:[{k:'Planners',v:'12'},{k:'Hours / day',v:'~12',mono:1},{k:'Constraint',v:'Coating CL-3'}],
+        note:'The constraint is the coating line — everything upstream waits on CL-3.' },
+      aiplan:{ kicker:'Planning · AI plan', title:'AI monthly plan, ready to lock', lead:'Sequenced across looms, dyeing and coating with the continuous + batch mix respected — one click instead of the week-by-week scramble.',
+        rows:[{k:'WIP',v:'18.6 → 12.4 days',mono:1},{k:'On-time delivery',v:'91 → 96%',mono:1},{k:'Planner hours freed',v:'~140 / month',mono:1},{k:'Cash released',v:'₹24 cr',mono:1}],
+        note:'Your planners move from firefighting to handling exceptions.', action:{label:'Lock June plan', modal:'plan'} },
+      labbulk:{ kicker:'Planning · product development', title:'Lab → bulk, trials cut from 6.2 to 2.3', lead:'The lab–bulk gap traced to two settings — mixing time and liquor ratio. Match them and bulk lands in two runs, not ten.',
+        rows:[{k:'Was',v:'6.2 trials',mono:1},{k:'Now',v:'2.3 trials',mono:1},{k:'Drivers',v:'mixing-time + liquor-ratio'}],
+        listTitle:'Converging now', list:['Olive-green parachute fabric — 3 trials (was 7)','Coated tarpaulin grey — 2 trials','NBC laminate charcoal — on trial 4'] },
+      converging:{ kicker:'Planning · in progress', title:'Products converging now', lead:'Where AI-predicted recipes are cutting the trial count right now.',
+        list:['Olive-green parachute fabric — matched bulk on trial 3 (was averaging 7)','Coated tarpaulin grey — 2 trials after a liquor-ratio correction','NBC laminate charcoal — on trial 4, holding on incoming film variance'] },
+      'm-auto':{ kicker:'Planning · margin', title:'Automotive & industrial coating — margin −9%', lead:'The biggest margin mover this quarter, and the most fixable.',
+        rows:[{k:'Margin QoQ',v:'−9.0%',mono:1},{k:'Input nylon',v:'+6%',mono:1},{k:'Last price revision',v:'4 months ago'},{k:'Suggested re-price',v:'~4%',mono:1}],
+        note:'A modest re-price restores the bridge; the watcher flagged it the moment input prices crossed.', action:{label:'Draft re-price note', toast:'Re-price note drafted for the automotive line.'} },
+      'm-cordura':{ kicker:'Planning · margin', title:'Outdoor & lifestyle · Cordura — −3.1%', lead:'Freight and dye cost, only partly passed through to price.',
+        rows:[{k:'Margin QoQ',v:'−3.1%',mono:1},{k:'Driver',v:'freight + dye cost'},{k:'Pass-through',v:'partial'}] },
+      'm-fabrics':{ kicker:'Planning · margin', title:'A&D fabrics — flat', lead:'Mix and yield are holding steady — no action needed.',
+        rows:[{k:'Margin QoQ',v:'flat',mono:1},{k:'Mix',v:'stable'},{k:'Yield',v:'on target'}] },
+      'm-solutions':{ kicker:'Planning · margin', title:'A&D solutions — +2.4%', lead:'Scale on finished parachute systems is lifting the margin — the FY25 growth engine compounding.',
+        rows:[{k:'Margin QoQ',v:'+2.4%',mono:1},{k:'Driver',v:'scale / volume'},{k:'Trend',v:'improving'}] },
+      'q-conc':{ kicker:'Roadshow · prepared answer', title:'Top 10 = 84.7% of revenue', lead:'The concentration question — and the durable answer.',
+        note:'Multi-year defence programmes on transferred technology (CFF, cold-weather) with high switching cost. Concentration reflects programme scale, not fragility — and Solutions is broadening the base from ₹0.86 cr to ₹221.9 cr.',
+        listTitle:'Lead with', list:['Multi-year DRDO-ToT programmes — high switching cost','AS9100D qualification is a years-long barrier','Solutions broadening the revenue base'], action:{label:'Open full brief', modal:'brief'} },
+      'q-lumpy':{ kicker:'Roadshow · prepared answer', title:'How predictable is the order book?', lead:'Defence orders are lumpy — here is the frame.',
+        note:'Order book ≈ 9 months of cover; tenders convert on fixed, contracted timelines; the new Surat capacity de-risks delivery the moment a tender is won.', action:{label:'Open full brief', modal:'brief'} },
+      'q-ofs':{ kicker:'Roadshow · prepared answer', title:'100% OFS — how is growth funded?', lead:'No fresh issue — so where does the growth capital come from?',
+        note:'Internal accruals plus 1.09× net-debt headroom; the FY25 capacity was already built. This offer is promoter monetisation, not a growth-capital need.', action:{label:'Open full brief', modal:'brief'} },
+      dontvol:{ kicker:'Roadshow · guardrails', title:'Steer the conversation', lead:'Three areas to frame carefully — answer if asked, but don\'t volunteer.',
+        list:['Single-customer share inside the top 10 — speak to the programme, not the name','WIP days — lead with the plan to bring them down, not today\'s figure','Automotive-coating margin dip — frame as a re-pricing already in motion'], action:{label:'Open full brief', modal:'brief'} },
+      'intel-nbc':{ kicker:'Intel · green-field', title:'Competitor\'s new NBC line', lead:'A listed peer\'s DRHP (p.142) reveals a fresh N.B.C.-protection division entering your space.',
+        list:['You already hold AS9100D for this space','Only Indian maker of NBC clothing today','First-mover window before they ramp'],
+        note:'Worth a board note before the next tender cycle.' },
+      'intel-airship':{ kicker:'Intel · new market', title:'Airship & aerostat fabric', lead:'A new market your zero-porosity laminates are built for — lighter envelopes with the gas-retention these programmes need.',
+        rows:[{k:'Global makers',v:'3 identified'},{k:'Contacts',v:'founders on LinkedIn'},{k:'Outreach',v:'drafted in your voice'}], action:{label:'Open outreach draft', modal:'draft'} },
+      'intel-market':{ kicker:'Intel · tailwind', title:'The market is doubling', lead:'India\'s aerospace & defence engineered-fabrics market, per the DRHP.',
+        rows:[{k:'FY25',v:'₹50.0 bn',mono:1},{k:'FY30',v:'₹124.4 bn',mono:1},{k:'CAGR',v:'~20%',mono:1},{k:'Your exposure',v:'77%',mono:1}],
+        note:'The structural tailwind behind the whole portfolio.' }
+    };
 
+    /* App: tabs, modals, details, toast */
     (function(){
+      var overlay=document.getElementById('overlay');
+      var modals=overlay?overlay.querySelectorAll('.modal'):[];
       var toast=document.getElementById('toast'), timer;
+
+      function activateTab(name){
+        document.querySelectorAll('.tab').forEach(function(x){ var on=x.dataset.tab===name; x.classList.toggle('active',on); x.setAttribute('aria-selected', on?'true':'false'); });
+        document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.toggle('active', p.dataset.panel===name); });
+        window.scrollTo({ top:0, behavior:'smooth' });
+      }
+      function openModal(id){ modals.forEach(function(m){ m.classList.toggle('active', m.dataset.modalId===id); }); overlay.classList.add('show'); document.body.style.overflow='hidden'; }
+      function closeModal(){ overlay.classList.remove('show'); document.body.style.overflow=''; }
       function showToast(m){ toast.textContent=m; toast.classList.add('show'); clearTimeout(timer); timer=setTimeout(function(){ toast.classList.remove('show'); },2200); }
 
-      var overlay=document.getElementById('overlay');
-      var modals=overlay ? overlay.querySelectorAll('.modal') : [];
-      function openModal(id){ modals.forEach(function(m){ m.classList.toggle('active', m.dataset.modalId===id); }); overlay.classList.add('show'); document.body.style.overflow='hidden'; }
-      function closeModal(){ if(!overlay) return; overlay.classList.remove('show'); document.body.style.overflow=''; }
-
-      document.querySelectorAll('[data-modal]').forEach(function(b){ b.addEventListener('click', function(){ openModal(b.dataset.modal); }); });
-      if(overlay){
-        overlay.addEventListener('click', function(e){ if(e.target===overlay) closeModal(); });
-        overlay.querySelectorAll('[data-close]').forEach(function(c){ c.addEventListener('click', closeModal); });
-        document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModal(); });
+      function buildBody(d){
+        var h='';
+        if(d.lead) h+='<p class="modal-lead">'+d.lead+'</p>';
+        if(d.bars&&d.bars.length){ h+='<div class="modal-h">'+(d.barsTitle||'Breakdown')+'</div>'; d.bars.forEach(function(b){ h+='<div class="lbar"><div class="lbar-top"><span>'+b.l+'</span><span class="v">'+b.v+'</span></div><div class="lbar-track"><div class="lbar-fill" style="width:'+b.p+'%"></div></div></div>'; }); }
+        if(d.rows&&d.rows.length){ h+='<div class="hibox">'; d.rows.forEach(function(r){ h+='<div class="kv-row"><span class="k">'+r.k+'</span><span class="v'+(r.mono?' mono':'')+'">'+r.v+'</span></div>'; }); h+='</div>'; }
+        if(d.list&&d.list.length){ h+='<div class="modal-h">'+(d.listTitle||'Detail')+'</div><ul class="modal-ul">'; d.list.forEach(function(x){ h+='<li>'+x+'</li>'; }); h+='</ul>'; }
+        if(d.note) h+='<p class="modal-p" style="margin-top:18px;">'+d.note+'</p>';
+        return h;
+      }
+      function buildFoot(d){
+        var h='';
+        if(d.action){ var a=d.action;
+          if(a.modal) h+='<button class="btn-primary" data-modal="'+a.modal+'">'+a.label+'</button>';
+          else if(a.tab) h+='<button class="btn-primary" data-gototab="'+a.tab+'">'+a.label+'</button>';
+          else h+='<button class="btn-primary" data-toast="'+(a.toast||'Done.')+'">'+a.label+'</button>';
+        }
+        h+='<button class="btn-ghost" data-close>Close</button>';
+        return h;
+      }
+      function openDetail(key){ var d=DETAILS[key]; if(!d) return;
+        document.getElementById('dKicker').textContent=d.kicker||'Detail';
+        document.getElementById('dTitle').innerHTML=d.title||'';
+        document.getElementById('dBody').innerHTML=buildBody(d);
+        document.getElementById('dFoot').innerHTML=buildFoot(d);
+        openModal('__detail');
       }
 
-      document.querySelectorAll('[data-toast]').forEach(function(b){
-        b.addEventListener('click', function(){ showToast(b.dataset.toast); if(b.closest('.modal')) closeModal(); });
+      document.addEventListener('click', function(e){
+        var el;
+        if((el=e.target.closest('.tab'))){ activateTab(el.dataset.tab); return; }
+        if((el=e.target.closest('[data-modal]'))){ openModal(el.dataset.modal); return; }
+        if((el=e.target.closest('[data-gototab]'))){ closeModal(); activateTab(el.dataset.gototab); return; }
+        if((el=e.target.closest('[data-close]'))){ closeModal(); return; }
+        if((el=e.target.closest('[data-toast]'))){ showToast(el.dataset.toast); if(el.closest('.modal')) closeModal(); return; }
+        if((el=e.target.closest('[data-detail]'))){ openDetail(el.dataset.detail); return; }
+      });
+      overlay.addEventListener('click', function(e){ if(e.target===overlay) closeModal(); });
+      document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModal(); });
+    })();
+
+    /* Chart hover tooltips */
+    (function(){
+      var tip=document.createElement('div'); tip.className='chart-tip'; document.body.appendChild(tip);
+      function move(e){ var w=tip.offsetWidth, x=e.clientX, y=e.clientY; var left=x+14; if(left+w>window.innerWidth-8) left=x-w-14; tip.style.left=left+'px'; tip.style.top=(y-12)+'px'; }
+      function show(el,e){ var p=(el.getAttribute('data-tip')||'').split('|'); tip.innerHTML='<span class="t-val">'+p[0]+'</span>'+(p[1]?'<span class="t-sub">'+p[1]+'</span>':''); move(e); tip.classList.add('show'); }
+      function hide(){ tip.classList.remove('show'); }
+      document.querySelectorAll('[data-tip]').forEach(function(el){
+        el.addEventListener('pointerenter', function(e){ show(el,e); });
+        el.addEventListener('pointermove', move);
+        el.addEventListener('pointerleave', hide);
       });
     })();
 
